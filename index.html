@@ -2809,6 +2809,54 @@ function App() {
     };
   }, [brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, lang]);
 
+  function hasOnlineDatabaseTarget(config = dbConfigRef.current) {
+    return Boolean(config?.enabled) && (
+      config.provider === "supabase"
+        ? Boolean(config.supabaseUrl && config.supabaseKey)
+        : Boolean(config.apiBase)
+    );
+  }
+
+  function queueImmediateOnlineSave(reason = "manual_save", overrides = {}) {
+    const config = dbConfigRef.current;
+    if (!hasOnlineDatabaseTarget(config) || !dbLoadedRef.current) return;
+    if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
+    const state = makeDatabaseState({
+      brands: overrides.brands || brands,
+      orders: overrides.orders || orders,
+      customers: overrides.customers || customers,
+      accounts: overrides.accounts || accounts,
+      hiddenPartTypes: overrides.hiddenPartTypes || hiddenPartTypes,
+      activityLog: overrides.activityLog || activityLog,
+      analytics: overrides.analytics || analytics,
+    });
+    state.lastOnlineAction = {
+      reason,
+      at: new Date().toISOString(),
+    };
+    setDbStatus(prev => ({ ...prev, saving:true, error:"" }));
+    skkjDatabaseRequest(config, "/api/state", { method:"PUT", body:{ state } })
+      .then(() => {
+        setDbStatus(prev => ({
+          ...prev,
+          loading:false,
+          saving:false,
+          mode:"connected",
+          lastSaved:new Date().toLocaleString(lang==="th" ? "th-TH" : "en-US"),
+          error:"",
+        }));
+      })
+      .catch(error => {
+        setDbStatus(prev => ({
+          ...prev,
+          loading:false,
+          saving:false,
+          mode:"offline",
+          error:error.message || "Database save failed",
+        }));
+      });
+  }
+
   useEffect(() => {
     setOrderTimelineNote("");
   }, [detailOrder?.id]);
@@ -3035,8 +3083,8 @@ function App() {
     });
   }
 
-  function reduceStockForOrder(items) {
-    setBrands(prev => prev.map(brand => ({
+  function reduceStockForOrder(items, onlineOverrides = {}) {
+    const nextBrands = brands.map(brand => ({
       ...brand,
       models: brand.models.map(model => {
         const ordered = items
@@ -3044,7 +3092,9 @@ function App() {
           .reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
         return ordered > 0 ? { ...model, stock:Math.max(0, model.stock - ordered) } : model;
       })
-    })));
+    }));
+    setBrands(nextBrands);
+    queueImmediateOnlineSave("stock_reduced_after_order", { ...onlineOverrides, brands: nextBrands });
   }
 
   function cleanOrderForGoogleSheet(order) {
@@ -3116,11 +3166,13 @@ function App() {
       return;
     }
     const newOrder = { id:"ORD-"+String(orders.length+1).padStart(3,"0"), customer:orderDetails?.customer || "", customerEmail:currentCustomer?.email || "", brand:orderForm.brand, model:orderForm.model, brandId:orderForm.brandId || "", modelId:orderForm.modelId || "", quantity:1, year:orderDetails?.year || "", price:orderForm.price, status:"pending", date:new Date().toISOString().slice(0,10), phone:orderDetails?.phone || "", address:orderDetails?.address || "", customerNote:orderDetails?.notes || "", adminNote:"", deliveryMethod:singleDeliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus, adminFlag:"none", labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อ" : "Customer placed order")] };
-    setOrders(prev=>[newOrder, ...prev]);
+    const nextOrders = [newOrder, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("single_product_order_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(newOrder, "single_product_order");
     paymentMethod !== "cod" ? setLastBillOrders([newOrder]) : setLastBillOrders(null);
     saveCustomerAddressSlot(orderDetails);
-    if (orderForm.brandId && orderForm.modelId) reduceStockForOrder([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }]);
+    if (orderForm.brandId && orderForm.modelId) reduceStockForOrder([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }], { orders: nextOrders });
     setOrderForm(null);
     setOrderStep(1);
     setOrderDetails(null);
@@ -3157,11 +3209,13 @@ function App() {
       date: today,
       timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อจากตะกร้า" : "Customer placed basket order")],
     }));
-    setOrders(prev => [...newOrders, ...prev]);
+    const nextOrders = [...newOrders, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("basket_checkout_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(newOrders, "basket_checkout");
     (paymentMethod || "promptpay") !== "cod" ? setLastBillOrders(newOrders) : setLastBillOrders(null);
     saveCustomerAddressSlot({ customer, phone, address });
-    reduceStockForOrder(basket);
+    reduceStockForOrder(basket, { orders: nextOrders });
     setBasket([]);
     setCheckoutData(null);
     setBasketOpen(false);
@@ -3299,8 +3353,11 @@ function App() {
 
   function appendOrderTimeline(orderId, event) {
     if (!orderId || !event) return;
-    setOrders(prev=>prev.map(o=>o.id===orderId ? { ...o, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80) } : o));
-    setDetailOrder(prev=>prev && prev.id===orderId ? { ...prev, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===orderId ? { ...o, updatedAt:changedAt, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80) } : o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_timeline_updated", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===orderId ? { ...prev, updatedAt:changedAt, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
   }
 
   function addManualOrderTimelineNote(order) {
@@ -3313,8 +3370,11 @@ function App() {
 
   function saveEditOrder() {
     const event = makeOrderEvent("edit", lang==="th" ? "แก้ไขรายละเอียดคำสั่งซื้อ" : "Edited order details");
-    const nextEditOrder = { ...editOrder, timeline:[event, ...(Array.isArray(editOrder.timeline) ? editOrder.timeline : [])].slice(0, 80) };
-    setOrders(prev=>prev.map(o=>o.id===editOrder.id?nextEditOrder:o));
+    const changedAt = new Date().toISOString();
+    const nextEditOrder = { ...editOrder, updatedAt:changedAt, timeline:[event, ...(Array.isArray(editOrder.timeline) ? editOrder.timeline : [])].slice(0, 80) };
+    const nextOrders = orders.map(o=>o.id===editOrder.id?nextEditOrder:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_edited", { orders: nextOrders });
     setDetailOrder(prev=>prev && prev.id===editOrder.id ? nextEditOrder : prev);
     logActivity("order_edit", `Edited order ${editOrder.id}`);
     setEditOrder(null);
@@ -3322,7 +3382,9 @@ function App() {
   function saveNewOrder() {
     const id = "ORD-"+String(orders.length+1).padStart(3,"0");
     const manualOrder = { ...newOrder, id, date:new Date().toISOString().slice(0,10), price:Number(newOrder.price), labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "สร้างคำสั่งซื้อด้วยแอดมิน" : "Manual order created by admin")] };
-    setOrders(prev=>[manualOrder, ...prev]);
+    const nextOrders = [manualOrder, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("admin_manual_order_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(manualOrder, "admin_manual_order");
     logActivity("order_add", `Added manual order for ${newOrder.customer || "customer"}`);
     setNewOrderModal(false);
@@ -3346,7 +3408,9 @@ function App() {
       adminNote:"",
       timeline:[makeOrderEvent("created", lang==="th" ? `ทำสำเนาจาก ${order.id}` : `Duplicated from ${order.id}`)],
     };
-    setOrders(prev => [duplicatedOrder, ...prev]);
+    const nextOrders = [duplicatedOrder, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("admin_order_duplicated", { orders: nextOrders });
     sendOrdersToGoogleSheet(duplicatedOrder, "admin_duplicate_order");
     logActivity("order_duplicate", `Duplicated ${order.id}`);
   }
@@ -3354,8 +3418,11 @@ function App() {
   function updateOrderStatus(order, status) {
     if (!order || order.status === status) return;
     const event = makeOrderEvent("status", lang==="th" ? `เปลี่ยนสถานะจาก ${ta.statusLabels[order.status] || order.status} เป็น ${ta.statusLabels[status] || status}` : `Changed status from ${ta.statusLabels[order.status] || order.status} to ${ta.statusLabels[status] || status}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,status,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,status,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?{...o,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_status_changed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
     logActivity("order_status", `Changed ${order.id} from ${ta.statusLabels[order.status] || order.status} to ${ta.statusLabels[status] || status}`);
   }
 
@@ -3363,8 +3430,11 @@ function App() {
     const currentPayment = order?.paymentStatus || "waiting_review";
     if (!order || currentPayment === paymentStatus) return;
     const event = makeOrderEvent("payment", lang==="th" ? `เปลี่ยนการชำระเงินจาก ${ta.paymentLabels[currentPayment] || currentPayment} เป็น ${ta.paymentLabels[paymentStatus] || paymentStatus}` : `Changed payment from ${ta.paymentLabels[currentPayment] || currentPayment} to ${ta.paymentLabels[paymentStatus] || paymentStatus}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,paymentStatus,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,paymentStatus,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?{...o,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("payment_status_changed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
     logActivity("payment_status", `Changed ${order.id} payment from ${ta.paymentLabels[currentPayment] || currentPayment} to ${ta.paymentLabels[paymentStatus] || paymentStatus}`);
   }
 
@@ -3372,8 +3442,11 @@ function App() {
     const currentFlag = order?.adminFlag || "none";
     if (!order || currentFlag === adminFlag) return;
     const event = makeOrderEvent("flag", lang==="th" ? `เปลี่ยนธงแอดมินจาก ${orderFlagLabel(currentFlag)} เป็น ${orderFlagLabel(adminFlag)}` : `Changed admin flag from ${orderFlagLabel(currentFlag)} to ${orderFlagLabel(adminFlag)}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,adminFlag,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,adminFlag,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?{...o,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_flag_changed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
     logActivity("order_flag", `Changed ${order.id} flag from ${orderFlagLabel(currentFlag)} to ${orderFlagLabel(adminFlag)}`);
   }
 
@@ -3387,8 +3460,11 @@ function App() {
     }
     const nextStatus = ["delivered","cancelled"].includes(order.status) ? order.status : "shipped";
     const event = makeOrderEvent("tracking", lang==="th" ? `บันทึกเลขพัสดุ ${shippingCompany}: ${trackingNumber}${nextStatus==="shipped" ? " และเปลี่ยนเป็นกำลังจัดส่ง" : ""}` : `Saved tracking ${shippingCompany}: ${trackingNumber}${nextStatus==="shipped" ? " and moved to shipping" : ""}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o, shippingCompany, trackingNumber, status:nextStatus, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? { ...prev, shippingCompany, trackingNumber, status:nextStatus, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?{...o, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_tracking_saved", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? { ...prev, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
     logActivity("tracking_update", `Saved tracking for ${order.id}: ${shippingCompany} ${trackingNumber}${nextStatus==="shipped" ? " and moved to shipping" : ""}`);
     alert(lang==="th" ? "บันทึกเลขพัสดุแล้ว ลูกค้าจะเห็นในประวัติคำสั่งซื้อ" : "Tracking saved. Customer can see it in order history.");
   }
@@ -3775,15 +3851,25 @@ function App() {
       setCustomers(backup.customers);
       setAccounts(backup.accounts);
       setHiddenPartTypes(Array.isArray(backup.hiddenPartTypes) ? backup.hiddenPartTypes : []);
-      setActivityLog([{
+      const restoredActivityLog = [{
         id: Date.now(),
         type:"backup_restore",
         detail:`Restored backup file ${file.name}`,
         user: currentUser?.name || currentUser?.email || (lang==="th" ? "ระบบ" : "System"),
         date: new Date().toLocaleString(lang==="th" ? "th-TH" : "en-US"),
-      }, ...(Array.isArray(backup.activityLog) ? backup.activityLog : [])].slice(0, 200));
+      }, ...(Array.isArray(backup.activityLog) ? backup.activityLog : [])].slice(0, 200);
+      setActivityLog(restoredActivityLog);
       const restoredAnalytics = Array.isArray(backup.analytics) ? backup.analytics : [];
       setAnalytics(restoredAnalytics);
+      queueImmediateOnlineSave("backup_restored", {
+        brands: backup.brands,
+        orders: backup.orders,
+        customers: backup.customers,
+        accounts: backup.accounts,
+        hiddenPartTypes: Array.isArray(backup.hiddenPartTypes) ? backup.hiddenPartTypes : [],
+        activityLog: restoredActivityLog,
+        analytics: restoredAnalytics,
+      });
       try { localStorage.setItem("skkj_v2_analytics_v1", JSON.stringify(restoredAnalytics)); } catch (error) {}
       setBasket([]);
       setEditOrder(null);
@@ -3806,8 +3892,11 @@ function App() {
     const labelEvent = makeOrderEvent("label", order.status === "pending"
       ? (lang==="th" ? "พิมพ์ป้าย A6 และเปลี่ยนเป็นกำลังบรรจุ" : "Printed A6 label and moved to packing")
       : (lang==="th" ? "พิมพ์ป้าย A6" : "Printed A6 label"));
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,labelPrinted:true,status:o.status==="pending"?"processing":o.status,timeline:[labelEvent, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,labelPrinted:true,status:prev.status==="pending"?"processing":prev.status,timeline:[labelEvent, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const printedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?{...o,labelPrinted:true,labelPrintedAt:printedAt,status:o.status==="pending"?"processing":o.status,statusUpdatedAt:o.status==="pending"?printedAt:o.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("delivery_label_printed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,labelPrinted:true,labelPrintedAt:printedAt,status:prev.status==="pending"?"processing":prev.status,statusUpdatedAt:prev.status==="pending"?printedAt:prev.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
     logActivity("label_print", `Printed A6 label for ${order.id}${order.status === "pending" ? " and moved status to packing" : ""}`);
     labelWindow.document.write(`
       <!doctype html>
