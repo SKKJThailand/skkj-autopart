@@ -622,7 +622,7 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const scale = logoUse.scale ?? 1;
   const yOffset = logoUse.y ?? 0;
   const boxHeight = size * (logoUse.box ?? 1);
-  const displaySrc = isHonda && place === "brandCard" ? "assets/honda-logo-brand-card.png" : src;
+  const displaySrc = src;
   if (src) {
     return (
       <span data-logo-place={place} style={{ width:size*2.3, height:boxHeight, display:"flex", alignItems:"center", justifyContent:"center", overflow:"visible" }}>
