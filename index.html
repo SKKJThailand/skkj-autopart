@@ -306,6 +306,31 @@ const T = {
       quickLinks:"Quick Links", contactTitle:"Contact",
       copyright:"© 2025 SKKJ Autopart. All rights reserved.",
     },
+    finder:{
+      title:"Product finder",
+      subtitle:"Type a car model, part name, or common spelling. I will find the closest SKKJ products.",
+      placeholder:"Try D-Max, Revo, Civic, steering rack...",
+      send:"Search",
+      empty:"Type a car model or choose a quick button first.",
+      found:"I found matching products.",
+      notFound:"I could not find that yet. Try another model name or contact staff.",
+      view:"View product",
+      askLine:"Ask on LINE",
+      quickButtons:[
+        { label:"Check price", query:"check price" },
+        { label:"Find parts by car model", query:"find parts by car model" },
+        { label:"Steering rack", query:"steering rack" },
+        { label:"Contact staff", query:"contact staff" },
+        { label:"How to order", query:"how to order" },
+        { label:"Warranty", query:"warranty" },
+      ],
+      canned:{
+        contact:"You can send us your car model, year, and a photo on LINE. We will help check the correct part.",
+        order:"Choose product, fill name phone address, choose delivery and payment, then confirm order.",
+        warranty:"Warranty is 6 months or 20,000 km, whichever comes first.",
+        price:"Type a car model like D-Max, Revo, Civic, or a part like steering rack.",
+      }
+    },
   },
   th: {
     nav: { home:"หน้าหลัก", catalog:"สินค้า", policy:"คำถาม/นโยบาย", contact:"ติดต่อ", login:"เข้าสู่ระบบ", logout:"ออกจากระบบ" },
@@ -413,6 +438,31 @@ const T = {
       quickLinks:"ลิงก์ด่วน", contactTitle:"ติดต่อ",
       copyright:"© 2568 SKKJ Autopart สงวนลิขสิทธิ์ทั้งหมด",
     },
+    finder:{
+      title:"ตัวช่วยหาอะไหล่",
+      subtitle:"พิมพ์รุ่นรถ ชื่ออะไหล่ หรือคำสะกดที่ลูกค้าชอบใช้ เดี๋ยวระบบช่วยหาให้",
+      placeholder:"ลองพิมพ์ ดีแมค, รีโว่, ซีวิค, แร็ค...",
+      send:"ค้นหา",
+      empty:"พิมพ์รุ่นรถหรือกดปุ่มลัดก่อนครับ",
+      found:"เจอสินค้าที่ใกล้เคียงครับ",
+      notFound:"ยังไม่เจอรุ่นนี้ครับ ลองพิมพ์ชื่ออื่น หรือทักพนักงานได้เลย",
+      view:"ดูสินค้า",
+      askLine:"ถามทาง LINE",
+      quickButtons:[
+        { label:"เช็กราคา", query:"เช็กราคา" },
+        { label:"หาอะไหล่ตามรุ่นรถ", query:"หาอะไหล่ตามรุ่นรถ" },
+        { label:"แร็คพวงมาลัย", query:"แร็คพวงมาลัย" },
+        { label:"ติดต่อพนักงาน", query:"ติดต่อพนักงาน" },
+        { label:"วิธีสั่งซื้อ", query:"วิธีสั่งซื้อ" },
+        { label:"การรับประกัน", query:"การรับประกัน" },
+      ],
+      canned:{
+        contact:"ส่งรุ่นรถ ปีรถ และรูปอะไหล่ทาง LINE ได้เลยครับ เดี๋ยวร้านช่วยเช็กรุ่นให้",
+        order:"เลือกสินค้า กรอกชื่อ เบอร์ ที่อยู่ เลือกขนส่งและวิธีจ่ายเงิน แล้วกดยืนยันคำสั่งซื้อ",
+        warranty:"รับประกัน 6 เดือน หรือ 20,000 กม. แล้วแต่ระยะใดถึงก่อน",
+        price:"พิมพ์รุ่นรถ เช่น ดีแมค รีโว่ ซีวิค หรือชื่ออะไหล่ เช่น แร็คพวงมาลัย ได้เลยครับ",
+      }
+    },
   },
 };
 
@@ -420,6 +470,135 @@ const T = {
 const fmt = (n) => "฿" + Number(n).toLocaleString();
 const iSLight = { width:"100%", padding:"11px 14px", border:"1px solid #E0DDD8", borderRadius:10, fontSize:14, outline:"none", boxSizing:"border-box", background:"#FAFAF8", color:"#1A1A1A", fontFamily:"inherit" };
 const iSDark  = { width:"100%", padding:"10px 13px", border:"1px solid #E0DDD8", borderRadius:9,  fontSize:13, outline:"none", boxSizing:"border-box", background:"#fff", color:"#1A1A1A",  fontFamily:"inherit" };
+
+const THAI_RE = /[\u0E00-\u0E7F]/;
+const PART_TYPE_I18N = {
+  steering_rack:{ th:"แร็คพวงมาลัย", en:"Steering rack" },
+  steering_joint:{ th:"ยอยพวงมาลัย", en:"Steering joint" },
+  power_steering_pump:{ th:"ปั๊มพวงมาลัย", en:"Power steering pump" },
+  tie_rod_end:{ th:"ลูกหมากคันชัก", en:"Tie rod end" },
+  steering_boot:{ th:"ยางหุ้มแร็ค", en:"Steering rack boot" },
+};
+const BRAND_I18N = {
+  nissan:{ th:"นิสสัน", en:"Nissan" },
+  honda:{ th:"ฮอนด้า", en:"Honda" },
+  isuzu:{ th:"อีซูซุ", en:"Isuzu" },
+  mazda:{ th:"มาสด้า", en:"Mazda" },
+  mitsubishi:{ th:"มิตซูบิชิ", en:"Mitsubishi" },
+  toyota:{ th:"โตโยต้า", en:"Toyota" },
+  ford:{ th:"ฟอร์ด", en:"Ford" },
+  mg:{ th:"เอ็มจี", en:"MG" },
+};
+const MODEL_ALIAS_GROUPS = [
+  ["dmax","d max","d-max","d-maxx","ดีแมค","ดีแม็ค","ดีแมก","ดีแม็ก","ดีแมกซ์","ดีแม็กซ์","ดีแมคซ์"],
+  ["revo","hilux revo","รีโว่","รีโว","รีโว้","ไฮลักซ์รีโว่","ไฮลักซ์ รีโว่"],
+  ["fortuner","ฟอร์จูนเนอร์","ฟอจูนเนอร์","ฟอร์จูน","ฟอร์จูนเนอ"],
+  ["civic","civik","ซีวิค","ซิวิค","ซีวิก"],
+  ["rack steering","steering rack","rack","แร็ค","แร็คพวงมาลัย","แรค","แรคพวงมาลัย","พวงมาลัย"],
+  ["vigo","hilux vigo","วีโก้","วีโก"],
+  ["triton","ไทรทัน","ไททัน"],
+  ["pajero","ปาเจโร่","ปาเจโร"],
+  ["navara","นาวาร่า","นาวารา"],
+  ["teana","เทียน่า","เทียนา","j32"],
+  ["march","micra","มาร์ช"],
+  ["camry","แคมรี่","แคมรี"],
+  ["altis","อัลติส"],
+  ["vios","วีออส"],
+  ["yaris","ยาริส"],
+  ["mazda2","mazda 2","มาสด้า2","มาสด้า 2"],
+  ["mazda3","mazda 3","มาสด้า3","มาสด้า 3"],
+  ["cx5","cx-5","cx 5","ซีเอ็กซ์5","ซีเอ็กซ์-5","ซีเอ็กซ์ 5"],
+  ["cx3","cx-3","cx 3","ซีเอ็กซ์3","ซีเอ็กซ์-3","ซีเอ็กซ์ 3"],
+  ["accord","แอคคอร์ด","แอคคอด"],
+  ["jazz","แจ๊ส","แจส"],
+  ["city","ซิตี้","ซิตี"],
+  ["brio","บริโอ้","บริโอ"],
+  ["crv","cr-v","cr v","ซีอาร์วี"],
+  ["hrv","hr-v","hr v","เอชอาร์วี"],
+  ["mg5","mg 5","เอ็มจี5","เอ็มจี 5"],
+  ["zs","mg zs","เอ็มจี zs","เอ็มจี แซดเอส"],
+  ["hs","mg hs","เอ็มจี hs","เอ็มจี เอชเอส"],
+  ["gs","mg gs","เอ็มจี gs","เอ็มจี จีเอส"],
+];
+function hasThaiText(value) { return THAI_RE.test(String(value || "")); }
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\s\-_./()]+/g, "")
+    .replace(/[^\u0E00-\u0E7Fa-z0-9]/g, "");
+}
+function detectFinderLang(value) {
+  const text = String(value || "");
+  return hasThaiText(text) ? "th" : /[a-z]/i.test(text) ? "en" : "th";
+}
+function splitAliasText(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : String(value || "").split(/[\n,|]+/).map(v=>v.trim()).filter(Boolean);
+}
+function partTypeText(type, lang="th") {
+  const entry = PART_TYPE_I18N[type || "steering_rack"] || PART_TYPE_I18N.steering_rack;
+  return entry[lang] || entry.th;
+}
+function getAliasTermsFromText(text) {
+  const normalized = normalizeSearchText(text);
+  const terms = [];
+  MODEL_ALIAS_GROUPS.forEach(group => {
+    if (group.some(alias => normalized.includes(normalizeSearchText(alias)))) terms.push(...group);
+  });
+  return [...new Set(terms)];
+}
+function enrichProductI18n(brand, model) {
+  const brandInfo = BRAND_I18N[brand?.id] || { th:brand?.nameTh || "", en:brand?.nameEn || "" };
+  const type = model?.partType || "steering_rack";
+  const baseText = [
+    brand?.id, brand?.nameTh, brand?.nameEn, model?.nameTh, model?.nameEn,
+    model?.sku, model?.years, model?.driveBody, partTypeText(type, "th"), partTypeText(type, "en")
+  ].join(" ");
+  const aliases = [...new Set([
+    ...splitAliasText(model?.model_aliases || model?.modelAliases),
+    ...getAliasTermsFromText(baseText),
+  ])];
+  return {
+    name_th:model?.name_th || model?.nameTh || "",
+    name_en:model?.name_en || model?.nameEn || "",
+    brand_th:model?.brand_th || brandInfo.th || brand?.nameTh || "",
+    brand_en:model?.brand_en || brandInfo.en || brand?.nameEn || "",
+    model_th:model?.model_th || model?.nameTh || "",
+    model_en:model?.model_en || model?.nameEn || "",
+    model_aliases:aliases,
+    part_type_th:model?.part_type_th || partTypeText(type, "th"),
+    part_type_en:model?.part_type_en || partTypeText(type, "en"),
+    keywords_th:splitAliasText(model?.keywords_th || model?.keywordsTh),
+    keywords_en:splitAliasText(model?.keywords_en || model?.keywordsEn),
+  };
+}
+function productSearchHaystack(brand, model) {
+  const i18n = enrichProductI18n(brand, model);
+  return [
+    i18n.name_th, i18n.name_en, i18n.brand_th, i18n.brand_en,
+    i18n.model_th, i18n.model_en, i18n.part_type_th, i18n.part_type_en,
+    ...(i18n.model_aliases || []), ...(i18n.keywords_th || []), ...(i18n.keywords_en || []),
+    model?.nameTh, model?.nameEn, model?.sku, model?.years, model?.driveBody,
+    brand?.id, brand?.nameTh, brand?.nameEn
+  ].join(" ");
+}
+function productMatchesQuery(brand, model, query) {
+  const q = normalizeSearchText(query);
+  if (!q) return true;
+  return normalizeSearchText(productSearchHaystack(brand, model)).includes(q);
+}
+function findProductsByQuery(brands, query, options={}) {
+  const q = String(query || "").trim();
+  if (!q) return [];
+  return brands.flatMap(brand => (brand.models || []).map(model => ({ brand, model })))
+    .filter(({ brand, model }) => {
+      if (options.partType && options.partType !== "all" && (model.partType || "steering_rack") !== options.partType) return false;
+      if (options.driveSide && options.driveSide !== "all" && (model.driveSide || "right") !== options.driveSide) return false;
+      if (options.hideNoPhoto && !model.productImage && !(Array.isArray(model.productImages) && model.productImages.length)) return false;
+      return productMatchesQuery(brand, model, q);
+    });
+}
 
 function BrandLogo({ logo, size=28, place="default" }) {
   const src = typeof logo === "string" && logo.startsWith("image:") ? logo.slice(6) : "";
@@ -431,10 +610,10 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const isToyota = src.includes("toyota-logo.png");
   const isFord = src.includes("ford-logo.png");
   const isMg = src.includes("mg-logo.png");
-  const brandCardScale = isHonda ? 2.25 : isNissan ? 1.35 : isIsuzu ? 1.12 : isMazda ? 1.2 : isMitsubishi ? 1.28 : isToyota ? 1.2 : isFord ? 1.12 : isMg ? 1.12 : 1;
+  const brandCardScale = isHonda ? 1.48 : isNissan ? 1.35 : isIsuzu ? 1.12 : isMazda ? 1.2 : isMitsubishi ? 1.28 : isToyota ? 1.2 : isFord ? 1.12 : isMg ? 1.12 : 1;
   const logoUse = {
     default: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1, y: isHonda ? size*0.03 : 0, box: 1.18 },
-    brandCard: { scale: brandCardScale, y: isHonda ? size*0.02 : isIsuzu ? size*0.05 : isMitsubishi ? size*0.02 : 0, box: isHonda ? 1.9 : 1.48 },
+    brandCard: { scale: brandCardScale, y: isHonda ? size*0.02 : isIsuzu ? size*0.05 : isMitsubishi ? size*0.02 : 0, box: isHonda ? 1.58 : 1.48 },
     heroBadge: { scale: isHonda ? 1.9 : (isMitsubishi || isToyota) ? 1.15 : 1.03, y: isHonda ? size*0.04 : 0, box: isHonda ? 1.08 : 1.12 },
     heroMain: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1.05, y: isHonda ? size*0.04 : 0, box: 1.2 },
     productPhoto: { scale: isHonda ? 1.65 : (isMitsubishi || isToyota) ? 1.22 : 1.04, y: isHonda ? size*0.05 : 0, box: 1.22 },
@@ -443,10 +622,11 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const scale = logoUse.scale ?? 1;
   const yOffset = logoUse.y ?? 0;
   const boxHeight = size * (logoUse.box ?? 1);
+  const displaySrc = isHonda && place === "brandCard" ? "assets/honda-logo-brand-card.png" : src;
   if (src) {
     return (
       <span data-logo-place={place} style={{ width:size*2.3, height:boxHeight, display:"flex", alignItems:"center", justifyContent:"center", overflow:"visible" }}>
-        <img src={src} alt="" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
+        <img src={displaySrc} alt="" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
       </span>
     );
   }
@@ -1326,6 +1506,9 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
     brandId:selectedBrand || brands[0]?.id || "",
     nameTh:"",
     nameEn:"",
+    modelAliases:"",
+    keywordsTh:"",
+    keywordsEn:"",
     years:"",
     driveBody:"",
     price:"",
@@ -1394,6 +1577,9 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
       brandId:p.brandId,
       nameTh:p.nameTh || "",
       nameEn:p.nameEn || "",
+      modelAliases:splitAliasText(p.model_aliases || p.modelAliases).join(", "),
+      keywordsTh:splitAliasText(p.keywords_th || p.keywordsTh).join(", "),
+      keywordsEn:splitAliasText(p.keywords_en || p.keywordsEn).join(", "),
       years:p.years || "",
       driveBody:p.driveBody || "",
       price:String(p.price ?? ""),
@@ -1459,6 +1645,17 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
       productImages:galleryImages,
       imageFileName:mainImageName,
       hidden:productForm.visible === "No",
+      name_th:nameTh,
+      name_en:nameEn,
+      brand_th:(BRAND_I18N[brandId]?.th || brands.find(b=>b.id===brandId)?.nameTh || ""),
+      brand_en:(BRAND_I18N[brandId]?.en || brands.find(b=>b.id===brandId)?.nameEn || ""),
+      model_th:nameTh,
+      model_en:nameEn,
+      model_aliases:splitAliasText(productForm.modelAliases),
+      part_type_th:partTypeText(productForm.partType, "th"),
+      part_type_en:partTypeText(productForm.partType, "en"),
+      keywords_th:splitAliasText(productForm.keywordsTh),
+      keywords_en:splitAliasText(productForm.keywordsEn),
     };
     setBrands(prev => {
       if (productFormMode === "edit" && editingProduct) {
@@ -1561,7 +1758,8 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
   const filtered = partProducts.filter(p => {
     const q = search.toLowerCase();
     const searchStr = `${p.brandNameTh} ${p.brandNameEn} ${p.nameTh} ${p.nameEn} ${p.partTypeLabel} ${p.sku}`.toLowerCase();
-    if (!searchStr.includes(q)) return false;
+    const productBrand = brands.find(brand => brand.id === p.brandId);
+    if (q && !searchStr.includes(q) && !productMatchesQuery(productBrand, p, q)) return false;
     if (selectedBrand && p.brandId !== selectedBrand) return false;
     if (filter==="out") return p.stock===0;
     if (filter==="low") return p.stock>0 && p.stock<=15;
@@ -1767,9 +1965,21 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
               <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"ชื่อสินค้าอังกฤษ":"English product name"}</label>
               <input value={productForm.nameEn} onChange={e=>setFormField("nameEn", e.target.value)} placeholder="D-Max 2WD" style={iSLight} />
             </div>
+            <div style={{ gridColumn:"1 / -1" }}>
+              <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"คำค้น / คำสะกดอื่น":"Aliases / common spellings"}</label>
+              <input value={productForm.modelAliases} onChange={e=>setFormField("modelAliases", e.target.value)} placeholder={lang==="th"?"เช่น ดีแมค, ดีแม็ค, DMax, D-Max":"e.g. ดีแมค, ดีแม็ค, DMax, D-Max"} style={iSLight} />
+            </div>
+            <div>
+              <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"คีย์เวิร์ดไทย":"Thai keywords"}</label>
+              <input value={productForm.keywordsTh} onChange={e=>setFormField("keywordsTh", e.target.value)} placeholder={lang==="th"?"แร็ค, พวงมาลัย, ตัวเตี้ย":"แร็ค, พวงมาลัย, ตัวเตี้ย"} style={iSLight} />
+            </div>
+            <div>
+              <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"คีย์เวิร์ดอังกฤษ":"English keywords"}</label>
+              <input value={productForm.keywordsEn} onChange={e=>setFormField("keywordsEn", e.target.value)} placeholder="steering rack, rack, low" style={iSLight} />
+            </div>
             <div>
               <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"ปี / รุ่นที่ใส่ได้":"Year / fitment"}</label>
-              <input value={productForm.years} onChange={e=>setFormField("years", e.target.value)} placeholder="2002-2011" style={iSLight} />
+              <input value={productForm.years} onChange={e=>setFormField("years", e.target.value)} placeholder="2002–2011" style={iSLight} />
             </div>
             <div>
               <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"ขับ / ตัวถัง":"Drive / body"}</label>
@@ -1882,7 +2092,7 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
           <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"เลือกประเภทอะไหล่":"Choose part type"}</div>
           <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"ใช้ดูและปรับสต็อกแยกตามชนิดสินค้า":"View and adjust stock by product type"}</div>
         </div>
-        <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setSearch(""); }} style={{ minWidth:220, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 32px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
+        <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setSearch(""); }} style={{ width:lang==="th"?154:166, maxWidth:"100%", background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 28px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
           <option value="all">{lang==="th"?"อะไหล่ทั้งหมด":"All part types"}</option>
           {PART_TYPES.map(part => (
             <option key={part.id} value={part.id}>{lang==="th"?part.th:part.en}</option>
@@ -2102,6 +2312,9 @@ const SKKJ_DATABASE_CONFIG = {
   enabled: true,
   provider: "supabase",
   apiBase: "",
+  // Security note: never put service-role keys, OpenAI keys, webhook secrets,
+  // or private admin tokens in this frontend file. Browser code may only use
+  // a Supabase publishable/anon key with strict RLS policies.
   adminToken: "",
   supabaseUrl: "https://bxwawwrxwkwqqhfgapdn.supabase.co",
   supabaseKey: "sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R",
@@ -2119,19 +2332,19 @@ function readDatabaseConfig() {
     enabled: url.searchParams.get("skkjDb") === "1" || saved.enabled === true || SKKJ_DATABASE_CONFIG.enabled === true,
     provider: url.searchParams.get("skkjDbProvider") || saved.provider || SKKJ_DATABASE_CONFIG.provider || "server",
     apiBase: url.searchParams.get("skkjApi") || saved.apiBase || SKKJ_DATABASE_CONFIG.apiBase || "",
-    adminToken: url.searchParams.get("skkjToken") || saved.adminToken || SKKJ_DATABASE_CONFIG.adminToken || "",
+    adminToken: "",
     supabaseUrl: url.searchParams.get("skkjSupabaseUrl") || saved.supabaseUrl || SKKJ_DATABASE_CONFIG.supabaseUrl || "",
     supabaseKey: url.searchParams.get("skkjSupabaseKey") || saved.supabaseKey || SKKJ_DATABASE_CONFIG.supabaseKey || "",
     supabaseTable: url.searchParams.get("skkjSupabaseTable") || saved.supabaseTable || SKKJ_DATABASE_CONFIG.supabaseTable || "skkj_site_state",
     supabaseRecordId: url.searchParams.get("skkjSupabaseRecord") || saved.supabaseRecordId || SKKJ_DATABASE_CONFIG.supabaseRecordId || "main",
   };
-  if (url.searchParams.has("skkjDb") || url.searchParams.has("skkjApi") || url.searchParams.has("skkjToken") || url.searchParams.has("skkjSupabaseUrl") || url.searchParams.has("skkjSupabaseKey")) {
+  if (url.searchParams.has("skkjDb") || url.searchParams.has("skkjApi") || url.searchParams.has("skkjSupabaseUrl") || url.searchParams.has("skkjSupabaseKey")) {
     try {
       localStorage.setItem("skkj_v2_database_config_v1", JSON.stringify({
         enabled: config.enabled,
         provider: config.provider,
         apiBase: config.apiBase,
-        adminToken: config.adminToken,
+        adminToken: "",
         supabaseUrl: config.supabaseUrl,
         supabaseKey: config.supabaseKey,
         supabaseTable: config.supabaseTable,
@@ -2145,7 +2358,8 @@ function readDatabaseConfig() {
 async function skkjDatabaseRequest(config, path, options = {}) {
   if (config.provider === "supabase") return skkjSupabaseRequest(config, path, options);
   const headers = { "Content-Type":"application/json", ...(options.headers || {}) };
-  if (config.adminToken) headers.Authorization = `Bearer ${config.adminToken}`;
+  // Private API tokens must be attached by backend/serverless functions only.
+  // Never store admin, OpenAI, service-role, or webhook secrets in browser code.
   const response = await fetch(`${config.apiBase}${path}`, {
     ...options,
     headers,
@@ -2265,6 +2479,7 @@ function App() {
     catch (error) { return []; }
   });
   const viewedProductsRef                 = useRef(new Set());
+  const productViewStartRef               = useRef(null);
   // ── CUSTOMER AUTH ──
   const [customers, setCustomers]         = useState(() => {
     try {
@@ -2311,6 +2526,10 @@ function App() {
   const [basketOpen, setBasketOpen]       = useState(false);
   const [checkoutData, setCheckoutData]   = useState(null); // { shipping }
   const [catalogSearch, setCatalogSearch] = useState("");
+  const [finderQuery, setFinderQuery]     = useState("");
+  const [finderMessages, setFinderMessages] = useState([
+    { role:"bot", lang:"th", text:"สวัสดีครับ พิมพ์รุ่นรถหรือชื่ออะไหล่ เช่น ดีแมค รีโว่ ซีวิค หรือแร็คพวงมาลัย ได้เลย" }
+  ]);
   const [findBrandId, setFindBrandId]     = useState("");
   const [findModelId, setFindModelId]     = useState("");
   // ── BASKET TOAST ──
@@ -2554,6 +2773,55 @@ function App() {
     });
     setPage("contact");
   };
+  const openLineForProduct = (brand, model) => {
+    const line = buildContactProductText(brand.id, model.id);
+    const message = lang==="th"
+      ? `สวัสดีครับ ขอสอบถามสินค้า\n${line}`
+      : `Hello, I would like to ask about this product.\n${line}`;
+    window.open(`https://line.me/R/ti/p/@skkjautopart?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  };
+  const runProductFinder = (rawText) => {
+    const text = String(rawText || "").trim();
+    const replyLang = detectFinderLang(text);
+    const tf = T[replyLang].finder;
+    if (!text) {
+      setFinderMessages(prev => [...prev, { role:"bot", lang:replyLang, text:tf.empty }].slice(-8));
+      return;
+    }
+    const norm = normalizeSearchText(text);
+    const cannedKey = norm.includes(normalizeSearchText("contact")) || norm.includes(normalizeSearchText("ติดต่อ"))
+      ? "contact"
+      : norm.includes(normalizeSearchText("how to order")) || norm.includes(normalizeSearchText("วิธีสั่งซื้อ"))
+        ? "order"
+        : norm.includes(normalizeSearchText("warranty")) || norm.includes(normalizeSearchText("รับประกัน"))
+          ? "warranty"
+          : norm.includes(normalizeSearchText("price")) || norm.includes(normalizeSearchText("ราคา")) || norm.includes(normalizeSearchText("เช็กราคา"))
+            ? "price"
+            : "";
+    let matches = [];
+    try {
+      matches = findProductsByQuery(brands, text, {
+        partType:selectedPartType,
+        driveSide:selectedDriveSide,
+        hideNoPhoto,
+      }).slice(0, 5);
+    } catch (error) {
+      console.warn("Product finder search failed", error);
+    }
+    setCatalogSearch(text);
+    setLineHelpOpen(true);
+    setFinderMessages(prev => [
+      ...prev,
+      { role:"user", lang:replyLang, text },
+      {
+        role:"bot",
+        lang:replyLang,
+        text:matches.length ? `${tf.found} (${matches.length})` : (cannedKey ? tf.canned[cannedKey] : tf.notFound),
+        results:matches,
+      }
+    ].slice(-8));
+    setFinderQuery("");
+  };
   const isReadyToPack = (o) => {
     const status = o.status || "pending";
     return (o.paymentStatus || "waiting_review") === "paid" &&
@@ -2585,15 +2853,10 @@ function App() {
   };
   const filteredAdminOrders = orders.filter(o=>orderMatchesFilters(o, adminOrderSearch, adminOrderStatus, adminOrderPayment, adminOrderFlag, adminOrderSmart));
   const catalogBrands = (selectedBrand ? brands.filter(b=>b.id===selectedBrand) : brands).map(brand => {
-    const q = String(catalogSearch || "").trim().toLowerCase();
+    const q = String(catalogSearch || "").trim();
     const partModels = modelsForSelectedPart(brand);
     const filteredModels = !q ? partModels : partModels.filter(model => {
-      const text = [
-        brand.nameTh, brand.nameEn,
-        model.nameTh, model.nameEn, getPartTypeLabel(getModelPartType(model), "th"), getPartTypeLabel(getModelPartType(model), "en"), getDriveSideLabel(getModelDriveSide(model), "th"), getDriveSideLabel(getModelDriveSide(model), "en"),
-        model.years, model.sku, model.price
-      ].join(" ").toLowerCase();
-      return text.includes(q);
+      return productMatchesQuery(brand, model, q);
     });
     return { ...brand, filteredModels };
   }).filter(brand => brand.filteredModels.length > 0);
@@ -2646,11 +2909,14 @@ function App() {
     const modelName = lang==="th" ? model.nameTh : model.nameEn;
     const productEvents = analytics.filter(e => e.modelId === model.id);
     const count = (type) => productEvents.filter(e => e.type === type).length;
+    const staySeconds = productEvents.filter(e => e.type === "product_view_time").reduce((sum,e)=>sum + Number(e.seconds || 0), 0);
     const completedOrders = orders.filter(o => o.modelId === model.id && o.status !== "cancelled").length;
     const views = count("product_view");
+    const detailOpens = count("product_detail_open");
     const cartAdds = count("cart_add");
     const orderStarts = count("order_start");
     const asks = count("ask_shop");
+    const totalViews = views + detailOpens;
     return {
       key:`${brand.id}-${model.id}`,
       brandId:brand.id,
@@ -2658,17 +2924,21 @@ function App() {
       brandName,
       modelName,
       sku:model.sku,
-      views,
+      views:totalViews,
+      catalogViews:views,
+      detailOpens,
+      staySeconds,
       cartAdds,
       orderStarts,
       asks,
       orders:completedOrders,
-      interest:views + cartAdds + orderStarts + asks,
-      notBought:Math.max(0, views + cartAdds + orderStarts + asks - completedOrders),
+      interest:totalViews + cartAdds + orderStarts + asks,
+      notBought:Math.max(0, totalViews + cartAdds + orderStarts + asks - completedOrders),
     };
   })).sort((a,b)=>(b.notBought - a.notBought) || (b.interest - a.interest));
   const analyticsTotals = {
-    views: analytics.filter(e=>e.type==="product_view").length,
+    views: analytics.filter(e=>e.type==="product_view" || e.type==="product_detail_open").length,
+    staySeconds: analytics.filter(e=>e.type==="product_view_time").reduce((sum,e)=>sum + Number(e.seconds || 0), 0),
     cartAdds: analytics.filter(e=>e.type==="cart_add").length,
     orderStarts: analytics.filter(e=>e.type==="order_start").length,
     asks: analytics.filter(e=>e.type==="ask_shop").length,
@@ -2989,12 +3259,47 @@ function App() {
       id: Date.now() + Math.random(),
       type,
       date: new Date().toISOString(),
+      customerId: currentCustomer?.id || "",
+      customerName: currentCustomer?.name || "",
+      customerPhone: currentCustomer?.phone || "",
+      visitor: currentCustomer?.id || getVisitorId(),
+      page,
       ...data,
     };
     setAnalytics(prev => {
       const next = [event, ...prev].slice(0, 800);
       try { localStorage.setItem("skkj_v2_analytics_v1", JSON.stringify(next)); } catch (error) {}
+      queueImmediateOnlineSave("analytics_recorded", { analytics: next });
       return next;
+    });
+  }
+
+  function getVisitorId() {
+    try {
+      const key = "skkj_v2_visitor_id";
+      const saved = localStorage.getItem(key);
+      if (saved) return saved;
+      const id = "VIS-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+      localStorage.setItem(key, id);
+      return id;
+    } catch (error) {
+      return "VIS-LOCAL";
+    }
+  }
+
+  function finishProductView(reason = "leave_product") {
+    const active = productViewStartRef.current;
+    if (!active) return;
+    const seconds = Math.max(1, Math.round((Date.now() - active.startedAt) / 1000));
+    productViewStartRef.current = null;
+    trackAnalytics("product_view_time", {
+      reason,
+      brandId:active.brandId,
+      modelId:active.modelId,
+      brand:active.brand,
+      model:active.model,
+      sku:active.sku || "",
+      seconds,
     });
   }
 
@@ -3042,6 +3347,27 @@ function App() {
       });
     });
   }, [page, selectedBrand, catalogSearch, brands, lang]);
+
+  useEffect(() => {
+    finishProductView(productDetail ? "switch_product" : "close_product");
+    if (!productDetail || !detailBrand || !detailModel) return;
+    productViewStartRef.current = {
+      startedAt:Date.now(),
+      brandId:detailBrand.id,
+      modelId:detailModel.id,
+      brand:lang==="th" ? detailBrand.nameTh : detailBrand.nameEn,
+      model:lang==="th" ? detailModel.nameTh : detailModel.nameEn,
+      sku:detailModel.sku || "",
+    };
+    trackAnalytics("product_detail_open", {
+      brandId:detailBrand.id,
+      modelId:detailModel.id,
+      brand:lang==="th" ? detailBrand.nameTh : detailBrand.nameEn,
+      model:lang==="th" ? detailModel.nameTh : detailModel.nameEn,
+      sku:detailModel.sku || "",
+    });
+    return () => finishProductView("leave_product");
+  }, [productDetail?.brandId, productDetail?.modelId, lang]);
 
   // ── BASKET TOAST HELPER ──
   const addBToast = useCallback((msg, type="success") => {
@@ -3097,7 +3423,85 @@ function App() {
     queueImmediateOnlineSave("stock_reduced_after_order", { ...onlineOverrides, brands: nextBrands });
   }
 
+  function orderItemsForShippingRecord(order) {
+    if (Array.isArray(order?.items) && order.items.length) {
+      return order.items.map(item => ({
+        brand: item.brand || item.brandNameTh || item.brandNameEn || "",
+        model: item.model || item.modelNameTh || item.modelNameEn || "",
+        year: item.year || item.years || "",
+        sku: item.sku || "",
+        quantity: Number(item.quantity || 1),
+        unitPrice: Number(item.unitPrice || item.price || 0),
+        total: Number(item.total || item.price || 0) * Number(item.quantity || 1),
+      }));
+    }
+    const quantity = Number(order?.quantity || 1);
+    const price = Number(order?.price || 0);
+    return [{
+      brand: order?.brand || "",
+      model: order?.model || "",
+      year: order?.year || "",
+      sku: order?.sku || "",
+      quantity,
+      unitPrice: quantity > 0 ? Math.round(price / quantity) : price,
+      total: price,
+    }];
+  }
+
+  function buildShippingRecord(order, previous = {}, options = {}) {
+    const now = options.now || new Date().toISOString();
+    const printedCount = Number(previous.printedCount || 0) + (options.printed ? 1 : 0);
+    return {
+      id: previous.id || `SHIP-${order?.id || Date.now()}`,
+      orderId: order?.id || "",
+      createdAt: previous.createdAt || order?.createdAt || now,
+      updatedAt: now,
+      printedAt: options.printed ? now : (order?.labelPrintedAt || previous.printedAt || ""),
+      printedCount,
+      sender: {
+        name: "SKKJ Autopart",
+        phone: previous.sender?.phone || "",
+        address: "86/111 หมู่ที่ 7 แขวงแสมดำ เขตบางขุนเทียน กรุงเทพมหานคร 10150",
+      },
+      receiver: {
+        name: order?.customer || "",
+        phone: order?.phone || "",
+        email: order?.customerEmail || "",
+        address: order?.address || "",
+      },
+      delivery: {
+        method: order?.deliveryMethod || "standard",
+        methodLabel: deliveryMethodLabel(order?.deliveryMethod),
+        company: order?.shippingCompany || "",
+        trackingNumber: order?.trackingNumber || "",
+        labelPrinted: order?.labelPrinted === true || options.printed === true,
+      },
+      payment: {
+        method: order?.paymentMethod || "",
+        methodLabel: paymentMethodLabel(order?.paymentMethod),
+        status: order?.paymentStatus || "waiting_review",
+        statusLabel: ta.paymentLabels?.[order?.paymentStatus || "waiting_review"] || order?.paymentStatus || "waiting_review",
+        total: Number(order?.price || 0),
+        codAmount: order?.paymentMethod === "cod" ? Number(order?.price || 0) : 0,
+      },
+      items: orderItemsForShippingRecord(order),
+      customerNote: order?.customerNote || "",
+      adminNote: order?.adminNote || "",
+    };
+  }
+
+  function attachShippingRecord(order, options = {}) {
+    const nextOrder = { ...order };
+    nextOrder.shippingRecord = buildShippingRecord(nextOrder, order?.shippingRecord || {}, options);
+    return nextOrder;
+  }
+
+  function getShippingRecord(order) {
+    return order?.shippingRecord || buildShippingRecord(order, {}, { now:order?.updatedAt || order?.labelPrintedAt || new Date().toISOString() });
+  }
+
   function cleanOrderForGoogleSheet(order) {
+    const record = getShippingRecord(order);
     return {
       id: order.id || "",
       date: order.date || new Date().toISOString().slice(0,10),
@@ -3119,6 +3523,18 @@ function App() {
       adminNote: order.adminNote || "",
       paymentSlipName: order.paymentSlipName || "",
       labelPrinted: order.labelPrinted === true ? "yes" : "no",
+      shippingRecordId: record.id || "",
+      senderName: record.sender?.name || "",
+      senderAddress: record.sender?.address || "",
+      receiverName: record.receiver?.name || "",
+      receiverPhone: record.receiver?.phone || "",
+      receiverAddress: record.receiver?.address || "",
+      deliveryCompany: record.delivery?.company || "",
+      trackingNumber: record.delivery?.trackingNumber || "",
+      labelPrintedAt: record.printedAt || "",
+      labelPrintedCount: record.printedCount || 0,
+      codAmount: record.payment?.codAmount || 0,
+      items: JSON.stringify(record.items || []),
       createdAt: new Date().toISOString(),
     };
   }
@@ -3165,7 +3581,7 @@ function App() {
       addBToast(tb.notEnoughStock, "error");
       return;
     }
-    const newOrder = { id:"ORD-"+String(orders.length+1).padStart(3,"0"), customer:orderDetails?.customer || "", customerEmail:currentCustomer?.email || "", brand:orderForm.brand, model:orderForm.model, brandId:orderForm.brandId || "", modelId:orderForm.modelId || "", quantity:1, year:orderDetails?.year || "", price:orderForm.price, status:"pending", date:new Date().toISOString().slice(0,10), phone:orderDetails?.phone || "", address:orderDetails?.address || "", customerNote:orderDetails?.notes || "", adminNote:"", deliveryMethod:singleDeliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus, adminFlag:"none", labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อ" : "Customer placed order")] };
+    const newOrder = attachShippingRecord({ id:"ORD-"+String(orders.length+1).padStart(3,"0"), customer:orderDetails?.customer || "", customerEmail:currentCustomer?.email || "", brand:orderForm.brand, model:orderForm.model, brandId:orderForm.brandId || "", modelId:orderForm.modelId || "", quantity:1, year:orderDetails?.year || "", price:orderForm.price, status:"pending", date:new Date().toISOString().slice(0,10), phone:orderDetails?.phone || "", address:orderDetails?.address || "", customerNote:orderDetails?.notes || "", adminNote:"", deliveryMethod:singleDeliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus, adminFlag:"none", labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อ" : "Customer placed order")] });
     const nextOrders = [newOrder, ...orders];
     setOrders(nextOrders);
     queueImmediateOnlineSave("single_product_order_created", { orders: nextOrders });
@@ -3196,7 +3612,7 @@ function App() {
   function handleCheckoutConfirm({ customer, phone, address, year, notes, deliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus }) {
     const shippingCost = 0;
     const today = new Date().toISOString().slice(0,10);
-    const newOrders = basket.map((item, idx) => ({
+    const newOrders = basket.map((item, idx) => attachShippingRecord({
       id: "ORD-" + String(orders.length + idx + 1).padStart(3,"0"),
       customer, customerEmail:currentCustomer?.email || "", phone, address, year, customerNote:notes || "", adminNote:"", deliveryMethod:deliveryMethod || "standard", paymentSlip, paymentSlipName, paymentMethod:paymentMethod || "promptpay", paymentStatus:paymentStatus || "waiting_review", adminFlag:"none", labelPrinted:false,
       brand: item.brandNameTh,
@@ -3371,7 +3787,7 @@ function App() {
   function saveEditOrder() {
     const event = makeOrderEvent("edit", lang==="th" ? "แก้ไขรายละเอียดคำสั่งซื้อ" : "Edited order details");
     const changedAt = new Date().toISOString();
-    const nextEditOrder = { ...editOrder, updatedAt:changedAt, timeline:[event, ...(Array.isArray(editOrder.timeline) ? editOrder.timeline : [])].slice(0, 80) };
+    const nextEditOrder = attachShippingRecord({ ...editOrder, updatedAt:changedAt, timeline:[event, ...(Array.isArray(editOrder.timeline) ? editOrder.timeline : [])].slice(0, 80) });
     const nextOrders = orders.map(o=>o.id===editOrder.id?nextEditOrder:o);
     setOrders(nextOrders);
     queueImmediateOnlineSave("order_edited", { orders: nextOrders });
@@ -3381,7 +3797,7 @@ function App() {
   }
   function saveNewOrder() {
     const id = "ORD-"+String(orders.length+1).padStart(3,"0");
-    const manualOrder = { ...newOrder, id, date:new Date().toISOString().slice(0,10), price:Number(newOrder.price), labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "สร้างคำสั่งซื้อด้วยแอดมิน" : "Manual order created by admin")] };
+    const manualOrder = attachShippingRecord({ ...newOrder, id, date:new Date().toISOString().slice(0,10), price:Number(newOrder.price), labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "สร้างคำสั่งซื้อด้วยแอดมิน" : "Manual order created by admin")] });
     const nextOrders = [manualOrder, ...orders];
     setOrders(nextOrders);
     queueImmediateOnlineSave("admin_manual_order_created", { orders: nextOrders });
@@ -3393,7 +3809,7 @@ function App() {
 
   function duplicateOrder(order) {
     const newId = "ORD-"+String(orders.length+1).padStart(3,"0");
-    const duplicatedOrder = {
+    const duplicatedOrder = attachShippingRecord({
       ...order,
       id:newId,
       date:new Date().toISOString().slice(0,10),
@@ -3407,7 +3823,7 @@ function App() {
       trackingNumber:"",
       adminNote:"",
       timeline:[makeOrderEvent("created", lang==="th" ? `ทำสำเนาจาก ${order.id}` : `Duplicated from ${order.id}`)],
-    };
+    });
     const nextOrders = [duplicatedOrder, ...orders];
     setOrders(nextOrders);
     queueImmediateOnlineSave("admin_order_duplicated", { orders: nextOrders });
@@ -3419,10 +3835,10 @@ function App() {
     if (!order || order.status === status) return;
     const event = makeOrderEvent("status", lang==="th" ? `เปลี่ยนสถานะจาก ${ta.statusLabels[order.status] || order.status} เป็น ${ta.statusLabels[status] || status}` : `Changed status from ${ta.statusLabels[order.status] || order.status} to ${ta.statusLabels[status] || status}`);
     const changedAt = new Date().toISOString();
-    const nextOrders = orders.map(o=>o.id===order.id?{...o,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
     setOrders(nextOrders);
     queueImmediateOnlineSave("order_status_changed", { orders: nextOrders });
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}) : prev);
     logActivity("order_status", `Changed ${order.id} from ${ta.statusLabels[order.status] || order.status} to ${ta.statusLabels[status] || status}`);
   }
 
@@ -3431,10 +3847,10 @@ function App() {
     if (!order || currentPayment === paymentStatus) return;
     const event = makeOrderEvent("payment", lang==="th" ? `เปลี่ยนการชำระเงินจาก ${ta.paymentLabels[currentPayment] || currentPayment} เป็น ${ta.paymentLabels[paymentStatus] || paymentStatus}` : `Changed payment from ${ta.paymentLabels[currentPayment] || currentPayment} to ${ta.paymentLabels[paymentStatus] || paymentStatus}`);
     const changedAt = new Date().toISOString();
-    const nextOrders = orders.map(o=>o.id===order.id?{...o,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
     setOrders(nextOrders);
     queueImmediateOnlineSave("payment_status_changed", { orders: nextOrders });
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}) : prev);
     logActivity("payment_status", `Changed ${order.id} payment from ${ta.paymentLabels[currentPayment] || currentPayment} to ${ta.paymentLabels[paymentStatus] || paymentStatus}`);
   }
 
@@ -3443,10 +3859,10 @@ function App() {
     if (!order || currentFlag === adminFlag) return;
     const event = makeOrderEvent("flag", lang==="th" ? `เปลี่ยนธงแอดมินจาก ${orderFlagLabel(currentFlag)} เป็น ${orderFlagLabel(adminFlag)}` : `Changed admin flag from ${orderFlagLabel(currentFlag)} to ${orderFlagLabel(adminFlag)}`);
     const changedAt = new Date().toISOString();
-    const nextOrders = orders.map(o=>o.id===order.id?{...o,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
     setOrders(nextOrders);
     queueImmediateOnlineSave("order_flag_changed", { orders: nextOrders });
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}) : prev);
     logActivity("order_flag", `Changed ${order.id} flag from ${orderFlagLabel(currentFlag)} to ${orderFlagLabel(adminFlag)}`);
   }
 
@@ -3461,10 +3877,10 @@ function App() {
     const nextStatus = ["delivered","cancelled"].includes(order.status) ? order.status : "shipped";
     const event = makeOrderEvent("tracking", lang==="th" ? `บันทึกเลขพัสดุ ${shippingCompany}: ${trackingNumber}${nextStatus==="shipped" ? " และเปลี่ยนเป็นกำลังจัดส่ง" : ""}` : `Saved tracking ${shippingCompany}: ${trackingNumber}${nextStatus==="shipped" ? " and moved to shipping" : ""}`);
     const changedAt = new Date().toISOString();
-    const nextOrders = orders.map(o=>o.id===order.id?{...o, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
     setOrders(nextOrders);
     queueImmediateOnlineSave("order_tracking_saved", { orders: nextOrders });
-    setDetailOrder(prev=>prev && prev.id===order.id ? { ...prev, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({ ...prev, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) }) : prev);
     logActivity("tracking_update", `Saved tracking for ${order.id}: ${shippingCompany} ${trackingNumber}${nextStatus==="shipped" ? " and moved to shipping" : ""}`);
     alert(lang==="th" ? "บันทึกเลขพัสดุแล้ว ลูกค้าจะเห็นในประวัติคำสั่งซื้อ" : "Tracking saved. Customer can see it in order history.");
   }
@@ -3782,21 +4198,34 @@ function App() {
 
   function exportOrdersCSV(rows = orders) {
     const headers = [
-      "Order ID","Date","Customer","Phone","Email","Address","Brand","Model","Quantity","Year","Price","Status","Delivery Method","Payment Method","Payment","Admin Flag","Shipping Company","Tracking","Customer Note","Admin Note"
+      "Order ID","Date","Customer","Phone","Email","Address","Brand","Model","Quantity","Year","Price","Status","Delivery Method","Payment Method","Payment","Admin Flag","Shipping Company","Tracking","Customer Note","Admin Note","Shipping Record ID","Sender","Sender Address","Receiver","Receiver Phone","Receiver Address","Label Printed At","Label Print Count","COD Amount","Items JSON"
     ];
     const csvCell = (value) => `"${String(value ?? "").replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
     const lines = [
       headers.map(csvCell).join(","),
-      ...rows.map(o => [
-        o.id, o.date, o.customer, o.phone, o.customerEmail, o.address,
-        o.brand, o.model, o.quantity || 1, o.year, o.price,
-        ta.statusLabels[o.status] || o.status,
-        deliveryMethodLabel(o.deliveryMethod),
-        paymentMethodLabel(o.paymentMethod),
-        ta.paymentLabels[o.paymentStatus || "waiting_review"] || o.paymentStatus || "",
-        orderFlagLabel(o.adminFlag),
-        o.shippingCompany, o.trackingNumber, o.customerNote, o.adminNote
-      ].map(csvCell).join(","))
+      ...rows.map(o => {
+        const record = getShippingRecord(o);
+        return [
+          o.id, o.date, o.customer, o.phone, o.customerEmail, o.address,
+          o.brand, o.model, o.quantity || 1, o.year, o.price,
+          ta.statusLabels[o.status] || o.status,
+          deliveryMethodLabel(o.deliveryMethod),
+          paymentMethodLabel(o.paymentMethod),
+          ta.paymentLabels[o.paymentStatus || "waiting_review"] || o.paymentStatus || "",
+          orderFlagLabel(o.adminFlag),
+          o.shippingCompany, o.trackingNumber, o.customerNote, o.adminNote,
+          record.id,
+          record.sender?.name,
+          record.sender?.address,
+          record.receiver?.name,
+          record.receiver?.phone,
+          record.receiver?.address,
+          record.printedAt,
+          record.printedCount,
+          record.payment?.codAmount,
+          JSON.stringify(record.items || [])
+        ].map(csvCell).join(",");
+      })
     ];
     const blob = new Blob(["\uFEFF" + lines.join("\n")], { type:"text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -3808,6 +4237,40 @@ function App() {
     link.remove();
     URL.revokeObjectURL(url);
     logActivity("backup_download", "Downloaded business backup");
+  }
+
+  function exportAnalyticsCSV(rows = analytics) {
+    const headers = [
+      "Time","Visitor ID","Customer ID","Customer Name","Customer Phone","Event","Page","Brand","Model","SKU","Seconds Stayed","Reason"
+    ];
+    const csvCell = (value) => `"${String(value ?? "").replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
+    const lines = [
+      headers.map(csvCell).join(","),
+      ...rows.map(e => [
+        e.date,
+        e.visitor,
+        e.customerId,
+        e.customerName,
+        e.customerPhone,
+        e.type,
+        e.page,
+        e.brand,
+        e.model,
+        e.sku,
+        e.seconds,
+        e.reason,
+      ].map(csvCell).join(","))
+    ];
+    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type:"text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `skkj-customer-interest-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    logActivity("analytics_download", "Downloaded customer interest history");
   }
 
   function downloadBackup() {
@@ -3893,10 +4356,10 @@ function App() {
       ? (lang==="th" ? "พิมพ์ป้าย A6 และเปลี่ยนเป็นกำลังบรรจุ" : "Printed A6 label and moved to packing")
       : (lang==="th" ? "พิมพ์ป้าย A6" : "Printed A6 label"));
     const printedAt = new Date().toISOString();
-    const nextOrders = orders.map(o=>o.id===order.id?{...o,labelPrinted:true,labelPrintedAt:printedAt,status:o.status==="pending"?"processing":o.status,statusUpdatedAt:o.status==="pending"?printedAt:o.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o);
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,labelPrinted:true,labelPrintedAt:printedAt,status:o.status==="pending"?"processing":o.status,statusUpdatedAt:o.status==="pending"?printedAt:o.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}, { printed:true, now:printedAt }):o);
     setOrders(nextOrders);
     queueImmediateOnlineSave("delivery_label_printed", { orders: nextOrders });
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,labelPrinted:true,labelPrintedAt:printedAt,status:prev.status==="pending"?"processing":prev.status,statusUpdatedAt:prev.status==="pending"?printedAt:prev.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,labelPrinted:true,labelPrintedAt:printedAt,status:prev.status==="pending"?"processing":prev.status,statusUpdatedAt:prev.status==="pending"?printedAt:prev.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}, { printed:true, now:printedAt }) : prev);
     logActivity("label_print", `Printed A6 label for ${order.id}${order.status === "pending" ? " and moved status to packing" : ""}`);
     labelWindow.document.write(`
       <!doctype html>
@@ -4067,11 +4530,12 @@ function App() {
         .v2-hero-price span{font-size:11px;color:#777;font-weight:900}
         .v2-hero-fast{position:absolute;top:18px;right:18px;z-index:2;background:var(--skkj-red);color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;box-shadow:0 14px 28px rgba(154,0,24,.26)}
         .v2-logo-strip{position:absolute;left:18px;top:18px;z-index:2;pointer-events:none}
-        .v2-logo-strip > span{min-width:96px;height:42px;background:rgba(255,255,255,.88);border:1px solid rgba(227,222,212,.9);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:6px 13px;box-shadow:0 12px 26px rgba(17,17,17,.08);backdrop-filter:blur(10px)}
-        .v2-logo-strip img{max-width:none;max-height:none;object-fit:contain}
+        .v2-logo-strip > span{width:112px;height:54px;background:rgba(255,255,255,.88);border:1px solid rgba(227,222,212,.9);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:7px 12px;box-shadow:0 12px 26px rgba(17,17,17,.08);backdrop-filter:blur(10px);overflow:hidden;box-sizing:border-box}
+        .v2-logo-strip [data-logo-place="heroBadge"]{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
+        .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:72%!important;max-width:88px!important;max-height:38px!important;object-fit:contain!important;transform:none!important;flex-shrink:1!important}
         .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:16px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
         .v2-hero-order:disabled{background:#eee;color:#999;box-shadow:none;cursor:not-allowed}
-        .v2-hero-nav{position:absolute;top:50%;z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
+        .v2-hero-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
         .v2-hero-nav.left{left:14px}
         .v2-hero-nav.right{right:14px}
         .fitment-control{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E6E1D8;border-radius:22px;padding:10px;box-shadow:0 14px 34px rgba(17,17,17,0.08);margin:0 auto 22px}
@@ -4143,14 +4607,16 @@ function App() {
           .v2-hero-slide{min-height:230px!important}
           .v2-hero-visual img.v2-hero-main-image{height:180px!important;width:112%!important}
           .v2-logo-strip{left:12px!important;top:12px!important}
-          .v2-logo-strip > span{min-width:76px!important;height:36px!important}
+          .v2-logo-strip > span{width:86px!important;height:42px!important;padding:6px 8px!important;overflow:hidden!important;box-sizing:border-box!important}
+          .v2-logo-strip [data-logo-place="heroBadge"]{width:100%!important;height:100%!important;overflow:hidden!important}
+          .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:70%!important;max-width:68px!important;max-height:28px!important;object-fit:contain!important;transform:none!important}
           .v2-hero-title{bottom:82px!important;max-width:calc(100% - 118px)!important}
           .v2-hero-price{left:12px!important;bottom:12px!important;padding:9px 11px!important}
           .v2-hero-price strong{font-size:18px!important}
           .v2-hero-fast{top:12px!important;right:12px!important}
           .v2-hero-title{bottom:58px!important;max-width:178px!important;overflow:hidden!important;text-overflow:ellipsis!important}
           .v2-hero-order{right:12px!important;bottom:12px!important;padding:10px 12px!important;font-size:12px!important;border-radius:13px!important}
-          .v2-hero-nav{width:30px!important;height:38px!important;font-size:22px!important}
+          .v2-hero-nav{width:30px!important;height:38px!important;font-size:22px!important;transform:translateY(-50%)!important;padding:0!important}
           .v2-brand-heading{align-items:flex-start!important;flex-direction:column!important;gap:4px!important}
           .feature-card { min-height: 0 !important; padding: 18px 20px !important; border-radius: 14px !important; }
           .feature-card-icon { font-size: 24px !important; margin-bottom: 10px !important; }
@@ -4176,11 +4642,11 @@ function App() {
           .admin-orders-table .order-status-cell { margin-top: 10px !important; }
           .admin-orders-table .order-actions-cell > div { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 7px !important; }
           .admin-orders-table .order-actions-cell button, .admin-orders-table .order-actions-cell select { width: 100% !important; min-width: 0 !important; text-align: center !important; }
-          .mobile-login-btn { width: 36px !important; height: 36px !important; border-radius: 18px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 0 !important; overflow: visible !important; }
-          .mobile-login-btn::before { content: "🔐"; font-size: 16px; line-height: 1; }
+          .mobile-login-btn { width: 36px !important; height: 36px !important; border-radius: 18px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 0 !important; overflow: hidden !important; box-sizing: border-box !important; line-height: 1 !important; }
+          .mobile-login-btn::before { content: "🔐"; width: 100% !important; height: 100% !important; font-size: 16px !important; line-height: 1 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; transform: none !important; }
           .mobile-login-btn.customer-profile::before { content: "" !important; }
           .mobile-login-btn span { display: none !important; }
-          .mobile-login-btn > span:first-child { display: inline-flex !important; font-size: 14px !important; }
+          .mobile-login-btn > span:first-child { display: inline-flex !important; width: 24px !important; height: 24px !important; min-width: 24px !important; min-height: 24px !important; margin: 0 !important; padding: 0 !important; align-items: center !important; justify-content: center !important; font-size: 12px !important; line-height: 1 !important; transform: none !important; position: static !important; }
           .desktop-admin-btn { display: none !important; }
           .mobile-admin-btn { width: 44px !important; height: 44px !important; border-radius: 22px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 17px !important; position: fixed !important; top: auto !important; right: auto !important; left: 12px !important; bottom: 12px !important; z-index: 140 !important; background: #1A1A1A !important; border: 1px solid rgba(255,255,255,.28) !important; color: #fff !important; cursor: pointer !important; box-shadow: 0 12px 30px rgba(17,17,17,.28) !important; }
           .lang-switch { position: absolute !important; top: 0 !important; right: 0 !important; z-index: 2 !important; }
@@ -4200,7 +4666,9 @@ function App() {
           .checkout-actions button { min-height: 44px !important; }
           .order-success-banner { top: auto !important; left: 12px !important; right: 12px !important; bottom: 78px !important; transform: none !important; width: auto !important; max-width: none !important; white-space: normal !important; justify-content: center !important; text-align: center !important; padding: 12px 14px !important; border-radius: 13px !important; font-size: 13px !important; line-height: 1.45 !important; }
           .line-help-float { right: 12px !important; bottom: 12px !important; max-width: calc(100vw - 24px) !important; }
-          .line-help-card { width: min(210px, calc(100vw - 24px)) !important; }
+          .line-help-card { width: min(340px, calc(100vw - 24px)) !important; max-height: calc(100vh - 190px) !important; overflow-y: auto !important; }
+          .line-help-line-card { width: min(340px, calc(100vw - 24px)) !important; grid-template-columns: 54px 1fr !important; padding: 10px !important; }
+          .line-help-line-card img { width: 54px !important; height: 54px !important; }
           .line-help-button { padding: 11px 14px !important; font-size: 14px !important; max-width: calc(100vw - 24px) !important; }
           .admin-label-alert { top: auto !important; left: 12px !important; right: 12px !important; bottom: 78px !important; max-width: none !important; }
           .purchase-history-panel { padding: 16px !important; border-radius: 14px !important; }
@@ -4262,11 +4730,12 @@ function App() {
           .v2-hero-visual:before { font-size: 18px !important; opacity: .7 !important; }
           .v2-hero-visual img.v2-hero-main-image { height: 150px !important; width: 108% !important; }
           .v2-logo-strip { left: 10px !important; top: 10px !important; }
-          .v2-logo-strip > span { min-width: 64px !important; width: 64px !important; height: 32px !important; border-radius: 10px !important; padding: 5px !important; }
-          .v2-logo-strip img { max-width: none !important; max-height: none !important; }
+          .v2-logo-strip > span { min-width: 0 !important; width: 74px !important; height: 36px !important; border-radius: 10px !important; padding: 5px 7px !important; overflow: hidden !important; box-sizing: border-box !important; }
+          .v2-logo-strip [data-logo-place="heroBadge"] { width: 100% !important; height: 100% !important; overflow: hidden !important; }
+          .v2-logo-strip [data-logo-place="heroBadge"] img { width: 82% !important; height: 68% !important; max-width: 58px !important; max-height: 23px !important; object-fit: contain !important; transform: none !important; }
           .v2-hero-fast { top: 10px !important; right: 10px !important; padding: 6px 10px !important; font-size: 10px !important; }
           .v2-hero-title { display: none !important; }
-          .v2-hero-nav { width: 28px !important; height: 36px !important; border-radius: 11px !important; font-size: 20px !important; }
+          .v2-hero-nav { width: 28px !important; height: 36px !important; border-radius: 11px !important; font-size: 20px !important; transform: translateY(-50%) !important; padding: 0 !important; }
           .v2-hero-nav.left { left: 9px !important; }
           .v2-hero-nav.right { right: 9px !important; }
           .v2-hero-price { left: 10px !important; bottom: 10px !important; padding: 8px 10px !important; border-radius: 13px !important; }
@@ -4348,7 +4817,6 @@ function App() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg>
             </div>
             <span style={{ fontWeight:800, fontSize:18, letterSpacing:"-0.5px", color:"#111" }}>SKKJ Autopart</span>
-            <span className="v2-concept-badge" style={{ padding:"4px 8px", fontSize:10 }}>Version 2</span>
           </div>
           <div className="site-actions" style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap", justifyContent:"flex-end" }}>
             {navPages.map(p=>(
@@ -4713,6 +5181,7 @@ function App() {
         const sc = ORDER_STATUS[detailOrder.status] || ORDER_STATUS.pending;
         const pc = PAYMENT_STATUS[detailOrder.paymentStatus || "waiting_review"] || PAYMENT_STATUS.waiting_review;
         const fc = orderFlagMeta(detailOrder.adminFlag);
+        const shippingRecord = getShippingRecord(detailOrder);
         return (
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:210, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
             <div className="skkj-modal-card" style={{ background:"#fff", borderRadius:16, padding:28, width:"100%", maxWidth:720, maxHeight:"90vh", overflowY:"auto" }}>
@@ -4794,6 +5263,61 @@ function App() {
                   <button onClick={()=>saveOrderTracking(detailOrder)} style={{ marginTop:10, width:"100%", background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:9, padding:"10px 12px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"บันทึกเลขพัสดุ และเปลี่ยนเป็นกำลังจัดส่ง":"Save tracking and mark as shipping"}
                   </button>
+                </div>
+              </div>
+
+              <div style={{ border:"1px solid #E0DDD8", borderRadius:14, padding:14, background:"#FAFAF8", marginBottom:16 }}>
+                <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:12 }}>
+                  <div>
+                    <div style={{ fontSize:14, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ประวัติข้อมูลจัดส่งที่บันทึกไว้":"Saved Delivery Record"}</div>
+                    <div style={{ fontSize:11, color:"#777", marginTop:2 }}>{lang==="th"?"ส่วนนี้ไม่พิมพ์ลงป้าย A6 แต่บันทึกไว้กับออเดอร์ใน Supabase สำหรับแอดมินตรวจย้อนหลัง":"This is not printed on the A6 label. It is saved with the order for admin history."}</div>
+                  </div>
+                  <span style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#777", borderRadius:999, padding:"4px 9px", fontSize:11, fontWeight:800 }}>{shippingRecord.id}</span>
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))", gap:10, marginBottom:12 }}>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ผู้ส่ง":"Sender"}</div>
+                    <div style={{ fontSize:13, color:"#1A1A1A", fontWeight:900 }}>{shippingRecord.sender?.name || "SKKJ Autopart"}</div>
+                    <div style={{ marginTop:5, fontSize:12, color:"#555", lineHeight:1.5 }}>{shippingRecord.sender?.address || "-"}</div>
+                  </div>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ผู้รับ":"Receiver"}</div>
+                    <div style={{ fontSize:13, color:"#1A1A1A", fontWeight:900 }}>{shippingRecord.receiver?.name || "-"}</div>
+                    <div style={{ marginTop:5, fontSize:12, color:"#555", lineHeight:1.5 }}>{shippingRecord.receiver?.phone || "-"}<br/>{shippingRecord.receiver?.address || "-"}</div>
+                  </div>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ขนส่ง / ชำระเงิน":"Delivery / Payment"}</div>
+                    <div style={{ fontSize:12, color:"#555", lineHeight:1.65 }}>
+                      {lang==="th"?"จัดส่ง":"Delivery"}: <strong style={{ color:"#1A1A1A" }}>{shippingRecord.delivery?.methodLabel || "-"}</strong><br/>
+                      {lang==="th"?"บริษัท":"Company"}: {shippingRecord.delivery?.company || "-"}<br/>
+                      {lang==="th"?"เลขพัสดุ":"Tracking"}: {shippingRecord.delivery?.trackingNumber || "-"}<br/>
+                      {lang==="th"?"จ่ายเงิน":"Payment"}: {shippingRecord.payment?.methodLabel || "-"} / {shippingRecord.payment?.statusLabel || "-"}<br/>
+                      {lang==="th"?"ยอดรวม":"Total"}: <strong style={{ color:"#9A0018" }}>{fmt(shippingRecord.payment?.total || 0)}</strong>
+                    </div>
+                  </div>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ข้อมูลป้าย":"Label Info"}</div>
+                    <div style={{ fontSize:12, color:"#555", lineHeight:1.65 }}>
+                      {lang==="th"?"พิมพ์แล้ว":"Printed"}: <strong style={{ color:shippingRecord.delivery?.labelPrinted?"#166534":"#777" }}>{shippingRecord.delivery?.labelPrinted ? (lang==="th"?"ใช่":"Yes") : (lang==="th"?"ยัง":"No")}</strong><br/>
+                      {lang==="th"?"จำนวนครั้ง":"Print count"}: {shippingRecord.printedCount || 0}<br/>
+                      {lang==="th"?"พิมพ์ล่าสุด":"Last printed"}: {shippingRecord.printedAt ? new Date(shippingRecord.printedAt).toLocaleString(lang==="th"?"th-TH":"en-US") : "-"}<br/>
+                      {lang==="th"?"ยอดปลายทาง":"COD amount"}: {fmt(shippingRecord.payment?.codAmount || 0)}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, overflow:"hidden" }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"minmax(160px,1fr) 70px 92px", gap:8, padding:"9px 11px", background:"#FAFAF8", color:"#777", fontSize:11, fontWeight:900 }}>
+                    <div>{lang==="th"?"สินค้า":"Item"}</div>
+                    <div>{lang==="th"?"จำนวน":"Qty"}</div>
+                    <div>{lang==="th"?"ราคา":"Total"}</div>
+                  </div>
+                  {(shippingRecord.items || []).map((item, index)=>(
+                    <div key={index} style={{ display:"grid", gridTemplateColumns:"minmax(160px,1fr) 70px 92px", gap:8, padding:"10px 11px", borderTop:index===0?"none":"1px solid #F0EEE8", fontSize:12, color:"#333" }}>
+                      <div><strong>{item.brand} {item.model}</strong><br/><span style={{ color:"#888", fontSize:11 }}>{item.year || "-"} · {item.sku || "-"}</span></div>
+                      <div style={{ fontFamily:"monospace", fontWeight:900 }}>{item.quantity || 1}</div>
+                      <div style={{ fontFamily:"monospace", fontWeight:900 }}>{fmt(item.total || 0)}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -4893,7 +5417,7 @@ function App() {
                   <div className="fitment-control">
                     <div className="part-type-picker" style={{ display:"inline-flex", alignItems:"center", gap:10, background:"transparent", border:"none", borderRadius:16, padding:"0", margin:0, boxShadow:"none" }}>
                       <span style={{ color:"#777", fontSize:12, fontWeight:800, whiteSpace:"nowrap" }}>{lang==="th"?"เลือกอะไหล่":"Choose part"}</span>
-                      <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"9px 28px 9px 12px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
+                      <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ width:lang==="th"?146:158, maxWidth:"100%", background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"9px 26px 9px 12px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
                         {customerPartTypes.length===0 && <option value="">{lang==="th"?"ไม่มีหมวดที่เปิดอยู่":"No visible sections"}</option>}
                         {customerPartTypes.map(part => (
                           <option key={part.id} value={part.id}>{lang==="th"?part.th:part.en}</option>
@@ -5003,7 +5527,7 @@ function App() {
                 <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"ใช้ทดสอบเวลาเรามีสินค้าอื่นนอกจากแร็คพวงมาลัย":"Testing how the site works with other product types"}</div>
               </div>
               <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap", justifyContent:"flex-end" }}>
-                <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ minWidth:220, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 32px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
+                <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ width:lang==="th"?154:166, maxWidth:"100%", background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 28px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
                   {customerPartTypes.length===0 && <option value="">{lang==="th"?"ไม่มีหมวดที่เปิดอยู่":"No visible sections"}</option>}
                   {customerPartTypes.map(part => (
                     <option key={part.id} value={part.id}>{lang==="th"?part.th:part.en}</option>
@@ -6076,12 +6600,16 @@ function App() {
                         <p style={{ margin:0, color:"#777", fontSize:13 }}>{lang==="th"?"ดูว่าสินค้าไหนมีคนดู ใส่ตะกร้า หรือถามร้าน แต่ยังไม่ซื้อ":"See products people viewed, added, or asked about before buying"}</p>
                       </div>
                       {analytics.length > 0 && (
-                        <button onClick={()=>{ setAnalytics([]); viewedProductsRef.current.clear(); try { localStorage.removeItem("skkj_v2_analytics_v1"); } catch (error) {} logActivity("analytics_clear", "Cleared analytics data"); }} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ล้างข้อมูล":"Clear analytics"}</button>
+                        <div style={{ display:"flex", gap:8, flexWrap:"wrap", justifyContent:"flex-end" }}>
+                          <button onClick={()=>exportAnalyticsCSV(analytics)} style={{ background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดาวน์โหลดประวัติ":"Download history"}</button>
+                          <button onClick={()=>{ setAnalytics([]); viewedProductsRef.current.clear(); try { localStorage.removeItem("skkj_v2_analytics_v1"); } catch (error) {} logActivity("analytics_clear", "Cleared analytics data"); }} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ล้างข้อมูล":"Clear analytics"}</button>
+                        </div>
                       )}
                     </div>
                     <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:10, padding:13, borderBottom:"1px solid #ECECEC", background:"#fff" }}>
                       {[
                         [lang==="th"?"ดูสินค้า":"Views", analyticsTotals.views],
+                        [lang==="th"?"เวลาที่ดู":"Time stayed", `${Math.round(analyticsTotals.staySeconds / 60)}m`],
                         [lang==="th"?"ใส่ตะกร้า":"Cart adds", analyticsTotals.cartAdds],
                         [lang==="th"?"เริ่มสั่งซื้อ":"Order starts", analyticsTotals.orderStarts],
                         [lang==="th"?"ถามร้าน":"Ask clicks", analyticsTotals.asks],
@@ -6094,22 +6622,24 @@ function App() {
                       ))}
                     </div>
                     <div style={{ padding:"12px 13px", background:"#FFFDF5", borderBottom:"1px solid #F0EEE8", fontSize:12, color:"#7c2d12", lineHeight:1.55 }}>
-                      {lang==="th"?"ตอนนี้เป็นข้อมูลในเครื่องพรีวิวนี้เท่านั้น พอขึ้นเว็บจริงต้องต่อกับเซิร์ฟเวอร์เพื่อเห็นข้อมูลจากลูกค้าทุกคน":"This preview tracks only this browser. On the real website, it should connect to the server to see all visitors."}
+                      {lang==="th"?"บันทึกนี้เก็บประวัติความสนใจของลูกค้า เช่น เปิดหน้าสินค้า อยู่กี่วินาที ใส่ตะกร้า ถามร้าน และเริ่มสั่งซื้อ ถ้า Supabase เปิดอยู่ข้อมูลจะถูกบันทึกออนไลน์ด้วย":"This records customer interest history, including product page opens, seconds stayed, cart adds, ask-shop clicks, and checkout starts. When Supabase is enabled, it also saves online."}
                     </div>
                     <div style={{ overflowX:"auto" }}>
                       <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
                         <thead>
                           <tr style={{ background:"#FAFAF8", borderBottom:"1px solid #ECECEC" }}>
-                            {[lang==="th"?"สินค้า":"Product", lang==="th"?"ดู":"Views", lang==="th"?"ตะกร้า":"Cart", lang==="th"?"เริ่มซื้อ":"Started", lang==="th"?"ถามร้าน":"Asked", lang==="th"?"ซื้อแล้ว":"Orders", lang==="th"?"สนใจแต่ยังไม่ซื้อ":"Interested not bought"].map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:600, color:"#777", whiteSpace:"nowrap" }}>{h}</th>)}
+                            {[lang==="th"?"สินค้า":"Product", lang==="th"?"ดู":"Views", lang==="th"?"เปิดหน้า":"Opened", lang==="th"?"เวลาที่ดู":"Time", lang==="th"?"ตะกร้า":"Cart", lang==="th"?"เริ่มซื้อ":"Started", lang==="th"?"ถามร้าน":"Asked", lang==="th"?"ซื้อแล้ว":"Orders", lang==="th"?"สนใจแต่ยังไม่ซื้อ":"Interested not bought"].map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:600, color:"#777", whiteSpace:"nowrap" }}>{h}</th>)}
                           </tr>
                         </thead>
                         <tbody>
                           {analyticsByProduct.filter(row=>row.interest>0 || row.orders>0).length===0 ? (
-                            <tr><td colSpan={7} style={{ padding:"30px 16px", textAlign:"center", color:"#999" }}>{lang==="th"?"ยังไม่มีข้อมูลการดูสินค้า ลองเปิดหน้าสินค้าแล้วกดดู/ถาม/ใส่ตะกร้า":"No analytics yet. Open products and try view/ask/cart actions."}</td></tr>
+                            <tr><td colSpan={9} style={{ padding:"30px 16px", textAlign:"center", color:"#999" }}>{lang==="th"?"ยังไม่มีข้อมูลการดูสินค้า ลองเปิดหน้าสินค้าแล้วกดดู/ถาม/ใส่ตะกร้า":"No analytics yet. Open products and try view/ask/cart actions."}</td></tr>
                           ) : analyticsByProduct.filter(row=>row.interest>0 || row.orders>0).slice(0, 30).map((row,i)=>(
                             <tr key={row.key} style={{ borderBottom:i<Math.min(analyticsByProduct.filter(r=>r.interest>0 || r.orders>0).length,30)-1?"1px solid #ECECEC":"none" }}>
                               <td style={{ padding:"11px 13px", color:"#1A1A1A", fontWeight:700 }}>{row.brandName} {row.modelName}<br/><span style={{ color:"#999", fontSize:11, fontWeight:400, fontFamily:"monospace" }}>{row.sku}</span></td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.views}</td>
+                              <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.detailOpens}</td>
+                              <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.staySeconds}s</td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.cartAdds}</td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.orderStarts}</td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.asks}</td>
@@ -6196,14 +6726,70 @@ function App() {
       </footer>
       <div className="line-help-float" style={{ position:"fixed", right:18, bottom:18, zIndex:9999, display:"flex", flexDirection:"column", alignItems:"flex-end", gap:10 }}>
         {lineHelpOpen && (
-          <div className="line-help-card" style={{ background:"#fff", border:"1px solid #E0DDD8", borderRadius:14, padding:14, boxShadow:"0 12px 30px rgba(0,0,0,0.18)", width:210 }}>
+          <>
+          <div className="line-help-card" style={{ background:"#fff", border:"1px solid #E0DDD8", borderRadius:16, padding:14, boxShadow:"0 18px 44px rgba(0,0,0,0.18)", width:360, maxWidth:"calc(100vw - 28px)" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:8 }}>
-              <div style={{ fontSize:13, fontWeight:800, color:"#1A1A1A" }}>{lang==="th"?"ถามร้านทาง LINE":"Ask us on LINE"}</div>
-              <button onClick={()=>setLineHelpOpen(false)} style={{ width:26, height:26, borderRadius:13, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", lineHeight:1, fontSize:16 }}>×</button>
+              <div>
+                <div style={{ fontSize:15, fontWeight:900, color:"#1A1A1A" }}>{t.finder.title}</div>
+                <div style={{ fontSize:11.5, color:"#777", lineHeight:1.4, marginTop:2 }}>{t.finder.subtitle}</div>
+              </div>
+              <button type="button" onClick={()=>setLineHelpOpen(false)} style={{ width:26, height:26, borderRadius:13, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", lineHeight:1, fontSize:16 }}>×</button>
             </div>
-            <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:"100%", aspectRatio:"1/1", objectFit:"cover", border:"1px solid #ECECEC", borderRadius:10, display:"block" }} />
-            <div style={{ fontSize:12, color:"#666", lineHeight:1.5, marginTop:8 }}>{lang==="th"?"สแกน QR เพื่อส่งรูปอะไหล่หรือถามรุ่นรถได้เลย":"Scan the QR to send photos or ask about your car model."}</div>
+            <div style={{ display:"flex", gap:6, flexWrap:"wrap", margin:"10px 0" }}>
+              {t.finder.quickButtons.map(btn => (
+                <button key={btn.label} type="button" onClick={()=>runProductFinder(btn.query)} style={{ background:"#FAFAF8", border:"1px solid #E0DDD8", borderRadius:999, padding:"6px 9px", fontSize:11.5, fontWeight:800, color:"#1A1A1A", cursor:"pointer", fontFamily:thF }}>
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ maxHeight:260, overflowY:"auto", display:"grid", gap:8, paddingRight:2 }}>
+              {finderMessages.map((msg, idx) => (
+                <div key={idx} style={{ justifySelf:msg.role==="user"?"end":"start", maxWidth:"100%" }}>
+                  <div style={{ background:msg.role==="user"?"#1A1A1A":"#F8F7F4", color:msg.role==="user"?"#fff":"#1A1A1A", border:"1px solid "+(msg.role==="user"?"#1A1A1A":"#ECECEC"), borderRadius:12, padding:"8px 10px", fontSize:12.5, lineHeight:1.45, fontWeight:700 }}>
+                    {msg.text}
+                  </div>
+                  {Array.isArray(msg.results) && msg.results.length > 0 && (
+                    <div style={{ display:"grid", gap:6, marginTop:6 }}>
+                      {msg.results.map(({ brand, model }) => {
+                        const replyLang = msg.lang || lang;
+                        const name = replyLang==="th" ? `${brand.nameTh} ${model.nameTh}` : `${brand.nameEn} ${model.nameEn}`;
+                        return (
+                          <div key={`${brand.id}-${model.id}`} style={{ border:"1px solid #E0DDD8", borderRadius:12, padding:8, background:"#fff" }}>
+                            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                              <BrandLogo logo={brand.logo} size={18} place="navFilter" />
+                              <div style={{ flex:1, minWidth:0 }}>
+                                <div style={{ fontWeight:900, fontSize:12.5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{name}</div>
+                                <div style={{ fontSize:11, color:"#777" }}>{model.years || "-"} · {fmt(model.price)}</div>
+                              </div>
+                            </div>
+                            <div style={{ display:"flex", gap:6, marginTop:7 }}>
+                              <button type="button" onClick={()=>{ openProductDetail(brand, model); setLineHelpOpen(false); }} style={{ flex:1, border:"1px solid #1A1A1A", background:"#1A1A1A", color:"#fff", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.view}</button>
+                              <button type="button" onClick={()=>openLineForProduct(brand, model)} style={{ flex:1, border:"1px solid #06C755", background:"#fff", color:"#06A846", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.askLine}</button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div style={{ display:"flex", gap:7, marginTop:10 }}>
+              <input value={finderQuery} onChange={e=>setFinderQuery(e.target.value)} onKeyDown={e=>{ if(e.key==="Enter") runProductFinder(finderQuery); }} placeholder={t.finder.placeholder} style={{ ...iSLight, padding:"9px 10px", fontSize:12.5 }} />
+              <button type="button" onClick={()=>runProductFinder(finderQuery)} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, padding:"0 12px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{t.finder.send}</button>
+            </div>
           </div>
+          <div className="line-help-line-card" style={{ background:"#fff", border:"1px solid #DDF3E5", borderRadius:16, padding:12, boxShadow:"0 16px 38px rgba(6,199,85,0.18)", width:360, maxWidth:"calc(100vw - 28px)", display:"grid", gridTemplateColumns:"62px 1fr", alignItems:"center", gap:10 }}>
+            <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:62, height:62, objectFit:"cover", border:"1px solid #ECECEC", borderRadius:10, display:"block", background:"#fff" }} />
+            <div style={{ minWidth:0 }}>
+              <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A", marginBottom:2 }}>{lang==="th"?"LINE ร้าน SKKJ":"SKKJ LINE"}</div>
+              <div style={{ fontSize:11.5, color:"#666", lineHeight:1.45 }}>{lang==="th"?"สแกน QR เพื่อส่งรูปอะไหล่หรือถามพนักงานได้เลย":"Scan the QR to send photos or ask our staff."}</div>
+              <button type="button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ marginTop:7, background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"7px 11px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>
+                {lang==="th"?"เปิด LINE":"Open LINE"}
+              </button>
+            </div>
+          </div>
+          </>
         )}
         <button className="line-help-button" onClick={()=>setLineHelpOpen(v=>!v)} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"13px 18px", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, boxShadow:"0 10px 28px rgba(0,0,0,0.28)", display:"flex", alignItems:"center", gap:9 }}>
           <span style={{ width:22, height:22, borderRadius:11, background:"#fff", color:"#06C755", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:900 }}>L</span>
