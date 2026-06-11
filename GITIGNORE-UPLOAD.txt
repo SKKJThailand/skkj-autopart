@@ -1,0 +1,20 @@
+# Upload-friendly copy of .gitignore
+# If GitHub/Windows will not upload ".gitignore", upload this file for reference.
+# Later, on GitHub, create a file named exactly ".gitignore" and paste the rules below.
+
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+build/
+.vercel/
+.netlify/
+
+*.log
+skkj-server.err.log
+skkj-server.out.log
+
+.DS_Store
+Thumbs.db
