@@ -2417,11 +2417,12 @@ function normalizeDatabaseState(state) {
     hiddenPartTypes: Array.isArray(state.hiddenPartTypes) ? state.hiddenPartTypes : null,
     activityLog: Array.isArray(state.activityLog) ? state.activityLog : null,
     analytics: Array.isArray(state.analytics) ? state.analytics : null,
+    syncEvents: Array.isArray(state.syncEvents) ? state.syncEvents : null,
     updatedAt: state.updatedAt || null,
   };
 }
 
-function makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics }) {
+function makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents }) {
   return {
     version: 2,
     savedFrom: "skkj-version-2",
@@ -2433,6 +2434,7 @@ function makeDatabaseState({ brands, orders, customers, accounts, hiddenPartType
     hiddenPartTypes,
     activityLog,
     analytics,
+    syncEvents: Array.isArray(syncEvents) ? syncEvents.slice(0, 500) : [],
   };
 }
 
@@ -2477,6 +2479,14 @@ function App() {
   const [analytics, setAnalytics]         = useState(() => {
     try { return JSON.parse(localStorage.getItem("skkj_v2_analytics_v1") || "[]"); }
     catch (error) { return []; }
+  });
+  const [syncEvents, setSyncEvents]       = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("skkj_v2_sync_events_v1") || "[]");
+      return Array.isArray(saved) ? saved : [];
+    } catch (error) {
+      return [];
+    }
   });
   const viewedProductsRef                 = useRef(new Set());
   const productViewStartRef               = useRef(null);
@@ -2604,6 +2614,7 @@ function App() {
   const newOrderCount  = orders.filter(o=>o.status==="pending").length;
   const unprintedLabelOrders = orders.filter(o=>o.labelPrinted === false);
   const unprintedLabelCount = unprintedLabelOrders.length;
+  const latestSyncEvent = syncEvents[0] || null;
   const brandRevenue   = brands.map(b=>({
     nameTh:b.nameTh, nameEn:b.nameEn,
     revenue:orders.filter(o=>o.brand===b.nameTh&&o.status!=="cancelled").reduce((s,o)=>s+Number(o.price),0),
@@ -2640,11 +2651,21 @@ function App() {
     setPage("product");
     setTimeout(()=>window.scrollTo({ top:0, behavior:"smooth" }), 0);
   };
+  const normalizeCustomerOnlineProfile = (customer) => ({
+    ...customer,
+    email:String(customer?.email || "").trim(),
+    phone:String(customer?.phone || "").trim(),
+    addresses:Array.isArray(customer?.addresses) ? customer.addresses : [],
+    favorites:Array.isArray(customer?.favorites) ? customer.favorites : [],
+    savedCars:Array.isArray(customer?.savedCars) ? customer.savedCars : [],
+    updatedAt:customer?.updatedAt || new Date().toISOString(),
+  });
   const updateCurrentCustomerRecord = (updater) => {
     if (!currentCustomer) return null;
     const baseCustomer = customers.find(customer => customer.id === currentCustomer.id) || currentCustomer;
-    const updatedCustomer = updater(baseCustomer);
+    const updatedCustomer = normalizeCustomerOnlineProfile({ ...updater(baseCustomer), updatedAt:new Date().toISOString() });
     if (!updatedCustomer) return null;
+    let nextCustomersForSave = null;
     setCurrentCustomer(updatedCustomer);
     setCustomers(prev => {
       let found = false;
@@ -2653,8 +2674,12 @@ function App() {
         found = true;
         return updatedCustomer;
       });
-      return found ? nextCustomers : [updatedCustomer, ...prev];
+      nextCustomersForSave = found ? nextCustomers : [updatedCustomer, ...prev];
+      return nextCustomersForSave;
     });
+    setTimeout(() => {
+      if (nextCustomersForSave) queueImmediateOnlineSave("customer_profile_updated", { customers: nextCustomersForSave });
+    }, 0);
     return updatedCustomer;
   };
   const requireCustomerLogin = () => {
@@ -3013,6 +3038,7 @@ function App() {
         if (next.hiddenPartTypes) setHiddenPartTypes(next.hiddenPartTypes);
         if (next.activityLog) setActivityLog(next.activityLog);
         if (next.analytics) setAnalytics(next.analytics);
+        if (next.syncEvents) setSyncEvents(next.syncEvents);
         setDbStatus(prev => ({
           ...prev,
           loading:false,
@@ -3051,7 +3077,7 @@ function App() {
     if (!config.enabled || !hasDatabaseTarget || !dbLoadedRef.current) return;
     if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
     setDbStatus(prev => ({ ...prev, saving:true, error:"" }));
-    const state = makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics });
+    const state = makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents });
     dbSaveTimerRef.current = setTimeout(() => {
       skkjDatabaseRequest(config, "/api/state", { method:"PUT", body:{ state } })
         .then(() => {
@@ -3077,7 +3103,7 @@ function App() {
     return () => {
       if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
     };
-  }, [brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, lang]);
+  }, [brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents, lang]);
 
   function hasOnlineDatabaseTarget(config = dbConfigRef.current) {
     return Boolean(config?.enabled) && (
@@ -3087,10 +3113,43 @@ function App() {
     );
   }
 
+  function makeOnlineSyncEvent(reason = "manual_save", overrides = {}) {
+    const orderList = Array.isArray(overrides.orders) ? overrides.orders : orders;
+    const brandList = Array.isArray(overrides.brands) ? overrides.brands : brands;
+    const productCount = Array.isArray(brandList)
+      ? brandList.reduce((sum, brand) => sum + (Array.isArray(brand.models) ? brand.models.length : 0), 0)
+      : 0;
+    return {
+      id: `SYNC-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      reason,
+      at: new Date().toISOString(),
+      actor: currentUser?.email || currentCustomer?.email || currentCustomer?.phone || "website",
+      actorRole: currentUser?.role || (currentCustomer ? "customer" : "guest"),
+      changed: {
+        brands: Array.isArray(overrides.brands),
+        orders: Array.isArray(overrides.orders),
+        customers: Array.isArray(overrides.customers),
+        accounts: Array.isArray(overrides.accounts),
+        hiddenPartTypes: Array.isArray(overrides.hiddenPartTypes),
+        activityLog: Array.isArray(overrides.activityLog),
+        analytics: Array.isArray(overrides.analytics),
+      },
+      totals: {
+        orders: Array.isArray(orderList) ? orderList.length : 0,
+        products: productCount,
+      },
+    };
+  }
+
   function queueImmediateOnlineSave(reason = "manual_save", overrides = {}) {
     const config = dbConfigRef.current;
     if (!hasOnlineDatabaseTarget(config) || !dbLoadedRef.current) return;
     if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
+    const nextSyncEvents = [
+      makeOnlineSyncEvent(reason, overrides),
+      ...(Array.isArray(overrides.syncEvents) ? overrides.syncEvents : syncEvents),
+    ].slice(0, 500);
+    setSyncEvents(nextSyncEvents);
     const state = makeDatabaseState({
       brands: overrides.brands || brands,
       orders: overrides.orders || orders,
@@ -3099,6 +3158,7 @@ function App() {
       hiddenPartTypes: overrides.hiddenPartTypes || hiddenPartTypes,
       activityLog: overrides.activityLog || activityLog,
       analytics: overrides.analytics || analytics,
+      syncEvents: nextSyncEvents,
     });
     state.lastOnlineAction = {
       reason,
@@ -3148,8 +3208,18 @@ function App() {
   }, [customers]);
 
   useEffect(() => {
+    try { localStorage.setItem("skkj_v2_sync_events_v1", JSON.stringify(syncEvents)); } catch (error) {}
+  }, [syncEvents]);
+
+  useEffect(() => {
     try { localStorage.setItem("skkj_v2_google_sheet_config_v1", JSON.stringify(googleSheetConfig)); } catch (error) {}
   }, [googleSheetConfig]);
+
+  useEffect(() => {
+    if (adminTab === "accounts" && currentUser?.role !== "owner") {
+      setAdminTab("orders");
+    }
+  }, [adminTab, currentUser?.role]);
 
   useEffect(() => {
     if (page !== "home" || heroSimilarProducts.length <= 1) return;
@@ -3163,24 +3233,50 @@ function App() {
     try {
       const saved = JSON.parse(localStorage.getItem("skkj_v2_remember_login_v1") || "null");
       if (!saved?.type || !saved?.email) return;
-      if (saved.type === "staff") {
+      if (saved.type === "staff" && !currentUser) {
         const account = accounts.find(a => a.email.toLowerCase() === String(saved.email).toLowerCase() && a.role !== "disabled");
         if (account) {
           setCurrentUser(account);
           setAdminAuth(true);
         }
       }
-      if (saved.type === "customer") {
+      if (saved.type === "customer" && !currentCustomer) {
         const savedLogin = String(saved.email || "").toLowerCase();
         const savedPhone = String(saved.email || "").replace(/\D/g, "");
         const customer = customers.find(c =>
           (c.email && c.email.toLowerCase() === savedLogin) ||
           (savedPhone && String(c.phone || "").replace(/\D/g, "") === savedPhone)
         );
-        if (customer) setCurrentCustomer(customer);
+        if (customer) setCurrentCustomer(normalizeCustomerOnlineProfile(customer));
       }
     } catch (error) {}
-  }, []);
+  }, [accounts, customers, currentUser, currentCustomer]);
+
+  useEffect(() => {
+    if (!currentCustomer?.id) return;
+    const freshCustomer = customers.find(customer => customer.id === currentCustomer.id);
+    if (!freshCustomer) return;
+    const normalizedFresh = normalizeCustomerOnlineProfile(freshCustomer);
+    const currentStamp = JSON.stringify({
+      name:currentCustomer.name || "",
+      phone:currentCustomer.phone || "",
+      email:currentCustomer.email || "",
+      addresses:currentCustomer.addresses || [],
+      favorites:currentCustomer.favorites || [],
+      savedCars:currentCustomer.savedCars || [],
+      updatedAt:currentCustomer.updatedAt || "",
+    });
+    const freshStamp = JSON.stringify({
+      name:normalizedFresh.name || "",
+      phone:normalizedFresh.phone || "",
+      email:normalizedFresh.email || "",
+      addresses:normalizedFresh.addresses || [],
+      favorites:normalizedFresh.favorites || [],
+      savedCars:normalizedFresh.savedCars || [],
+      updatedAt:normalizedFresh.updatedAt || "",
+    });
+    if (freshStamp !== currentStamp) setCurrentCustomer(normalizedFresh);
+  }, [customers, currentCustomer?.id, currentCustomer?.updatedAt]);
 
   function rememberLogin(type, email) {
     try {
@@ -3206,42 +3302,57 @@ function App() {
     const addressKey = cleanAddress.replace(/\s+/g, " ").toLowerCase();
     const phoneKey = normalizePhone(cleanPhone);
     let updatedCustomer = null;
-    setCustomers(prev => prev.map(customer => {
-      if (customer.id !== currentCustomer.id) return customer;
-      const existing = Array.isArray(customer.addresses) ? customer.addresses : [];
-      const matched = existing.find(addr =>
-        String(addr.address || "").replace(/\s+/g, " ").toLowerCase() === addressKey &&
-        normalizePhone(addr.phone) === phoneKey
-      );
-      const nextAddress = {
-        id:matched?.id || "ADDR-" + Date.now(),
-        label:matched?.label || (lang==="th" ? `ที่อยู่ ${Math.min(existing.length + 1, 5)}` : `Address ${Math.min(existing.length + 1, 5)}`),
-        customer:cleanName,
-        phone:cleanPhone,
-        address:cleanAddress,
-        updatedAt:new Date().toISOString(),
-      };
-      const nextAddresses = [nextAddress, ...existing.filter(addr => addr.id !== matched?.id)].slice(0, 5);
-      updatedCustomer = {
-        ...customer,
-        name:cleanName || customer.name,
-        phone:cleanPhone || customer.phone,
-        addresses:nextAddresses,
-      };
-      return updatedCustomer;
-    }));
+    let nextCustomersForSave = null;
+    setCustomers(prev => {
+      nextCustomersForSave = prev.map(customer => {
+        if (customer.id !== currentCustomer.id) return customer;
+        const existing = Array.isArray(customer.addresses) ? customer.addresses : [];
+        const matched = existing.find(addr =>
+          String(addr.address || "").replace(/\s+/g, " ").toLowerCase() === addressKey &&
+          normalizePhone(addr.phone) === phoneKey
+        );
+        const nextAddress = {
+          id:matched?.id || "ADDR-" + Date.now(),
+          label:matched?.label || (lang==="th" ? `ที่อยู่ ${Math.min(existing.length + 1, 5)}` : `Address ${Math.min(existing.length + 1, 5)}`),
+          customer:cleanName,
+          phone:cleanPhone,
+          address:cleanAddress,
+          updatedAt:new Date().toISOString(),
+        };
+        const nextAddresses = [nextAddress, ...existing.filter(addr => addr.id !== matched?.id)].slice(0, 5);
+        updatedCustomer = normalizeCustomerOnlineProfile({
+          ...customer,
+          name:cleanName || customer.name,
+          phone:cleanPhone || customer.phone,
+          addresses:nextAddresses,
+          updatedAt:new Date().toISOString(),
+        });
+        return updatedCustomer;
+      });
+      return nextCustomersForSave;
+    });
     if (updatedCustomer) setCurrentCustomer(updatedCustomer);
+    setTimeout(() => {
+      if (nextCustomersForSave) queueImmediateOnlineSave("customer_address_saved", { customers: nextCustomersForSave });
+    }, 0);
   }
 
   function removeCustomerAddress(addressId) {
     if (!currentCustomer) return;
     let updatedCustomer = null;
-    setCustomers(prev => prev.map(customer => {
+    let nextCustomersForSave = null;
+    setCustomers(prev => {
+      nextCustomersForSave = prev.map(customer => {
       if (customer.id !== currentCustomer.id) return customer;
-      updatedCustomer = { ...customer, addresses:(customer.addresses || []).filter(addr => addr.id !== addressId) };
+      updatedCustomer = normalizeCustomerOnlineProfile({ ...customer, addresses:(customer.addresses || []).filter(addr => addr.id !== addressId), updatedAt:new Date().toISOString() });
       return updatedCustomer;
-    }));
+      });
+      return nextCustomersForSave;
+    });
     if (updatedCustomer) setCurrentCustomer(updatedCustomer);
+    setTimeout(() => {
+      if (nextCustomersForSave) queueImmediateOnlineSave("customer_address_removed", { customers: nextCustomersForSave });
+    }, 0);
   }
 
   function logActivity(type, detail) {
@@ -3673,8 +3784,12 @@ function App() {
     );
     if (!customer)          { setAuthError(t.auth.wrongCredentials); return; }
     if (customer.password !== pw) { setAuthError(t.auth.wrongCredentials); return; }
-    setCurrentCustomer(customer);
-    authRemember ? rememberLogin("customer", customer.email || customer.phone) : forgetLogin();
+    const onlineCustomer = normalizeCustomerOnlineProfile({ ...customer, lastLoginAt:new Date().toISOString() });
+    const nextCustomers = customers.map(c => c.id === onlineCustomer.id ? onlineCustomer : c);
+    setCustomers(nextCustomers);
+    setCurrentCustomer(onlineCustomer);
+    queueImmediateOnlineSave("customer_login_remembered_online", { customers: nextCustomers });
+    authRemember ? rememberLogin("customer", onlineCustomer.email || onlineCustomer.phone) : forgetLogin();
     setLoginOpen(false);
     resetAuthForm();
   }
@@ -3690,16 +3805,23 @@ function App() {
     if (phone && customers.find(c => normalizePhone(c.phone)===phone)) {
       setAuthError(lang==="th" ? "เบอร์โทรนี้มีในระบบแล้ว" : "This phone number already has an account"); return;
     }
-    const newCustomer = {
+    const newCustomer = normalizeCustomerOnlineProfile({
       id: "C" + String(customers.length + 1).padStart(3,"0"),
       email: authEmail.trim(),
       password: authPw.trim(),
       name: authName.trim(),
       phone: authPhone.trim(),
       joinDate: new Date().toISOString().slice(0,10),
-    };
-    setCustomers(prev => [...prev, newCustomer]);
+      addresses:[],
+      favorites:[],
+      savedCars:[],
+      createdAt:new Date().toISOString(),
+      lastLoginAt:new Date().toISOString(),
+    });
+    const nextCustomers = [...customers, newCustomer];
+    setCustomers(nextCustomers);
     setCurrentCustomer(newCustomer);
+    queueImmediateOnlineSave("customer_registered_online", { customers: nextCustomers });
     authRemember ? rememberLogin("customer", newCustomer.email || newCustomer.phone) : forgetLogin();
     setLoginOpen(false);
     resetAuthForm();
@@ -4284,6 +4406,7 @@ function App() {
       accounts,
       activityLog,
       analytics,
+      syncEvents,
       hiddenPartTypes,
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type:"application/json;charset=utf-8" });
@@ -4324,6 +4447,8 @@ function App() {
       setActivityLog(restoredActivityLog);
       const restoredAnalytics = Array.isArray(backup.analytics) ? backup.analytics : [];
       setAnalytics(restoredAnalytics);
+      const restoredSyncEvents = Array.isArray(backup.syncEvents) ? backup.syncEvents : [];
+      setSyncEvents(restoredSyncEvents);
       queueImmediateOnlineSave("backup_restored", {
         brands: backup.brands,
         orders: backup.orders,
@@ -4332,8 +4457,10 @@ function App() {
         hiddenPartTypes: Array.isArray(backup.hiddenPartTypes) ? backup.hiddenPartTypes : [],
         activityLog: restoredActivityLog,
         analytics: restoredAnalytics,
+        syncEvents: restoredSyncEvents,
       });
       try { localStorage.setItem("skkj_v2_analytics_v1", JSON.stringify(restoredAnalytics)); } catch (error) {}
+      try { localStorage.setItem("skkj_v2_sync_events_v1", JSON.stringify(restoredSyncEvents)); } catch (error) {}
       setBasket([]);
       setEditOrder(null);
       setNewOrderModal(false);
@@ -6211,6 +6338,11 @@ function App() {
                   <div>
                     <div style={{ fontSize:13, fontWeight:800, color:"#1A1A1A" }}>{lang==="th"?"สำรองข้อมูล":"Backup data"}</div>
                     <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"บันทึกหรือกู้คืนออเดอร์ สต็อก ลูกค้า และบัญชีแอดมิน":"Save or restore orders, stock, customers, and admin accounts"}</div>
+                    <div style={{ fontSize:11, color:dbStatus.mode==="connected"?"#166534":"#777", marginTop:5 }}>
+                      {lang==="th"
+                        ? `Supabase: ${dbStatus.mode==="connected" ? "เชื่อมต่อแล้ว" : dbStatus.mode==="offline" ? "ออฟไลน์/ใช้ข้อมูลในเครื่อง" : "กำลังเชื่อมต่อ"}${latestSyncEvent ? ` • ล่าสุด: ${latestSyncEvent.reason}` : ""}`
+                        : `Supabase: ${dbStatus.mode==="connected" ? "connected" : dbStatus.mode==="offline" ? "offline/local fallback" : "connecting"}${latestSyncEvent ? ` • latest: ${latestSyncEvent.reason}` : ""}`}
+                    </div>
                   </div>
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                     <button onClick={downloadBackup} style={{ background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:9, padding:"8px 13px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"Backup data":"Backup data"}</button>
