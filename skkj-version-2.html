@@ -1,12 +1,46 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="th">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ | Steering Racks Thailand</title>
+  <meta name="description" content="SKKJ Autopart ผู้เชี่ยวชาญแร็คพวงมาลัยในกรุงเทพฯ นิสสัน ฮอนด้า อีซูซุ มาสด้า มิตซูบิชิ โตโยต้า ฟอร์ด เอ็มจี รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
+  <meta name="keywords" content="แร็คพวงมาลัย, steering rack, อะไหล่รถยนต์, SKKJ, นิสสัน, ฮอนด้า, อีซูซุ, โตโยต้า, มาสด้า" />
+  <!-- Open Graph — controls how the link looks when shared on LINE, Facebook, Messenger -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
+  <meta property="og:description" content="ผู้เชี่ยวชาญแร็คพวงมาลัย รับประกัน 6 เดือน จัดส่งทั่วประเทศ ถามร้านผ่าน LINE ได้เลย" />
+  <meta property="og:image" content="assets/nissan-teana-j32-top-skkj.png" />
+  <meta property="og:site_name" content="SKKJ Autopart" />
+  <meta property="og:locale" content="th_TH" />
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
+  <meta name="twitter:description" content="ผู้เชี่ยวชาญแร็คพวงมาลัย รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
+  <meta name="twitter:image" content="assets/nissan-teana-j32-top-skkj.png" />
+  <!-- Schema.org — tells Google this is an auto parts store (rich results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoPartsStore",
+    "name": "SKKJ Autopart",
+    "description": "ผู้เชี่ยวชาญแร็คพวงมาลัยและอะไหล่พวงมาลัย ทุกยี่ห้อ",
+    "email": "skkjthailand@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "86/111 หมู่ที่ 7 แขวงแสมดำ เขตบางขุนเทียน",
+      "addressLocality": "กรุงเทพมหานคร",
+      "postalCode": "10150",
+      "addressCountry": "TH"
+    },
+    "areaServed": "TH",
+    "priceRange": "฿฿"
+  }
+  </script>
   <title>SKKJ Version 2 Preview</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
   <style>
     html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
     #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
@@ -306,6 +340,31 @@ const T = {
       quickLinks:"Quick Links", contactTitle:"Contact",
       copyright:"© 2025 SKKJ Autopart. All rights reserved.",
     },
+    finder:{
+      title:"Product finder",
+      subtitle:"Type a car model, part name, or common spelling. I will find the closest SKKJ products.",
+      placeholder:"Try D-Max, Revo, Civic, steering rack...",
+      send:"Search",
+      empty:"Type a car model or choose a quick button first.",
+      found:"I found matching products.",
+      notFound:"I could not find that yet. Try another model name or contact staff.",
+      view:"View product",
+      askLine:"Ask on LINE",
+      quickButtons:[
+        { label:"Check price", query:"check price" },
+        { label:"Find parts by car model", query:"find parts by car model" },
+        { label:"Steering rack", query:"steering rack" },
+        { label:"Contact staff", query:"contact staff" },
+        { label:"How to order", query:"how to order" },
+        { label:"Warranty", query:"warranty" },
+      ],
+      canned:{
+        contact:"You can send us your car model, year, and a photo on LINE. We will help check the correct part.",
+        order:"Choose product, fill name phone address, choose delivery and payment, then confirm order.",
+        warranty:"Warranty is 6 months or 20,000 km, whichever comes first.",
+        price:"Type a car model like D-Max, Revo, Civic, or a part like steering rack.",
+      }
+    },
   },
   th: {
     nav: { home:"หน้าหลัก", catalog:"สินค้า", policy:"คำถาม/นโยบาย", contact:"ติดต่อ", login:"เข้าสู่ระบบ", logout:"ออกจากระบบ" },
@@ -413,6 +472,31 @@ const T = {
       quickLinks:"ลิงก์ด่วน", contactTitle:"ติดต่อ",
       copyright:"© 2568 SKKJ Autopart สงวนลิขสิทธิ์ทั้งหมด",
     },
+    finder:{
+      title:"ตัวช่วยหาอะไหล่",
+      subtitle:"พิมพ์รุ่นรถ ชื่ออะไหล่ หรือคำสะกดที่ลูกค้าชอบใช้ เดี๋ยวระบบช่วยหาให้",
+      placeholder:"ลองพิมพ์ ดีแมค, รีโว่, ซีวิค, แร็ค...",
+      send:"ค้นหา",
+      empty:"พิมพ์รุ่นรถหรือกดปุ่มลัดก่อนครับ",
+      found:"เจอสินค้าที่ใกล้เคียงครับ",
+      notFound:"ยังไม่เจอรุ่นนี้ครับ ลองพิมพ์ชื่ออื่น หรือทักพนักงานได้เลย",
+      view:"ดูสินค้า",
+      askLine:"ถามทาง LINE",
+      quickButtons:[
+        { label:"เช็กราคา", query:"เช็กราคา" },
+        { label:"หาอะไหล่ตามรุ่นรถ", query:"หาอะไหล่ตามรุ่นรถ" },
+        { label:"แร็คพวงมาลัย", query:"แร็คพวงมาลัย" },
+        { label:"ติดต่อพนักงาน", query:"ติดต่อพนักงาน" },
+        { label:"วิธีสั่งซื้อ", query:"วิธีสั่งซื้อ" },
+        { label:"การรับประกัน", query:"การรับประกัน" },
+      ],
+      canned:{
+        contact:"ส่งรุ่นรถ ปีรถ และรูปอะไหล่ทาง LINE ได้เลยครับ เดี๋ยวร้านช่วยเช็กรุ่นให้",
+        order:"เลือกสินค้า กรอกชื่อ เบอร์ ที่อยู่ เลือกขนส่งและวิธีจ่ายเงิน แล้วกดยืนยันคำสั่งซื้อ",
+        warranty:"รับประกัน 6 เดือน หรือ 20,000 กม. แล้วแต่ระยะใดถึงก่อน",
+        price:"พิมพ์รุ่นรถ เช่น ดีแมค รีโว่ ซีวิค หรือชื่ออะไหล่ เช่น แร็คพวงมาลัย ได้เลยครับ",
+      }
+    },
   },
 };
 
@@ -420,6 +504,135 @@ const T = {
 const fmt = (n) => "฿" + Number(n).toLocaleString();
 const iSLight = { width:"100%", padding:"11px 14px", border:"1px solid #E0DDD8", borderRadius:10, fontSize:14, outline:"none", boxSizing:"border-box", background:"#FAFAF8", color:"#1A1A1A", fontFamily:"inherit" };
 const iSDark  = { width:"100%", padding:"10px 13px", border:"1px solid #E0DDD8", borderRadius:9,  fontSize:13, outline:"none", boxSizing:"border-box", background:"#fff", color:"#1A1A1A",  fontFamily:"inherit" };
+
+const THAI_RE = /[\u0E00-\u0E7F]/;
+const PART_TYPE_I18N = {
+  steering_rack:{ th:"แร็คพวงมาลัย", en:"Steering rack" },
+  steering_joint:{ th:"ยอยพวงมาลัย", en:"Steering joint" },
+  power_steering_pump:{ th:"ปั๊มพวงมาลัย", en:"Power steering pump" },
+  tie_rod_end:{ th:"ลูกหมากคันชัก", en:"Tie rod end" },
+  steering_boot:{ th:"ยางหุ้มแร็ค", en:"Steering rack boot" },
+};
+const BRAND_I18N = {
+  nissan:{ th:"นิสสัน", en:"Nissan" },
+  honda:{ th:"ฮอนด้า", en:"Honda" },
+  isuzu:{ th:"อีซูซุ", en:"Isuzu" },
+  mazda:{ th:"มาสด้า", en:"Mazda" },
+  mitsubishi:{ th:"มิตซูบิชิ", en:"Mitsubishi" },
+  toyota:{ th:"โตโยต้า", en:"Toyota" },
+  ford:{ th:"ฟอร์ด", en:"Ford" },
+  mg:{ th:"เอ็มจี", en:"MG" },
+};
+const MODEL_ALIAS_GROUPS = [
+  ["dmax","d max","d-max","d-maxx","ดีแมค","ดีแม็ค","ดีแมก","ดีแม็ก","ดีแมกซ์","ดีแม็กซ์","ดีแมคซ์"],
+  ["revo","hilux revo","รีโว่","รีโว","รีโว้","ไฮลักซ์รีโว่","ไฮลักซ์ รีโว่"],
+  ["fortuner","ฟอร์จูนเนอร์","ฟอจูนเนอร์","ฟอร์จูน","ฟอร์จูนเนอ"],
+  ["civic","civik","ซีวิค","ซิวิค","ซีวิก"],
+  ["rack steering","steering rack","rack","แร็ค","แร็คพวงมาลัย","แรค","แรคพวงมาลัย","พวงมาลัย"],
+  ["vigo","hilux vigo","วีโก้","วีโก"],
+  ["triton","ไทรทัน","ไททัน"],
+  ["pajero","ปาเจโร่","ปาเจโร"],
+  ["navara","นาวาร่า","นาวารา"],
+  ["teana","เทียน่า","เทียนา","j32"],
+  ["march","micra","มาร์ช"],
+  ["camry","แคมรี่","แคมรี"],
+  ["altis","อัลติส"],
+  ["vios","วีออส"],
+  ["yaris","ยาริส"],
+  ["mazda2","mazda 2","มาสด้า2","มาสด้า 2"],
+  ["mazda3","mazda 3","มาสด้า3","มาสด้า 3"],
+  ["cx5","cx-5","cx 5","ซีเอ็กซ์5","ซีเอ็กซ์-5","ซีเอ็กซ์ 5"],
+  ["cx3","cx-3","cx 3","ซีเอ็กซ์3","ซีเอ็กซ์-3","ซีเอ็กซ์ 3"],
+  ["accord","แอคคอร์ด","แอคคอด"],
+  ["jazz","แจ๊ส","แจส"],
+  ["city","ซิตี้","ซิตี"],
+  ["brio","บริโอ้","บริโอ"],
+  ["crv","cr-v","cr v","ซีอาร์วี"],
+  ["hrv","hr-v","hr v","เอชอาร์วี"],
+  ["mg5","mg 5","เอ็มจี5","เอ็มจี 5"],
+  ["zs","mg zs","เอ็มจี zs","เอ็มจี แซดเอส"],
+  ["hs","mg hs","เอ็มจี hs","เอ็มจี เอชเอส"],
+  ["gs","mg gs","เอ็มจี gs","เอ็มจี จีเอส"],
+];
+function hasThaiText(value) { return THAI_RE.test(String(value || "")); }
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\s\-_./()]+/g, "")
+    .replace(/[^\u0E00-\u0E7Fa-z0-9]/g, "");
+}
+function detectFinderLang(value) {
+  const text = String(value || "");
+  return hasThaiText(text) ? "th" : /[a-z]/i.test(text) ? "en" : "th";
+}
+function splitAliasText(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : String(value || "").split(/[\n,|]+/).map(v=>v.trim()).filter(Boolean);
+}
+function partTypeText(type, lang="th") {
+  const entry = PART_TYPE_I18N[type || "steering_rack"] || PART_TYPE_I18N.steering_rack;
+  return entry[lang] || entry.th;
+}
+function getAliasTermsFromText(text) {
+  const normalized = normalizeSearchText(text);
+  const terms = [];
+  MODEL_ALIAS_GROUPS.forEach(group => {
+    if (group.some(alias => normalized.includes(normalizeSearchText(alias)))) terms.push(...group);
+  });
+  return [...new Set(terms)];
+}
+function enrichProductI18n(brand, model) {
+  const brandInfo = BRAND_I18N[brand?.id] || { th:brand?.nameTh || "", en:brand?.nameEn || "" };
+  const type = model?.partType || "steering_rack";
+  const baseText = [
+    brand?.id, brand?.nameTh, brand?.nameEn, model?.nameTh, model?.nameEn,
+    model?.sku, model?.years, model?.driveBody, partTypeText(type, "th"), partTypeText(type, "en")
+  ].join(" ");
+  const aliases = [...new Set([
+    ...splitAliasText(model?.model_aliases || model?.modelAliases),
+    ...getAliasTermsFromText(baseText),
+  ])];
+  return {
+    name_th:model?.name_th || model?.nameTh || "",
+    name_en:model?.name_en || model?.nameEn || "",
+    brand_th:model?.brand_th || brandInfo.th || brand?.nameTh || "",
+    brand_en:model?.brand_en || brandInfo.en || brand?.nameEn || "",
+    model_th:model?.model_th || model?.nameTh || "",
+    model_en:model?.model_en || model?.nameEn || "",
+    model_aliases:aliases,
+    part_type_th:model?.part_type_th || partTypeText(type, "th"),
+    part_type_en:model?.part_type_en || partTypeText(type, "en"),
+    keywords_th:splitAliasText(model?.keywords_th || model?.keywordsTh),
+    keywords_en:splitAliasText(model?.keywords_en || model?.keywordsEn),
+  };
+}
+function productSearchHaystack(brand, model) {
+  const i18n = enrichProductI18n(brand, model);
+  return [
+    i18n.name_th, i18n.name_en, i18n.brand_th, i18n.brand_en,
+    i18n.model_th, i18n.model_en, i18n.part_type_th, i18n.part_type_en,
+    ...(i18n.model_aliases || []), ...(i18n.keywords_th || []), ...(i18n.keywords_en || []),
+    model?.nameTh, model?.nameEn, model?.sku, model?.years, model?.driveBody,
+    brand?.id, brand?.nameTh, brand?.nameEn
+  ].join(" ");
+}
+function productMatchesQuery(brand, model, query) {
+  const q = normalizeSearchText(query);
+  if (!q) return true;
+  return normalizeSearchText(productSearchHaystack(brand, model)).includes(q);
+}
+function findProductsByQuery(brands, query, options={}) {
+  const q = String(query || "").trim();
+  if (!q) return [];
+  return brands.flatMap(brand => (brand.models || []).map(model => ({ brand, model })))
+    .filter(({ brand, model }) => {
+      if (options.partType && options.partType !== "all" && (model.partType || "steering_rack") !== options.partType) return false;
+      if (options.driveSide && options.driveSide !== "all" && (model.driveSide || "right") !== options.driveSide) return false;
+      if (options.hideNoPhoto && !model.productImage && !(Array.isArray(model.productImages) && model.productImages.length)) return false;
+      return productMatchesQuery(brand, model, q);
+    });
+}
 
 function BrandLogo({ logo, size=28, place="default" }) {
   const src = typeof logo === "string" && logo.startsWith("image:") ? logo.slice(6) : "";
@@ -431,10 +644,10 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const isToyota = src.includes("toyota-logo.png");
   const isFord = src.includes("ford-logo.png");
   const isMg = src.includes("mg-logo.png");
-  const brandCardScale = isHonda ? 2.25 : isNissan ? 1.35 : isIsuzu ? 1.12 : isMazda ? 1.2 : isMitsubishi ? 1.28 : isToyota ? 1.2 : isFord ? 1.12 : isMg ? 1.12 : 1;
+  const brandCardScale = isHonda ? 1.48 : isNissan ? 1.35 : isIsuzu ? 1.12 : isMazda ? 1.2 : isMitsubishi ? 1.28 : isToyota ? 1.2 : isFord ? 1.12 : isMg ? 1.12 : 1;
   const logoUse = {
     default: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1, y: isHonda ? size*0.03 : 0, box: 1.18 },
-    brandCard: { scale: brandCardScale, y: isHonda ? size*0.02 : isIsuzu ? size*0.05 : isMitsubishi ? size*0.02 : 0, box: isHonda ? 1.9 : 1.48 },
+    brandCard: { scale: brandCardScale, y: isHonda ? size*0.02 : isIsuzu ? size*0.05 : isMitsubishi ? size*0.02 : 0, box: isHonda ? 1.58 : 1.48 },
     heroBadge: { scale: isHonda ? 1.9 : (isMitsubishi || isToyota) ? 1.15 : 1.03, y: isHonda ? size*0.04 : 0, box: isHonda ? 1.08 : 1.12 },
     heroMain: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1.05, y: isHonda ? size*0.04 : 0, box: 1.2 },
     productPhoto: { scale: isHonda ? 1.65 : (isMitsubishi || isToyota) ? 1.22 : 1.04, y: isHonda ? size*0.05 : 0, box: 1.22 },
@@ -443,10 +656,11 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const scale = logoUse.scale ?? 1;
   const yOffset = logoUse.y ?? 0;
   const boxHeight = size * (logoUse.box ?? 1);
+  const displaySrc = src;
   if (src) {
     return (
       <span data-logo-place={place} style={{ width:size*2.3, height:boxHeight, display:"flex", alignItems:"center", justifyContent:"center", overflow:"visible" }}>
-        <img src={src} alt="" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
+        <img src={displaySrc} alt="brand logo" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
       </span>
     );
   }
@@ -807,7 +1021,7 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
         {model.stock} {t.inStock}
       </div>
       {showImage ? (
-        <img className="product-main-image" src={slide.src} alt={slide.title} onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
+        <img className="product-main-image" src={slide.src} alt={slide.title} loading="lazy" onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
       ) : (
         <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:10 }}>
           <BrandLogo logo={brand.logo} size={54} place="productPhoto" />
@@ -1326,6 +1540,9 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
     brandId:selectedBrand || brands[0]?.id || "",
     nameTh:"",
     nameEn:"",
+    modelAliases:"",
+    keywordsTh:"",
+    keywordsEn:"",
     years:"",
     driveBody:"",
     price:"",
@@ -1394,6 +1611,9 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
       brandId:p.brandId,
       nameTh:p.nameTh || "",
       nameEn:p.nameEn || "",
+      modelAliases:splitAliasText(p.model_aliases || p.modelAliases).join(", "),
+      keywordsTh:splitAliasText(p.keywords_th || p.keywordsTh).join(", "),
+      keywordsEn:splitAliasText(p.keywords_en || p.keywordsEn).join(", "),
       years:p.years || "",
       driveBody:p.driveBody || "",
       price:String(p.price ?? ""),
@@ -1459,6 +1679,17 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
       productImages:galleryImages,
       imageFileName:mainImageName,
       hidden:productForm.visible === "No",
+      name_th:nameTh,
+      name_en:nameEn,
+      brand_th:(BRAND_I18N[brandId]?.th || brands.find(b=>b.id===brandId)?.nameTh || ""),
+      brand_en:(BRAND_I18N[brandId]?.en || brands.find(b=>b.id===brandId)?.nameEn || ""),
+      model_th:nameTh,
+      model_en:nameEn,
+      model_aliases:splitAliasText(productForm.modelAliases),
+      part_type_th:partTypeText(productForm.partType, "th"),
+      part_type_en:partTypeText(productForm.partType, "en"),
+      keywords_th:splitAliasText(productForm.keywordsTh),
+      keywords_en:splitAliasText(productForm.keywordsEn),
     };
     setBrands(prev => {
       if (productFormMode === "edit" && editingProduct) {
@@ -1561,7 +1792,8 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
   const filtered = partProducts.filter(p => {
     const q = search.toLowerCase();
     const searchStr = `${p.brandNameTh} ${p.brandNameEn} ${p.nameTh} ${p.nameEn} ${p.partTypeLabel} ${p.sku}`.toLowerCase();
-    if (!searchStr.includes(q)) return false;
+    const productBrand = brands.find(brand => brand.id === p.brandId);
+    if (q && !searchStr.includes(q) && !productMatchesQuery(productBrand, p, q)) return false;
     if (selectedBrand && p.brandId !== selectedBrand) return false;
     if (filter==="out") return p.stock===0;
     if (filter==="low") return p.stock>0 && p.stock<=15;
@@ -1767,9 +1999,21 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
               <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"ชื่อสินค้าอังกฤษ":"English product name"}</label>
               <input value={productForm.nameEn} onChange={e=>setFormField("nameEn", e.target.value)} placeholder="D-Max 2WD" style={iSLight} />
             </div>
+            <div style={{ gridColumn:"1 / -1" }}>
+              <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"คำค้น / คำสะกดอื่น":"Aliases / common spellings"}</label>
+              <input value={productForm.modelAliases} onChange={e=>setFormField("modelAliases", e.target.value)} placeholder={lang==="th"?"เช่น ดีแมค, ดีแม็ค, DMax, D-Max":"e.g. ดีแมค, ดีแม็ค, DMax, D-Max"} style={iSLight} />
+            </div>
+            <div>
+              <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"คีย์เวิร์ดไทย":"Thai keywords"}</label>
+              <input value={productForm.keywordsTh} onChange={e=>setFormField("keywordsTh", e.target.value)} placeholder={lang==="th"?"แร็ค, พวงมาลัย, ตัวเตี้ย":"แร็ค, พวงมาลัย, ตัวเตี้ย"} style={iSLight} />
+            </div>
+            <div>
+              <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"คีย์เวิร์ดอังกฤษ":"English keywords"}</label>
+              <input value={productForm.keywordsEn} onChange={e=>setFormField("keywordsEn", e.target.value)} placeholder="steering rack, rack, low" style={iSLight} />
+            </div>
             <div>
               <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"ปี / รุ่นที่ใส่ได้":"Year / fitment"}</label>
-              <input value={productForm.years} onChange={e=>setFormField("years", e.target.value)} placeholder="2002-2011" style={iSLight} />
+              <input value={productForm.years} onChange={e=>setFormField("years", e.target.value)} placeholder="2002–2011" style={iSLight} />
             </div>
             <div>
               <label style={{ display:"block", fontSize:11, color:"#666", fontWeight:800, marginBottom:5 }}>{lang==="th"?"ขับ / ตัวถัง":"Drive / body"}</label>
@@ -1838,7 +2082,7 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
                 {productForm.imageGallery.map((img, index)=>(
                   <div key={`${img.src}-${index}`} style={{ background:"#fff", border:index===0?"2px solid #1A1A1A":"1px solid #E0DDD8", borderRadius:12, padding:9 }}>
                     <div style={{ height:92, borderRadius:9, background:"#F8F7F4", border:"1px solid #ECECEC", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", marginBottom:8 }}>
-                      <img src={img.src} alt="" style={{ width:"100%", height:"100%", objectFit:"contain" }} />
+                      <img src={img.src} alt={lang==="th"?"รูปสินค้าที่อัปโหลด":"Uploaded product photo"} loading="lazy" style={{ width:"100%", height:"100%", objectFit:"contain" }} />
                     </div>
                     <div style={{ fontSize:10, color:index===0?"#1A1A1A":"#777", fontWeight:900, marginBottom:3 }}>{index===0 ? (lang==="th"?"รูปหลัก":"Main photo") : `${lang==="th"?"รูปที่":"Photo"} ${index+1}`}</div>
                     <div style={{ fontSize:10, color:"#777", lineHeight:1.35, height:28, overflow:"hidden", wordBreak:"break-word" }}>{img.name || (String(img.src).startsWith("data:") ? (lang==="th"?"รูปอัปโหลด":"Uploaded photo") : img.src)}</div>
@@ -1882,7 +2126,7 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
           <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"เลือกประเภทอะไหล่":"Choose part type"}</div>
           <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"ใช้ดูและปรับสต็อกแยกตามชนิดสินค้า":"View and adjust stock by product type"}</div>
         </div>
-        <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setSearch(""); }} style={{ minWidth:220, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 32px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
+        <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setSearch(""); }} style={{ width:lang==="th"?154:166, maxWidth:"100%", background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 28px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
           <option value="all">{lang==="th"?"อะไหล่ทั้งหมด":"All part types"}</option>
           {PART_TYPES.map(part => (
             <option key={part.id} value={part.id}>{lang==="th"?part.th:part.en}</option>
@@ -2060,16 +2304,15 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
 // role: "owner"    → full access + account management tab
 // role: "admin"    → full dashboard, no account management
 // role: "disabled" → blocked
+// SECURITY: Real credentials must be set in Supabase only.
 const INIT_ACCOUNTS = [
-  { id:1, email:"owner@skkjautopart.co.th",  password:"owner2025",    name:"SKKJ Owner", role:"owner" },
-  { id:2, email:"Thongin50412166@gmail.com", password:"Thongin55@",  name:"Thongin",    role:"owner" },
+  { id:1, email:"owner@skkjautopart.co.th", password:"", name:"SKKJ Owner", role:"owner" },
+  { id:2, email:"admin@skkjautopart.co.th", password:"", name:"Admin",       role:"owner" },
 ];
 
 // ─── CUSTOMER DATABASE ────────────────────────────────────────────────────────
 // Customers self-register; orders are linked by email
-const INIT_CUSTOMERS = [
-  { id:"C001", email:"demo@customer.com", password:"demo1234", name:"Demo Customer", phone:"081-000-0000", joinDate:"2025-01-15" },
-];
+const INIT_CUSTOMERS = [];
 
 const PART_TYPES = [
   { id:"steering_rack", th:"แร็คพวงมาลัย", en:"Rack steering" },
@@ -2095,6 +2338,163 @@ const getDriveSideLabel = (side, lang) => {
   return lang === "th" ? found.th : found.en;
 };
 const isProductVisible = (model) => !model.hidden;
+
+// ─── DATABASE-READY BRIDGE ───────────────────────────────────────────────────
+// This keeps GitHub Pages working now, and lets us plug in a real server later.
+const SKKJ_DATABASE_CONFIG = {
+  enabled: true,
+  provider: "supabase",
+  apiBase: "",
+  // Security note: never put service-role keys, OpenAI keys, webhook secrets,
+  // or private admin tokens in this frontend file. Browser code may only use
+  // a Supabase publishable/anon key with strict RLS policies.
+  adminToken: "",
+  supabaseUrl: "https://bxwawwrxwkwqqhfgapdn.supabase.co",
+  supabaseKey: "sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R",
+  supabaseTable: "skkj_site_state",
+  supabaseRecordId: "main",
+};
+
+function readDatabaseConfig() {
+  const url = new URL(window.location.href);
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem("skkj_v2_database_config_v1") || "{}"); } catch (error) {}
+  const config = {
+    ...SKKJ_DATABASE_CONFIG,
+    ...saved,
+    enabled: url.searchParams.get("skkjDb") === "1" || saved.enabled === true || SKKJ_DATABASE_CONFIG.enabled === true,
+    provider: url.searchParams.get("skkjDbProvider") || saved.provider || SKKJ_DATABASE_CONFIG.provider || "server",
+    apiBase: url.searchParams.get("skkjApi") || saved.apiBase || SKKJ_DATABASE_CONFIG.apiBase || "",
+    adminToken: "",
+    supabaseUrl: url.searchParams.get("skkjSupabaseUrl") || saved.supabaseUrl || SKKJ_DATABASE_CONFIG.supabaseUrl || "",
+    supabaseKey: url.searchParams.get("skkjSupabaseKey") || saved.supabaseKey || SKKJ_DATABASE_CONFIG.supabaseKey || "",
+    supabaseTable: url.searchParams.get("skkjSupabaseTable") || saved.supabaseTable || SKKJ_DATABASE_CONFIG.supabaseTable || "skkj_site_state",
+    supabaseRecordId: url.searchParams.get("skkjSupabaseRecord") || saved.supabaseRecordId || SKKJ_DATABASE_CONFIG.supabaseRecordId || "main",
+  };
+  if (url.searchParams.has("skkjDb") || url.searchParams.has("skkjApi") || url.searchParams.has("skkjSupabaseUrl") || url.searchParams.has("skkjSupabaseKey")) {
+    try {
+      localStorage.setItem("skkj_v2_database_config_v1", JSON.stringify({
+        enabled: config.enabled,
+        provider: config.provider,
+        apiBase: config.apiBase,
+        adminToken: "",
+        supabaseUrl: config.supabaseUrl,
+        supabaseKey: config.supabaseKey,
+        supabaseTable: config.supabaseTable,
+        supabaseRecordId: config.supabaseRecordId,
+      }));
+    } catch (error) {}
+  }
+  return config;
+}
+
+async function skkjDatabaseRequest(config, path, options = {}) {
+  if (config.provider === "supabase") return skkjSupabaseRequest(config, path, options);
+  const headers = { "Content-Type":"application/json", ...(options.headers || {}) };
+  // Private API tokens must be attached by backend/serverless functions only.
+  // Never store admin, OpenAI, service-role, or webhook secrets in browser code.
+  const response = await fetch(`${config.apiBase}${path}`, {
+    ...options,
+    headers,
+    body: options.body && typeof options.body !== "string" ? JSON.stringify(options.body) : options.body,
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.ok === false) throw new Error(data.error || "Database request failed");
+  return data;
+}
+
+async function skkjSupabaseRequest(config, path, options = {}) {
+  if (!config.supabaseUrl || !config.supabaseKey) throw new Error("Supabase URL or key is missing");
+  const table = encodeURIComponent(config.supabaseTable || "skkj_site_state");
+  const recordId = encodeURIComponent(config.supabaseRecordId || "main");
+  const baseUrl = String(config.supabaseUrl).replace(/\/+$/, "");
+  const headers = {
+    "Content-Type":"application/json",
+    "apikey":config.supabaseKey,
+    "Authorization":`Bearer ${config.supabaseKey}`,
+    ...(options.headers || {}),
+  };
+
+  if (path === "/api/state" && (!options.method || options.method === "GET")) {
+    const response = await fetch(`${baseUrl}/rest/v1/${table}?id=eq.${recordId}&select=state,updated_at`, { headers });
+    const data = await response.json().catch(() => []);
+    if (!response.ok) throw new Error(data?.message || "Supabase load failed");
+    const row = Array.isArray(data) ? data[0] : null;
+    return { ok:true, state:row?.state || null, updatedAt:row?.updated_at || "" };
+  }
+
+  if (path === "/api/state" && options.method === "PUT") {
+    const state = options.body?.state || options.body || {};
+    const response = await fetch(`${baseUrl}/rest/v1/${table}`, {
+      method:"POST",
+      headers:{ ...headers, "Prefer":"resolution=merge-duplicates,return=minimal" },
+      body:JSON.stringify({ id:config.supabaseRecordId || "main", state, updated_at:new Date().toISOString() }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data?.message || "Supabase save failed");
+    }
+    return { ok:true };
+  }
+
+  throw new Error("Unsupported Supabase database path");
+}
+
+async function skkjSupabaseTableRequest(config, tableName, options = {}) {
+  if (!config?.supabaseUrl || !config?.supabaseKey) throw new Error("Supabase URL or key is missing");
+  const baseUrl = String(config.supabaseUrl).replace(/\/+$/, "");
+  const query = options.query ? String(options.query) : "";
+  const headers = {
+    "Content-Type":"application/json",
+    "apikey":config.supabaseKey,
+    "Authorization":`Bearer ${config.supabaseKey}`,
+    ...(options.prefer ? { "Prefer":options.prefer } : {}),
+    ...(options.headers || {}),
+  };
+  const response = await fetch(`${baseUrl}/rest/v1/${encodeURIComponent(tableName)}${query}`, {
+    method:options.method || "GET",
+    headers,
+    body:options.body === undefined ? undefined : JSON.stringify(options.body),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(data?.message || `${tableName} request failed`);
+  return data;
+}
+
+const cleanText = (value, max = 500) => String(value || "").replace(/[<>]/g, "").trim().slice(0, max);
+const cleanNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+const stableTextId = (prefix, value) => `${prefix}_${String(value || "unknown").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 80) || "unknown"}`;
+
+function normalizeDatabaseState(state) {
+  if (!state || typeof state !== "object") return {};
+  return {
+    brands: Array.isArray(state.brands) ? state.brands : null,
+    orders: Array.isArray(state.orders) ? state.orders : null,
+    customers: Array.isArray(state.customers) ? state.customers : null,
+    accounts: Array.isArray(state.accounts) ? state.accounts : null,
+    hiddenPartTypes: Array.isArray(state.hiddenPartTypes) ? state.hiddenPartTypes : null,
+    activityLog: Array.isArray(state.activityLog) ? state.activityLog : null,
+    analytics: Array.isArray(state.analytics) ? state.analytics : null,
+    syncEvents: Array.isArray(state.syncEvents) ? state.syncEvents : null,
+    updatedAt: state.updatedAt || null,
+  };
+}
+
+function makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents }) {
+  return {
+    version: 2,
+    savedFrom: "skkj-version-2",
+    updatedAt: new Date().toISOString(),
+    brands,
+    orders,
+    customers,
+    accounts,
+    hiddenPartTypes,
+    activityLog,
+    analytics,
+    syncEvents: Array.isArray(syncEvents) ? syncEvents.slice(0, 500) : [],
+  };
+}
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 function App() {
@@ -2138,7 +2538,16 @@ function App() {
     try { return JSON.parse(localStorage.getItem("skkj_v2_analytics_v1") || "[]"); }
     catch (error) { return []; }
   });
+  const [syncEvents, setSyncEvents]       = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("skkj_v2_sync_events_v1") || "[]");
+      return Array.isArray(saved) ? saved : [];
+    } catch (error) {
+      return [];
+    }
+  });
   const viewedProductsRef                 = useRef(new Set());
+  const productViewStartRef               = useRef(null);
   // ── CUSTOMER AUTH ──
   const [customers, setCustomers]         = useState(() => {
     try {
@@ -2174,7 +2583,9 @@ function App() {
   const [contactBrandId, setContactBrandId] = useState("");
   const [contactModelId, setContactModelId] = useState("");
   const [contactMessage, setContactMessage] = useState("");
-  const [lineHelpOpen, setLineHelpOpen]   = useState(false);
+  const [lineFinderOpen, setLineFinderOpen]   = useState(false);
+  const [lineContactOpen, setLineContactOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop]     = useState(false);
   const [editOrder, setEditOrder]         = useState(null);
   const [detailOrder, setDetailOrder]     = useState(null);
   const [orderTimelineNote, setOrderTimelineNote] = useState("");
@@ -2185,12 +2596,40 @@ function App() {
   const [basketOpen, setBasketOpen]       = useState(false);
   const [checkoutData, setCheckoutData]   = useState(null); // { shipping }
   const [catalogSearch, setCatalogSearch] = useState("");
+  const [finderQuery, setFinderQuery]     = useState("");
+  const [finderMessages, setFinderMessages] = useState([
+    { role:"bot", lang:"th", text:"สวัสดีครับ พิมพ์รุ่นรถหรือชื่ออะไหล่ เช่น ดีแมค รีโว่ ซีวิค หรือแร็คพวงมาลัย ได้เลย" }
+  ]);
   const [findBrandId, setFindBrandId]     = useState("");
   const [findModelId, setFindModelId]     = useState("");
   // ── BASKET TOAST ──
   const [bToasts, setBToasts]             = useState([]);
   const bToastRef                         = useRef(0);
   const backupInputRef                    = useRef(null);
+  const dbConfigRef                       = useRef(readDatabaseConfig());
+  const dbLoadedRef                       = useRef(false);
+  const dbSaveTimerRef                    = useRef(null);
+  const businessSyncErrorsRef             = useRef(new Set());
+  const [dbStatus, setDbStatus]           = useState(() => ({
+    enabled: dbConfigRef.current.enabled,
+    mode: dbConfigRef.current.enabled ? "online-ready" : "browser",
+    loading: dbConfigRef.current.enabled,
+    saving: false,
+    lastSaved: "",
+    error: "",
+  }));
+  const [googleSheetConfig, setGoogleSheetConfig] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("skkj_v2_google_sheet_config_v1") || "{}");
+      return {
+        enabled: saved.enabled === true,
+        scriptUrl: saved.scriptUrl || "",
+        token: saved.token || "",
+      };
+    } catch (error) {
+      return { enabled:false, scriptUrl:"", token:"" };
+    }
+  });
 
   const t   = T[lang];
   const ta  = t.admin;
@@ -2236,6 +2675,7 @@ function App() {
   const newOrderCount  = orders.filter(o=>o.status==="pending").length;
   const unprintedLabelOrders = orders.filter(o=>o.labelPrinted === false);
   const unprintedLabelCount = unprintedLabelOrders.length;
+  const latestSyncEvent = syncEvents[0] || null;
   const brandRevenue   = brands.map(b=>({
     nameTh:b.nameTh, nameEn:b.nameEn,
     revenue:orders.filter(o=>o.brand===b.nameTh&&o.status!=="cancelled").reduce((s,o)=>s+Number(o.price),0),
@@ -2257,6 +2697,8 @@ function App() {
   const detailBrand = productDetail ? brands.find(b=>b.id===productDetail.brandId) : null;
   const detailModel = detailBrand?.models.find(m=>m.id===productDetail.modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m))) || null;
   const productKey = (brandId, modelId) => `${brandId}:${modelId}`;
+  const productHash = (brandId, modelId) => `#product=${encodeURIComponent(brandId || "")}/${encodeURIComponent(modelId || "")}`;
+  const productNewTabUrl = (brandId, modelId) => `${window.location.href.split("#")[0]}${productHash(brandId, modelId)}`;
   const isFavoriteProduct = (brandId, modelId) => !!currentCustomer?.favorites?.includes(productKey(brandId, modelId));
   const savedCarBrand = brands.find(b=>b.id===savedCarBrandId);
   const savedCarModels = savedCarBrand ? savedCarBrand.models.filter(model => isProductVisible(model) && isPartTypeVisible(getModelPartType(model))) : [];
@@ -2267,16 +2709,81 @@ function App() {
     const model = brand?.models.find(m=>m.id===modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m)));
     return brand && model ? { brand, model, key } : null;
   }).filter(Boolean);
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("skkj_v2_recently_viewed_v1") || "[]"); } catch (_e) { return []; }
+  });
+  const [compareList, setCompareList] = useState([]); // [{brandId, modelId}]
+  const [compareOpen, setCompareOpen] = useState(false);
+  const isComparing = (brandId, modelId) => compareList.some(c => c.brandId===brandId && c.modelId===modelId);
+  const toggleCompare = (brand, model) => {
+    setCompareList(prev => {
+      const exists = prev.some(c => c.brandId===brand.id && c.modelId===model.id);
+      if (exists) return prev.filter(c => !(c.brandId===brand.id && c.modelId===model.id));
+      if (prev.length >= 3) return prev; // max 3
+      return [...prev, { brandId:brand.id, modelId:model.id }];
+    });
+  };
   const openProductDetail = (brand, model) => {
     setProductDetail({ brandId:brand.id, modelId:model.id });
     setPage("product");
     setTimeout(()=>window.scrollTo({ top:0, behavior:"smooth" }), 0);
+    // Feature: track recently viewed (keep last 6, newest first, no duplicates)
+    try {
+      setRecentlyViewed(prev => {
+        const key = `${brand.id}__${model.id}`;
+        const next = [{ brandId:brand.id, modelId:model.id }, ...prev.filter(p => `${p.brandId}__${p.modelId}` !== key)].slice(0, 6);
+        localStorage.setItem("skkj_v2_recently_viewed_v1", JSON.stringify(next));
+        return next;
+      });
+    } catch (_e) {}
   };
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive:true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  // Feature: log search terms (debounced — waits 800ms after typing stops)
+  useEffect(() => {
+    const term = String(catalogSearch || "").trim();
+    if (term.length < 2) return;
+    const timer = setTimeout(() => {
+      const matchCount = catalogBrands.reduce((sum, b) => sum + (b.filteredModels ? b.filteredModels.length : 0), 0);
+      trackAnalytics("search", { term, results: matchCount });
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [catalogSearch]);
+  useEffect(() => {
+    const openHashProduct = () => {
+      const match = String(window.location.hash || "").match(/^#product=([^/]+)\/(.+)$/);
+      if (!match) return;
+      const brandId = decodeURIComponent(match[1] || "");
+      const modelId = decodeURIComponent(match[2] || "");
+      const brand = brands.find(b => b.id === brandId);
+      const model = brand?.models.find(m => m.id === modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m)));
+      if (!brand || !model) return;
+      setProductDetail({ brandId, modelId });
+      setPage("product");
+      setTimeout(()=>window.scrollTo({ top:0, behavior:"smooth" }), 0);
+    };
+    openHashProduct();
+    window.addEventListener("hashchange", openHashProduct);
+    return () => window.removeEventListener("hashchange", openHashProduct);
+  }, [brands, hiddenPartTypes]);
+  const normalizeCustomerOnlineProfile = (customer) => ({
+    ...customer,
+    email:String(customer?.email || "").trim(),
+    phone:String(customer?.phone || "").trim(),
+    addresses:Array.isArray(customer?.addresses) ? customer.addresses : [],
+    favorites:Array.isArray(customer?.favorites) ? customer.favorites : [],
+    savedCars:Array.isArray(customer?.savedCars) ? customer.savedCars : [],
+    updatedAt:customer?.updatedAt || new Date().toISOString(),
+  });
   const updateCurrentCustomerRecord = (updater) => {
     if (!currentCustomer) return null;
     const baseCustomer = customers.find(customer => customer.id === currentCustomer.id) || currentCustomer;
-    const updatedCustomer = updater(baseCustomer);
+    const updatedCustomer = normalizeCustomerOnlineProfile({ ...updater(baseCustomer), updatedAt:new Date().toISOString() });
     if (!updatedCustomer) return null;
+    let nextCustomersForSave = null;
     setCurrentCustomer(updatedCustomer);
     setCustomers(prev => {
       let found = false;
@@ -2285,8 +2792,12 @@ function App() {
         found = true;
         return updatedCustomer;
       });
-      return found ? nextCustomers : [updatedCustomer, ...prev];
+      nextCustomersForSave = found ? nextCustomers : [updatedCustomer, ...prev];
+      return nextCustomersForSave;
     });
+    setTimeout(() => {
+      if (nextCustomersForSave) queueImmediateOnlineSave("customer_profile_updated", { customers: nextCustomersForSave });
+    }, 0);
     return updatedCustomer;
   };
   const requireCustomerLogin = () => {
@@ -2405,6 +2916,55 @@ function App() {
     });
     setPage("contact");
   };
+  const openLineForProduct = (brand, model) => {
+    const line = buildContactProductText(brand.id, model.id);
+    const message = lang==="th"
+      ? `สวัสดีครับ ขอสอบถามสินค้า\n${line}`
+      : `Hello, I would like to ask about this product.\n${line}`;
+    window.open(`https://line.me/R/ti/p/@skkjautopart?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  };
+  const runProductFinder = (rawText) => {
+    const text = String(rawText || "").trim();
+    const replyLang = detectFinderLang(text);
+    const tf = T[replyLang].finder;
+    if (!text) {
+      setFinderMessages(prev => [...prev, { role:"bot", lang:replyLang, text:tf.empty }].slice(-8));
+      return;
+    }
+    const norm = normalizeSearchText(text);
+    const cannedKey = norm.includes(normalizeSearchText("contact")) || norm.includes(normalizeSearchText("ติดต่อ"))
+      ? "contact"
+      : norm.includes(normalizeSearchText("how to order")) || norm.includes(normalizeSearchText("วิธีสั่งซื้อ"))
+        ? "order"
+        : norm.includes(normalizeSearchText("warranty")) || norm.includes(normalizeSearchText("รับประกัน"))
+          ? "warranty"
+          : norm.includes(normalizeSearchText("price")) || norm.includes(normalizeSearchText("ราคา")) || norm.includes(normalizeSearchText("เช็กราคา"))
+            ? "price"
+            : "";
+    let matches = [];
+    try {
+      matches = findProductsByQuery(brands, text, {
+        partType:selectedPartType,
+        driveSide:selectedDriveSide,
+        hideNoPhoto,
+      }).slice(0, 5);
+    } catch (error) {
+      console.warn("Product finder search failed", error);
+    }
+    setCatalogSearch(text);
+    setLineHelpOpen(true);
+    setFinderMessages(prev => [
+      ...prev,
+      { role:"user", lang:replyLang, text },
+      {
+        role:"bot",
+        lang:replyLang,
+        text:matches.length ? `${tf.found} (${matches.length})` : (cannedKey ? tf.canned[cannedKey] : tf.notFound),
+        results:matches,
+      }
+    ].slice(-8));
+    setFinderQuery("");
+  };
   const isReadyToPack = (o) => {
     const status = o.status || "pending";
     return (o.paymentStatus || "waiting_review") === "paid" &&
@@ -2436,15 +2996,10 @@ function App() {
   };
   const filteredAdminOrders = orders.filter(o=>orderMatchesFilters(o, adminOrderSearch, adminOrderStatus, adminOrderPayment, adminOrderFlag, adminOrderSmart));
   const catalogBrands = (selectedBrand ? brands.filter(b=>b.id===selectedBrand) : brands).map(brand => {
-    const q = String(catalogSearch || "").trim().toLowerCase();
+    const q = String(catalogSearch || "").trim();
     const partModels = modelsForSelectedPart(brand);
     const filteredModels = !q ? partModels : partModels.filter(model => {
-      const text = [
-        brand.nameTh, brand.nameEn,
-        model.nameTh, model.nameEn, getPartTypeLabel(getModelPartType(model), "th"), getPartTypeLabel(getModelPartType(model), "en"), getDriveSideLabel(getModelDriveSide(model), "th"), getDriveSideLabel(getModelDriveSide(model), "en"),
-        model.years, model.sku, model.price
-      ].join(" ").toLowerCase();
-      return text.includes(q);
+      return productMatchesQuery(brand, model, q);
     });
     return { ...brand, filteredModels };
   }).filter(brand => brand.filteredModels.length > 0);
@@ -2497,11 +3052,14 @@ function App() {
     const modelName = lang==="th" ? model.nameTh : model.nameEn;
     const productEvents = analytics.filter(e => e.modelId === model.id);
     const count = (type) => productEvents.filter(e => e.type === type).length;
+    const staySeconds = productEvents.filter(e => e.type === "product_view_time").reduce((sum,e)=>sum + Number(e.seconds || 0), 0);
     const completedOrders = orders.filter(o => o.modelId === model.id && o.status !== "cancelled").length;
     const views = count("product_view");
+    const detailOpens = count("product_detail_open");
     const cartAdds = count("cart_add");
     const orderStarts = count("order_start");
     const asks = count("ask_shop");
+    const totalViews = views + detailOpens;
     return {
       key:`${brand.id}-${model.id}`,
       brandId:brand.id,
@@ -2509,17 +3067,21 @@ function App() {
       brandName,
       modelName,
       sku:model.sku,
-      views,
+      views:totalViews,
+      catalogViews:views,
+      detailOpens,
+      staySeconds,
       cartAdds,
       orderStarts,
       asks,
       orders:completedOrders,
-      interest:views + cartAdds + orderStarts + asks,
-      notBought:Math.max(0, views + cartAdds + orderStarts + asks - completedOrders),
+      interest:totalViews + cartAdds + orderStarts + asks,
+      notBought:Math.max(0, totalViews + cartAdds + orderStarts + asks - completedOrders),
     };
   })).sort((a,b)=>(b.notBought - a.notBought) || (b.interest - a.interest));
   const analyticsTotals = {
-    views: analytics.filter(e=>e.type==="product_view").length,
+    views: analytics.filter(e=>e.type==="product_view" || e.type==="product_detail_open").length,
+    staySeconds: analytics.filter(e=>e.type==="product_view_time").reduce((sum,e)=>sum + Number(e.seconds || 0), 0),
     cartAdds: analytics.filter(e=>e.type==="cart_add").length,
     orderStarts: analytics.filter(e=>e.type==="order_start").length,
     asks: analytics.filter(e=>e.type==="ask_shop").length,
@@ -2573,6 +3135,345 @@ function App() {
   }, [selectedPartType, selectedDriveSide]);
 
   useEffect(() => {
+    const config = dbConfigRef.current;
+    const hasDatabaseTarget = config.provider === "supabase"
+      ? Boolean(config.supabaseUrl && config.supabaseKey)
+      : Boolean(config.apiBase);
+    if (!config.enabled || !hasDatabaseTarget) {
+      dbLoadedRef.current = true;
+      return;
+    }
+    let cancelled = false;
+    setDbStatus(prev => ({ ...prev, loading:true, mode:"connecting", error:"" }));
+    skkjDatabaseRequest(config, "/api/state")
+      .then(data => {
+        if (cancelled) return;
+        const next = normalizeDatabaseState(data.state || data);
+        if (next.brands) setBrands(next.brands);
+        if (next.orders) setOrders(next.orders);
+        if (next.customers) setCustomers(next.customers);
+        if (next.accounts) setAccounts(next.accounts);
+        if (next.hiddenPartTypes) setHiddenPartTypes(next.hiddenPartTypes);
+        if (next.activityLog) setActivityLog(next.activityLog);
+        if (next.analytics) setAnalytics(next.analytics);
+        if (next.syncEvents) setSyncEvents(next.syncEvents);
+        setDbStatus(prev => ({
+          ...prev,
+          loading:false,
+          saving:false,
+          mode:"connected",
+          lastSaved: next.updatedAt ? new Date(next.updatedAt).toLocaleString(lang==="th" ? "th-TH" : "en-US") : "",
+          error:"",
+        }));
+      })
+      .catch(error => {
+        if (cancelled) return;
+        setDbStatus(prev => ({
+          ...prev,
+          loading:false,
+          saving:false,
+          mode:"offline",
+          error:error.message || "Database connection failed",
+        }));
+      })
+      .finally(() => {
+        setTimeout(() => {
+          if (!cancelled) dbLoadedRef.current = true;
+        }, 0);
+      });
+    return () => {
+      cancelled = true;
+      if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const config = dbConfigRef.current;
+    const hasDatabaseTarget = config.provider === "supabase"
+      ? Boolean(config.supabaseUrl && config.supabaseKey)
+      : Boolean(config.apiBase);
+    if (!config.enabled || !hasDatabaseTarget || !dbLoadedRef.current) return;
+    if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
+    setDbStatus(prev => ({ ...prev, saving:true, error:"" }));
+    const state = makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents });
+    dbSaveTimerRef.current = setTimeout(() => {
+      skkjDatabaseRequest(config, "/api/state", { method:"PUT", body:{ state } })
+        .then(() => {
+          setDbStatus(prev => ({
+            ...prev,
+            loading:false,
+            saving:false,
+            mode:"connected",
+            lastSaved:new Date().toLocaleString(lang==="th" ? "th-TH" : "en-US"),
+            error:"",
+          }));
+        })
+        .catch(error => {
+          setDbStatus(prev => ({
+            ...prev,
+            loading:false,
+            saving:false,
+            mode:"offline",
+            error:error.message || "Database save failed",
+          }));
+        });
+    }, 700);
+    return () => {
+      if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
+    };
+  }, [brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents, lang]);
+
+  function hasOnlineDatabaseTarget(config = dbConfigRef.current) {
+    return Boolean(config?.enabled) && (
+      config.provider === "supabase"
+        ? Boolean(config.supabaseUrl && config.supabaseKey)
+        : Boolean(config.apiBase)
+    );
+  }
+
+  function makeOnlineSyncEvent(reason = "manual_save", overrides = {}) {
+    const orderList = Array.isArray(overrides.orders) ? overrides.orders : orders;
+    const brandList = Array.isArray(overrides.brands) ? overrides.brands : brands;
+    const productCount = Array.isArray(brandList)
+      ? brandList.reduce((sum, brand) => sum + (Array.isArray(brand.models) ? brand.models.length : 0), 0)
+      : 0;
+    return {
+      id: `SYNC-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      reason,
+      at: new Date().toISOString(),
+      actor: currentUser?.email || currentCustomer?.email || currentCustomer?.phone || "website",
+      actorRole: currentUser?.role || (currentCustomer ? "customer" : "guest"),
+      changed: {
+        brands: Array.isArray(overrides.brands),
+        orders: Array.isArray(overrides.orders),
+        customers: Array.isArray(overrides.customers),
+        accounts: Array.isArray(overrides.accounts),
+        hiddenPartTypes: Array.isArray(overrides.hiddenPartTypes),
+        activityLog: Array.isArray(overrides.activityLog),
+        analytics: Array.isArray(overrides.analytics),
+      },
+      totals: {
+        orders: Array.isArray(orderList) ? orderList.length : 0,
+        products: productCount,
+      },
+    };
+  }
+
+  function queueImmediateOnlineSave(reason = "manual_save", overrides = {}) {
+    const config = dbConfigRef.current;
+    if (!hasOnlineDatabaseTarget(config) || !dbLoadedRef.current) return;
+    if (dbSaveTimerRef.current) clearTimeout(dbSaveTimerRef.current);
+    const nextSyncEvents = [
+      makeOnlineSyncEvent(reason, overrides),
+      ...(Array.isArray(overrides.syncEvents) ? overrides.syncEvents : syncEvents),
+    ].slice(0, 500);
+    setSyncEvents(nextSyncEvents);
+    syncBusinessTables(reason, overrides);
+    const state = makeDatabaseState({
+      brands: overrides.brands || brands,
+      orders: overrides.orders || orders,
+      customers: overrides.customers || customers,
+      accounts: overrides.accounts || accounts,
+      hiddenPartTypes: overrides.hiddenPartTypes || hiddenPartTypes,
+      activityLog: overrides.activityLog || activityLog,
+      analytics: overrides.analytics || analytics,
+      syncEvents: nextSyncEvents,
+    });
+    state.lastOnlineAction = {
+      reason,
+      at: new Date().toISOString(),
+    };
+    setDbStatus(prev => ({ ...prev, saving:true, error:"" }));
+    skkjDatabaseRequest(config, "/api/state", { method:"PUT", body:{ state } })
+      .then(() => {
+        setDbStatus(prev => ({
+          ...prev,
+          loading:false,
+          saving:false,
+          mode:"connected",
+          lastSaved:new Date().toLocaleString(lang==="th" ? "th-TH" : "en-US"),
+          error:"",
+        }));
+      })
+      .catch(error => {
+        setDbStatus(prev => ({
+          ...prev,
+          loading:false,
+          saving:false,
+          mode:"offline",
+          error:error.message || "Database save failed",
+        }));
+      });
+  }
+
+  function canUseBusinessTables(config = dbConfigRef.current) {
+    return Boolean(config?.enabled && config.provider === "supabase" && config.supabaseUrl && config.supabaseKey);
+  }
+
+  function reportBusinessSyncError(scope, error) {
+    const key = `${scope}:${error?.message || "unknown"}`;
+    if (businessSyncErrorsRef.current.has(key)) return;
+    businessSyncErrorsRef.current.add(key);
+    console.warn("SKKJ business table sync skipped:", scope, error);
+  }
+
+  async function upsertBusinessRows(tableName, rows, scope) {
+    const config = dbConfigRef.current;
+    const list = (Array.isArray(rows) ? rows : [rows]).filter(Boolean);
+    if (!list.length || !canUseBusinessTables(config)) return;
+    try {
+      await skkjSupabaseTableRequest(config, tableName, {
+        method:"POST",
+        prefer:"resolution=merge-duplicates,return=minimal",
+        body:list,
+      });
+    } catch (error) {
+      reportBusinessSyncError(scope || tableName, error);
+    }
+  }
+
+  function customerToBusinessRow(customer) {
+    if (!customer) return null;
+    const id = cleanText(customer.id || stableTextId("customer", customer.email || customer.phone), 100);
+    return {
+      id,
+      email: cleanText(customer.email, 180),
+      phone: cleanText(customer.phone, 60),
+      full_name: cleanText(customer.name, 180),
+      role: cleanText(customer.role || "customer", 30),
+      addresses: Array.isArray(customer.addresses) ? customer.addresses : [],
+      favorites: Array.isArray(customer.favorites) ? customer.favorites.map(String) : [],
+      saved_cars: Array.isArray(customer.savedCars) ? customer.savedCars : [],
+      raw: customer,
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  function addressRowsForCustomer(customer) {
+    if (!customer?.id || !Array.isArray(customer.addresses)) return [];
+    return customer.addresses.map((addr, index) => ({
+      id: cleanText(addr.id || `${customer.id}_address_${index + 1}`, 120),
+      customer_id: cleanText(customer.id, 100),
+      label: cleanText(addr.label || `Address ${index + 1}`, 120),
+      receiver_name: cleanText(addr.customer || customer.name, 180),
+      phone: cleanText(addr.phone || customer.phone, 60),
+      address: cleanText(addr.address, 900),
+      is_default: index === 0,
+      raw: addr,
+      updated_at: new Date().toISOString(),
+    })).filter(row => row.address);
+  }
+
+  function favoriteRowsForCustomer(customer) {
+    if (!customer?.id || !Array.isArray(customer.favorites)) return [];
+    return customer.favorites.map(productKey => ({
+      id: stableTextId("fav", `${customer.id}_${productKey}`),
+      customer_id: cleanText(customer.id, 100),
+      product_key: cleanText(productKey, 140),
+      created_at: new Date().toISOString(),
+    }));
+  }
+
+  function orderToBusinessRow(order) {
+    if (!order?.id) return null;
+    return {
+      id: cleanText(order.id, 100),
+      customer_id: cleanText(order.customerId || order.customerEmail || order.phone || stableTextId("guest", order.customer || order.id), 120),
+      customer_name: cleanText(order.customer, 180),
+      customer_email: cleanText(order.customerEmail, 180),
+      phone: cleanText(order.phone, 60),
+      delivery_address: cleanText(order.address, 900),
+      brand: cleanText(order.brand, 120),
+      model: cleanText(order.model, 220),
+      brand_id: cleanText(order.brandId, 80),
+      model_id: cleanText(order.modelId, 100),
+      quantity: cleanNumber(order.quantity || 1),
+      total: cleanNumber(order.price),
+      order_status: cleanText(order.status || "pending", 60),
+      payment_method: cleanText(order.paymentMethod || "unknown", 60),
+      payment_status: cleanText(order.paymentStatus || "unknown", 80),
+      delivery_method: cleanText(order.deliveryMethod || "standard", 80),
+      label_printed: order.labelPrinted === true,
+      raw: order,
+      created_at: order.createdAt || (order.date ? `${order.date}T00:00:00.000Z` : new Date().toISOString()),
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  function incomeRowForOrder(order) {
+    if (!order?.id || order.status === "cancelled") return null;
+    return {
+      id: stableTextId("income", order.id),
+      order_id: cleanText(order.id, 100),
+      customer_name: cleanText(order.customer, 180),
+      amount: cleanNumber(order.price),
+      payment_method: cleanText(order.paymentMethod || "unknown", 60),
+      payment_status: cleanText(order.paymentStatus || "unknown", 80),
+      order_status: cleanText(order.status || "pending", 60),
+      recorded_date: order.date || new Date().toISOString().slice(0, 10),
+      raw: order,
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  function adminActionToBusinessRow(type, detail, extra = {}) {
+    const actor = currentUser || {};
+    return {
+      id: `LOG-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      admin_email: cleanText(actor.email || "system", 180),
+      admin_role: cleanText(actor.role || "system", 40),
+      action_type: cleanText(type, 120),
+      target_id: cleanText(extra.targetId || "", 160),
+      old_value: extra.oldValue || {},
+      new_value: extra.newValue || { detail },
+      original_message: cleanText(detail, 900),
+      created_at: new Date().toISOString(),
+    };
+  }
+
+  function syncCustomerToBusinessTables(customer) {
+    const normalized = normalizeCustomerOnlineProfile(customer || {});
+    upsertBusinessRows("skkj_customers", customerToBusinessRow(normalized), "customer");
+    upsertBusinessRows("skkj_customer_addresses", addressRowsForCustomer(normalized), "customer_addresses");
+    upsertBusinessRows("skkj_customer_favorites", favoriteRowsForCustomer(normalized), "customer_favorites");
+  }
+
+  function syncOrdersToBusinessTables(orderList) {
+    const list = (Array.isArray(orderList) ? orderList : [orderList]).filter(Boolean);
+    upsertBusinessRows("skkj_orders", list.map(orderToBusinessRow), "orders");
+    upsertBusinessRows("skkj_income_records", list.map(incomeRowForOrder), "income");
+  }
+
+  function syncAdminActionToBusinessTable(type, detail, extra = {}) {
+    if (!(currentUser?.role === "owner" || currentUser?.role === "admin")) return;
+    upsertBusinessRows("skkj_admin_action_logs", adminActionToBusinessRow(type, detail, extra), "admin_action_logs");
+  }
+
+  function syncBusinessTables(reason = "manual_save", overrides = {}) {
+    if (!canUseBusinessTables() || !dbLoadedRef.current) return;
+    if (Array.isArray(overrides.customers)) {
+      overrides.customers.slice(0, 100).forEach(syncCustomerToBusinessTables);
+    }
+    if (Array.isArray(overrides.orders)) {
+      syncOrdersToBusinessTables(overrides.orders.slice(0, 150));
+    }
+    if (Array.isArray(overrides.activityLog) && overrides.activityLog[0]) {
+      const latest = overrides.activityLog[0];
+      upsertBusinessRows("skkj_admin_action_logs", {
+        id: cleanText(latest.id || `LOG-${Date.now()}`, 120),
+        admin_email: cleanText(currentUser?.email || latest.user || "system", 180),
+        admin_role: cleanText(currentUser?.role || "system", 40),
+        action_type: cleanText(latest.type || reason, 120),
+        target_id: "",
+        old_value: {},
+        new_value: latest,
+        original_message: cleanText(latest.detail, 900),
+        created_at: new Date().toISOString(),
+      }, "activity_log");
+    }
+  }
+
+  useEffect(() => {
     setOrderTimelineNote("");
   }, [detailOrder?.id]);
 
@@ -2593,6 +3494,20 @@ function App() {
   }, [customers]);
 
   useEffect(() => {
+    try { localStorage.setItem("skkj_v2_sync_events_v1", JSON.stringify(syncEvents)); } catch (error) {}
+  }, [syncEvents]);
+
+  useEffect(() => {
+    try { localStorage.setItem("skkj_v2_google_sheet_config_v1", JSON.stringify(googleSheetConfig)); } catch (error) {}
+  }, [googleSheetConfig]);
+
+  useEffect(() => {
+    if (adminTab === "accounts" && currentUser?.role !== "owner") {
+      setAdminTab("orders");
+    }
+  }, [adminTab, currentUser?.role]);
+
+  useEffect(() => {
     if (page !== "home" || heroSimilarProducts.length <= 1) return;
     const timer = setTimeout(() => {
       setHeroSlideIndex(index => (index + 1) % heroSimilarProducts.length);
@@ -2604,24 +3519,50 @@ function App() {
     try {
       const saved = JSON.parse(localStorage.getItem("skkj_v2_remember_login_v1") || "null");
       if (!saved?.type || !saved?.email) return;
-      if (saved.type === "staff") {
+      if (saved.type === "staff" && !currentUser) {
         const account = accounts.find(a => a.email.toLowerCase() === String(saved.email).toLowerCase() && a.role !== "disabled");
         if (account) {
           setCurrentUser(account);
           setAdminAuth(true);
         }
       }
-      if (saved.type === "customer") {
+      if (saved.type === "customer" && !currentCustomer) {
         const savedLogin = String(saved.email || "").toLowerCase();
         const savedPhone = String(saved.email || "").replace(/\D/g, "");
         const customer = customers.find(c =>
           (c.email && c.email.toLowerCase() === savedLogin) ||
           (savedPhone && String(c.phone || "").replace(/\D/g, "") === savedPhone)
         );
-        if (customer) setCurrentCustomer(customer);
+        if (customer) setCurrentCustomer(normalizeCustomerOnlineProfile(customer));
       }
     } catch (error) {}
-  }, []);
+  }, [accounts, customers, currentUser, currentCustomer]);
+
+  useEffect(() => {
+    if (!currentCustomer?.id) return;
+    const freshCustomer = customers.find(customer => customer.id === currentCustomer.id);
+    if (!freshCustomer) return;
+    const normalizedFresh = normalizeCustomerOnlineProfile(freshCustomer);
+    const currentStamp = JSON.stringify({
+      name:currentCustomer.name || "",
+      phone:currentCustomer.phone || "",
+      email:currentCustomer.email || "",
+      addresses:currentCustomer.addresses || [],
+      favorites:currentCustomer.favorites || [],
+      savedCars:currentCustomer.savedCars || [],
+      updatedAt:currentCustomer.updatedAt || "",
+    });
+    const freshStamp = JSON.stringify({
+      name:normalizedFresh.name || "",
+      phone:normalizedFresh.phone || "",
+      email:normalizedFresh.email || "",
+      addresses:normalizedFresh.addresses || [],
+      favorites:normalizedFresh.favorites || [],
+      savedCars:normalizedFresh.savedCars || [],
+      updatedAt:normalizedFresh.updatedAt || "",
+    });
+    if (freshStamp !== currentStamp) setCurrentCustomer(normalizedFresh);
+  }, [customers, currentCustomer?.id, currentCustomer?.updatedAt]);
 
   function rememberLogin(type, email) {
     try {
@@ -2647,45 +3588,61 @@ function App() {
     const addressKey = cleanAddress.replace(/\s+/g, " ").toLowerCase();
     const phoneKey = normalizePhone(cleanPhone);
     let updatedCustomer = null;
-    setCustomers(prev => prev.map(customer => {
-      if (customer.id !== currentCustomer.id) return customer;
-      const existing = Array.isArray(customer.addresses) ? customer.addresses : [];
-      const matched = existing.find(addr =>
-        String(addr.address || "").replace(/\s+/g, " ").toLowerCase() === addressKey &&
-        normalizePhone(addr.phone) === phoneKey
-      );
-      const nextAddress = {
-        id:matched?.id || "ADDR-" + Date.now(),
-        label:matched?.label || (lang==="th" ? `ที่อยู่ ${Math.min(existing.length + 1, 5)}` : `Address ${Math.min(existing.length + 1, 5)}`),
-        customer:cleanName,
-        phone:cleanPhone,
-        address:cleanAddress,
-        updatedAt:new Date().toISOString(),
-      };
-      const nextAddresses = [nextAddress, ...existing.filter(addr => addr.id !== matched?.id)].slice(0, 5);
-      updatedCustomer = {
-        ...customer,
-        name:cleanName || customer.name,
-        phone:cleanPhone || customer.phone,
-        addresses:nextAddresses,
-      };
-      return updatedCustomer;
-    }));
+    let nextCustomersForSave = null;
+    setCustomers(prev => {
+      nextCustomersForSave = prev.map(customer => {
+        if (customer.id !== currentCustomer.id) return customer;
+        const existing = Array.isArray(customer.addresses) ? customer.addresses : [];
+        const matched = existing.find(addr =>
+          String(addr.address || "").replace(/\s+/g, " ").toLowerCase() === addressKey &&
+          normalizePhone(addr.phone) === phoneKey
+        );
+        const nextAddress = {
+          id:matched?.id || "ADDR-" + Date.now(),
+          label:matched?.label || (lang==="th" ? `ที่อยู่ ${Math.min(existing.length + 1, 5)}` : `Address ${Math.min(existing.length + 1, 5)}`),
+          customer:cleanName,
+          phone:cleanPhone,
+          address:cleanAddress,
+          updatedAt:new Date().toISOString(),
+        };
+        const nextAddresses = [nextAddress, ...existing.filter(addr => addr.id !== matched?.id)].slice(0, 5);
+        updatedCustomer = normalizeCustomerOnlineProfile({
+          ...customer,
+          name:cleanName || customer.name,
+          phone:cleanPhone || customer.phone,
+          addresses:nextAddresses,
+          updatedAt:new Date().toISOString(),
+        });
+        return updatedCustomer;
+      });
+      return nextCustomersForSave;
+    });
     if (updatedCustomer) setCurrentCustomer(updatedCustomer);
+    setTimeout(() => {
+      if (nextCustomersForSave) queueImmediateOnlineSave("customer_address_saved", { customers: nextCustomersForSave });
+    }, 0);
   }
 
   function removeCustomerAddress(addressId) {
     if (!currentCustomer) return;
     let updatedCustomer = null;
-    setCustomers(prev => prev.map(customer => {
+    let nextCustomersForSave = null;
+    setCustomers(prev => {
+      nextCustomersForSave = prev.map(customer => {
       if (customer.id !== currentCustomer.id) return customer;
-      updatedCustomer = { ...customer, addresses:(customer.addresses || []).filter(addr => addr.id !== addressId) };
+      updatedCustomer = normalizeCustomerOnlineProfile({ ...customer, addresses:(customer.addresses || []).filter(addr => addr.id !== addressId), updatedAt:new Date().toISOString() });
       return updatedCustomer;
-    }));
+      });
+      return nextCustomersForSave;
+    });
     if (updatedCustomer) setCurrentCustomer(updatedCustomer);
+    setTimeout(() => {
+      if (nextCustomersForSave) queueImmediateOnlineSave("customer_address_removed", { customers: nextCustomersForSave });
+    }, 0);
   }
 
   function logActivity(type, detail) {
+    syncAdminActionToBusinessTable(type, detail);
     setActivityLog(prev => [{
       id: Date.now() + Math.random(),
       type,
@@ -2700,12 +3657,47 @@ function App() {
       id: Date.now() + Math.random(),
       type,
       date: new Date().toISOString(),
+      customerId: currentCustomer?.id || "",
+      customerName: currentCustomer?.name || "",
+      customerPhone: currentCustomer?.phone || "",
+      visitor: currentCustomer?.id || getVisitorId(),
+      page,
       ...data,
     };
     setAnalytics(prev => {
       const next = [event, ...prev].slice(0, 800);
       try { localStorage.setItem("skkj_v2_analytics_v1", JSON.stringify(next)); } catch (error) {}
+      queueImmediateOnlineSave("analytics_recorded", { analytics: next });
       return next;
+    });
+  }
+
+  function getVisitorId() {
+    try {
+      const key = "skkj_v2_visitor_id";
+      const saved = localStorage.getItem(key);
+      if (saved) return saved;
+      const id = "VIS-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+      localStorage.setItem(key, id);
+      return id;
+    } catch (error) {
+      return "VIS-LOCAL";
+    }
+  }
+
+  function finishProductView(reason = "leave_product") {
+    const active = productViewStartRef.current;
+    if (!active) return;
+    const seconds = Math.max(1, Math.round((Date.now() - active.startedAt) / 1000));
+    productViewStartRef.current = null;
+    trackAnalytics("product_view_time", {
+      reason,
+      brandId:active.brandId,
+      modelId:active.modelId,
+      brand:active.brand,
+      model:active.model,
+      sku:active.sku || "",
+      seconds,
     });
   }
 
@@ -2754,6 +3746,50 @@ function App() {
     });
   }, [page, selectedBrand, catalogSearch, brands, lang]);
 
+  useEffect(() => {
+    finishProductView(productDetail ? "switch_product" : "close_product");
+    if (!productDetail || !detailBrand || !detailModel) return;
+    productViewStartRef.current = {
+      startedAt:Date.now(),
+      brandId:detailBrand.id,
+      modelId:detailModel.id,
+      brand:lang==="th" ? detailBrand.nameTh : detailBrand.nameEn,
+      model:lang==="th" ? detailModel.nameTh : detailModel.nameEn,
+      sku:detailModel.sku || "",
+    };
+    trackAnalytics("product_detail_open", {
+      brandId:detailBrand.id,
+      modelId:detailModel.id,
+      brand:lang==="th" ? detailBrand.nameTh : detailBrand.nameEn,
+      model:lang==="th" ? detailModel.nameTh : detailModel.nameEn,
+      sku:detailModel.sku || "",
+    });
+    return () => finishProductView("leave_product");
+  }, [productDetail?.brandId, productDetail?.modelId, lang]);
+
+  // Feature: cart abandonment detection
+  const basketRef = useRef([]);
+  const checkoutDoneRef = useRef(false);
+  const abandonLoggedRef = useRef(false);
+  useEffect(() => { basketRef.current = basket; if (basket.length > 0) abandonLoggedRef.current = false; }, [basket]);
+  useEffect(() => {
+    const onHide = () => {
+      if (document.visibilityState !== "hidden") return;
+      const items = basketRef.current;
+      if (items.length > 0 && !checkoutDoneRef.current && !abandonLoggedRef.current) {
+        abandonLoggedRef.current = true;
+        const value = items.reduce((sum, i) => sum + (i.price || 0) * (i.quantity || 1), 0);
+        trackAnalytics("cart_abandoned", {
+          itemCount: items.reduce((sum, i) => sum + (i.quantity || 1), 0),
+          value,
+          items: items.map(i => ({ sku:i.sku, modelId:i.modelId, brandId:i.brandId, qty:i.quantity })),
+        });
+      }
+    };
+    document.addEventListener("visibilitychange", onHide);
+    return () => document.removeEventListener("visibilitychange", onHide);
+  }, []);
+
   // ── BASKET TOAST HELPER ──
   const addBToast = useCallback((msg, type="success") => {
     const id = ++bToastRef.current;
@@ -2794,8 +3830,8 @@ function App() {
     });
   }
 
-  function reduceStockForOrder(items) {
-    setBrands(prev => prev.map(brand => ({
+  function reduceStockForOrder(items, onlineOverrides = {}) {
+    const nextBrands = brands.map(brand => ({
       ...brand,
       models: brand.models.map(model => {
         const ordered = items
@@ -2803,7 +3839,146 @@ function App() {
           .reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
         return ordered > 0 ? { ...model, stock:Math.max(0, model.stock - ordered) } : model;
       })
-    })));
+    }));
+    setBrands(nextBrands);
+    queueImmediateOnlineSave("stock_reduced_after_order", { ...onlineOverrides, brands: nextBrands });
+  }
+
+  function orderItemsForShippingRecord(order) {
+    if (Array.isArray(order?.items) && order.items.length) {
+      return order.items.map(item => ({
+        brand: item.brand || item.brandNameTh || item.brandNameEn || "",
+        model: item.model || item.modelNameTh || item.modelNameEn || "",
+        year: item.year || item.years || "",
+        sku: item.sku || "",
+        quantity: Number(item.quantity || 1),
+        unitPrice: Number(item.unitPrice || item.price || 0),
+        total: Number(item.total || item.price || 0) * Number(item.quantity || 1),
+      }));
+    }
+    const quantity = Number(order?.quantity || 1);
+    const price = Number(order?.price || 0);
+    return [{
+      brand: order?.brand || "",
+      model: order?.model || "",
+      year: order?.year || "",
+      sku: order?.sku || "",
+      quantity,
+      unitPrice: quantity > 0 ? Math.round(price / quantity) : price,
+      total: price,
+    }];
+  }
+
+  function buildShippingRecord(order, previous = {}, options = {}) {
+    const now = options.now || new Date().toISOString();
+    const printedCount = Number(previous.printedCount || 0) + (options.printed ? 1 : 0);
+    return {
+      id: previous.id || `SHIP-${order?.id || Date.now()}`,
+      orderId: order?.id || "",
+      createdAt: previous.createdAt || order?.createdAt || now,
+      updatedAt: now,
+      printedAt: options.printed ? now : (order?.labelPrintedAt || previous.printedAt || ""),
+      printedCount,
+      sender: {
+        name: "SKKJ Autopart",
+        phone: previous.sender?.phone || "",
+        address: "86/111 หมู่ที่ 7 แขวงแสมดำ เขตบางขุนเทียน กรุงเทพมหานคร 10150",
+      },
+      receiver: {
+        name: order?.customer || "",
+        phone: order?.phone || "",
+        email: order?.customerEmail || "",
+        address: order?.address || "",
+      },
+      delivery: {
+        method: order?.deliveryMethod || "standard",
+        methodLabel: deliveryMethodLabel(order?.deliveryMethod),
+        company: order?.shippingCompany || "",
+        trackingNumber: order?.trackingNumber || "",
+        labelPrinted: order?.labelPrinted === true || options.printed === true,
+      },
+      payment: {
+        method: order?.paymentMethod || "",
+        methodLabel: paymentMethodLabel(order?.paymentMethod),
+        status: order?.paymentStatus || "waiting_review",
+        statusLabel: ta.paymentLabels?.[order?.paymentStatus || "waiting_review"] || order?.paymentStatus || "waiting_review",
+        total: Number(order?.price || 0),
+        codAmount: order?.paymentMethod === "cod" ? Number(order?.price || 0) : 0,
+      },
+      items: orderItemsForShippingRecord(order),
+      customerNote: order?.customerNote || "",
+      adminNote: order?.adminNote || "",
+    };
+  }
+
+  function attachShippingRecord(order, options = {}) {
+    const nextOrder = { ...order };
+    nextOrder.shippingRecord = buildShippingRecord(nextOrder, order?.shippingRecord || {}, options);
+    return nextOrder;
+  }
+
+  function getShippingRecord(order) {
+    return order?.shippingRecord || buildShippingRecord(order, {}, { now:order?.updatedAt || order?.labelPrintedAt || new Date().toISOString() });
+  }
+
+  function cleanOrderForGoogleSheet(order) {
+    const record = getShippingRecord(order);
+    return {
+      id: order.id || "",
+      date: order.date || new Date().toISOString().slice(0,10),
+      customer: order.customer || "",
+      customerEmail: order.customerEmail || "",
+      phone: order.phone || "",
+      address: order.address || "",
+      brand: order.brand || "",
+      model: order.model || "",
+      year: order.year || "",
+      sku: order.sku || "",
+      quantity: Number(order.quantity || 1),
+      price: Number(order.price || 0),
+      status: order.status || "pending",
+      deliveryMethod: deliveryMethodLabel(order.deliveryMethod),
+      paymentMethod: paymentMethodLabel(order.paymentMethod),
+      paymentStatus: ta.paymentLabels?.[order.paymentStatus || "waiting_review"] || order.paymentStatus || "waiting_review",
+      customerNote: order.customerNote || "",
+      adminNote: order.adminNote || "",
+      paymentSlipName: order.paymentSlipName || "",
+      labelPrinted: order.labelPrinted === true ? "yes" : "no",
+      shippingRecordId: record.id || "",
+      senderName: record.sender?.name || "",
+      senderAddress: record.sender?.address || "",
+      receiverName: record.receiver?.name || "",
+      receiverPhone: record.receiver?.phone || "",
+      receiverAddress: record.receiver?.address || "",
+      deliveryCompany: record.delivery?.company || "",
+      trackingNumber: record.delivery?.trackingNumber || "",
+      labelPrintedAt: record.printedAt || "",
+      labelPrintedCount: record.printedCount || 0,
+      codAmount: record.payment?.codAmount || 0,
+      items: JSON.stringify(record.items || []),
+      createdAt: new Date().toISOString(),
+    };
+  }
+
+  function sendOrdersToGoogleSheet(newOrders, source = "website") {
+    const config = googleSheetConfig;
+    if (!config.enabled || !String(config.scriptUrl || "").trim()) return;
+    const ordersToSend = Array.isArray(newOrders) ? newOrders : [newOrders];
+    const payload = {
+      token: config.token || "",
+      source,
+      shop: "SKKJ Autopart",
+      sentAt: new Date().toISOString(),
+      orders: ordersToSend.map(cleanOrderForGoogleSheet),
+    };
+    fetch(config.scriptUrl.trim(), {
+      method:"POST",
+      mode:"no-cors",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body:JSON.stringify(payload),
+    }).catch(error => {
+      console.warn("Google Sheet order sync failed", error);
+    });
   }
 
   // ── SINGLE-PRODUCT ORDER (existing flow, unchanged) ──
@@ -2827,11 +4002,14 @@ function App() {
       addBToast(tb.notEnoughStock, "error");
       return;
     }
-    const newOrder = { id:"ORD-"+String(orders.length+1).padStart(3,"0"), customer:orderDetails?.customer || "", customerEmail:currentCustomer?.email || "", brand:orderForm.brand, model:orderForm.model, brandId:orderForm.brandId || "", modelId:orderForm.modelId || "", quantity:1, year:orderDetails?.year || "", price:orderForm.price, status:"pending", date:new Date().toISOString().slice(0,10), phone:orderDetails?.phone || "", address:orderDetails?.address || "", customerNote:orderDetails?.notes || "", adminNote:"", deliveryMethod:singleDeliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus, adminFlag:"none", labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อ" : "Customer placed order")] };
-    setOrders(prev=>[newOrder, ...prev]);
+    const newOrder = attachShippingRecord({ id:"ORD-"+String(orders.length+1).padStart(3,"0"), customer:orderDetails?.customer || "", customerEmail:currentCustomer?.email || "", brand:orderForm.brand, model:orderForm.model, brandId:orderForm.brandId || "", modelId:orderForm.modelId || "", quantity:1, year:orderDetails?.year || "", price:orderForm.price, status:"pending", date:new Date().toISOString().slice(0,10), phone:orderDetails?.phone || "", address:orderDetails?.address || "", customerNote:orderDetails?.notes || "", adminNote:"", deliveryMethod:singleDeliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus, adminFlag:"none", labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อ" : "Customer placed order")] });
+    const nextOrders = [newOrder, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("single_product_order_created", { orders: nextOrders });
+    sendOrdersToGoogleSheet(newOrder, "single_product_order");
     paymentMethod !== "cod" ? setLastBillOrders([newOrder]) : setLastBillOrders(null);
     saveCustomerAddressSlot(orderDetails);
-    if (orderForm.brandId && orderForm.modelId) reduceStockForOrder([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }]);
+    if (orderForm.brandId && orderForm.modelId) reduceStockForOrder([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }], { orders: nextOrders });
     setOrderForm(null);
     setOrderStep(1);
     setOrderDetails(null);
@@ -2855,7 +4033,7 @@ function App() {
   function handleCheckoutConfirm({ customer, phone, address, year, notes, deliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus }) {
     const shippingCost = 0;
     const today = new Date().toISOString().slice(0,10);
-    const newOrders = basket.map((item, idx) => ({
+    const newOrders = basket.map((item, idx) => attachShippingRecord({
       id: "ORD-" + String(orders.length + idx + 1).padStart(3,"0"),
       customer, customerEmail:currentCustomer?.email || "", phone, address, year, customerNote:notes || "", adminNote:"", deliveryMethod:deliveryMethod || "standard", paymentSlip, paymentSlipName, paymentMethod:paymentMethod || "promptpay", paymentStatus:paymentStatus || "waiting_review", adminFlag:"none", labelPrinted:false,
       brand: item.brandNameTh,
@@ -2868,10 +4046,14 @@ function App() {
       date: today,
       timeline:[makeOrderEvent("created", lang==="th" ? "ลูกค้าส่งคำสั่งซื้อจากตะกร้า" : "Customer placed basket order")],
     }));
-    setOrders(prev => [...newOrders, ...prev]);
+    const nextOrders = [...newOrders, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("basket_checkout_created", { orders: nextOrders });
+    sendOrdersToGoogleSheet(newOrders, "basket_checkout");
     (paymentMethod || "promptpay") !== "cod" ? setLastBillOrders(newOrders) : setLastBillOrders(null);
     saveCustomerAddressSlot({ customer, phone, address });
-    reduceStockForOrder(basket);
+    reduceStockForOrder(basket, { orders: nextOrders });
+    checkoutDoneRef.current = true;
     setBasket([]);
     setCheckoutData(null);
     setBasketOpen(false);
@@ -2913,8 +4095,12 @@ function App() {
     );
     if (!customer)          { setAuthError(t.auth.wrongCredentials); return; }
     if (customer.password !== pw) { setAuthError(t.auth.wrongCredentials); return; }
-    setCurrentCustomer(customer);
-    authRemember ? rememberLogin("customer", customer.email || customer.phone) : forgetLogin();
+    const onlineCustomer = normalizeCustomerOnlineProfile({ ...customer, lastLoginAt:new Date().toISOString() });
+    const nextCustomers = customers.map(c => c.id === onlineCustomer.id ? onlineCustomer : c);
+    setCustomers(nextCustomers);
+    setCurrentCustomer(onlineCustomer);
+    queueImmediateOnlineSave("customer_login_remembered_online", { customers: nextCustomers });
+    authRemember ? rememberLogin("customer", onlineCustomer.email || onlineCustomer.phone) : forgetLogin();
     setLoginOpen(false);
     resetAuthForm();
   }
@@ -2930,16 +4116,23 @@ function App() {
     if (phone && customers.find(c => normalizePhone(c.phone)===phone)) {
       setAuthError(lang==="th" ? "เบอร์โทรนี้มีในระบบแล้ว" : "This phone number already has an account"); return;
     }
-    const newCustomer = {
+    const newCustomer = normalizeCustomerOnlineProfile({
       id: "C" + String(customers.length + 1).padStart(3,"0"),
       email: authEmail.trim(),
       password: authPw.trim(),
       name: authName.trim(),
       phone: authPhone.trim(),
       joinDate: new Date().toISOString().slice(0,10),
-    };
-    setCustomers(prev => [...prev, newCustomer]);
+      addresses:[],
+      favorites:[],
+      savedCars:[],
+      createdAt:new Date().toISOString(),
+      lastLoginAt:new Date().toISOString(),
+    });
+    const nextCustomers = [...customers, newCustomer];
+    setCustomers(nextCustomers);
     setCurrentCustomer(newCustomer);
+    queueImmediateOnlineSave("customer_registered_online", { customers: nextCustomers });
     authRemember ? rememberLogin("customer", newCustomer.email || newCustomer.phone) : forgetLogin();
     setLoginOpen(false);
     resetAuthForm();
@@ -3009,8 +4202,11 @@ function App() {
 
   function appendOrderTimeline(orderId, event) {
     if (!orderId || !event) return;
-    setOrders(prev=>prev.map(o=>o.id===orderId ? { ...o, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80) } : o));
-    setDetailOrder(prev=>prev && prev.id===orderId ? { ...prev, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===orderId ? { ...o, updatedAt:changedAt, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80) } : o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_timeline_updated", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===orderId ? { ...prev, updatedAt:changedAt, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
   }
 
   function addManualOrderTimelineNote(order) {
@@ -3023,15 +4219,22 @@ function App() {
 
   function saveEditOrder() {
     const event = makeOrderEvent("edit", lang==="th" ? "แก้ไขรายละเอียดคำสั่งซื้อ" : "Edited order details");
-    const nextEditOrder = { ...editOrder, timeline:[event, ...(Array.isArray(editOrder.timeline) ? editOrder.timeline : [])].slice(0, 80) };
-    setOrders(prev=>prev.map(o=>o.id===editOrder.id?nextEditOrder:o));
+    const changedAt = new Date().toISOString();
+    const nextEditOrder = attachShippingRecord({ ...editOrder, updatedAt:changedAt, timeline:[event, ...(Array.isArray(editOrder.timeline) ? editOrder.timeline : [])].slice(0, 80) });
+    const nextOrders = orders.map(o=>o.id===editOrder.id?nextEditOrder:o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_edited", { orders: nextOrders });
     setDetailOrder(prev=>prev && prev.id===editOrder.id ? nextEditOrder : prev);
     logActivity("order_edit", `Edited order ${editOrder.id}`);
     setEditOrder(null);
   }
   function saveNewOrder() {
     const id = "ORD-"+String(orders.length+1).padStart(3,"0");
-    setOrders(prev=>[{ ...newOrder, id, date:new Date().toISOString().slice(0,10), price:Number(newOrder.price), labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "สร้างคำสั่งซื้อด้วยแอดมิน" : "Manual order created by admin")] }, ...prev]);
+    const manualOrder = attachShippingRecord({ ...newOrder, id, date:new Date().toISOString().slice(0,10), price:Number(newOrder.price), labelPrinted:false, timeline:[makeOrderEvent("created", lang==="th" ? "สร้างคำสั่งซื้อด้วยแอดมิน" : "Manual order created by admin")] });
+    const nextOrders = [manualOrder, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("admin_manual_order_created", { orders: nextOrders });
+    sendOrdersToGoogleSheet(manualOrder, "admin_manual_order");
     logActivity("order_add", `Added manual order for ${newOrder.customer || "customer"}`);
     setNewOrderModal(false);
     setNewOrder({ customer:"", brand:"", model:"", year:"", price:"", phone:"", address:"", customerNote:"", adminNote:"", shippingCompany:"", trackingNumber:"", status:"pending", paymentStatus:"waiting_review", adminFlag:"none" });
@@ -3039,7 +4242,7 @@ function App() {
 
   function duplicateOrder(order) {
     const newId = "ORD-"+String(orders.length+1).padStart(3,"0");
-    setOrders(prev => [{
+    const duplicatedOrder = attachShippingRecord({
       ...order,
       id:newId,
       date:new Date().toISOString().slice(0,10),
@@ -3053,15 +4256,22 @@ function App() {
       trackingNumber:"",
       adminNote:"",
       timeline:[makeOrderEvent("created", lang==="th" ? `ทำสำเนาจาก ${order.id}` : `Duplicated from ${order.id}`)],
-    }, ...prev]);
+    });
+    const nextOrders = [duplicatedOrder, ...orders];
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("admin_order_duplicated", { orders: nextOrders });
+    sendOrdersToGoogleSheet(duplicatedOrder, "admin_duplicate_order");
     logActivity("order_duplicate", `Duplicated ${order.id}`);
   }
 
   function updateOrderStatus(order, status) {
     if (!order || order.status === status) return;
     const event = makeOrderEvent("status", lang==="th" ? `เปลี่ยนสถานะจาก ${ta.statusLabels[order.status] || order.status} เป็น ${ta.statusLabels[status] || status}` : `Changed status from ${ta.statusLabels[order.status] || order.status} to ${ta.statusLabels[status] || status}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,status,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,status,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_status_changed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,status,statusUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}) : prev);
     logActivity("order_status", `Changed ${order.id} from ${ta.statusLabels[order.status] || order.status} to ${ta.statusLabels[status] || status}`);
   }
 
@@ -3069,8 +4279,11 @@ function App() {
     const currentPayment = order?.paymentStatus || "waiting_review";
     if (!order || currentPayment === paymentStatus) return;
     const event = makeOrderEvent("payment", lang==="th" ? `เปลี่ยนการชำระเงินจาก ${ta.paymentLabels[currentPayment] || currentPayment} เป็น ${ta.paymentLabels[paymentStatus] || paymentStatus}` : `Changed payment from ${ta.paymentLabels[currentPayment] || currentPayment} to ${ta.paymentLabels[paymentStatus] || paymentStatus}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,paymentStatus,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,paymentStatus,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("payment_status_changed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,paymentStatus,paymentUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}) : prev);
     logActivity("payment_status", `Changed ${order.id} payment from ${ta.paymentLabels[currentPayment] || currentPayment} to ${ta.paymentLabels[paymentStatus] || paymentStatus}`);
   }
 
@@ -3078,8 +4291,11 @@ function App() {
     const currentFlag = order?.adminFlag || "none";
     if (!order || currentFlag === adminFlag) return;
     const event = makeOrderEvent("flag", lang==="th" ? `เปลี่ยนธงแอดมินจาก ${orderFlagLabel(currentFlag)} เป็น ${orderFlagLabel(adminFlag)}` : `Changed admin flag from ${orderFlagLabel(currentFlag)} to ${orderFlagLabel(adminFlag)}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,adminFlag,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,adminFlag,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_flag_changed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,adminFlag,flagUpdatedAt:changedAt,updatedAt:changedAt,timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}) : prev);
     logActivity("order_flag", `Changed ${order.id} flag from ${orderFlagLabel(currentFlag)} to ${orderFlagLabel(adminFlag)}`);
   }
 
@@ -3093,8 +4309,11 @@ function App() {
     }
     const nextStatus = ["delivered","cancelled"].includes(order.status) ? order.status : "shipped";
     const event = makeOrderEvent("tracking", lang==="th" ? `บันทึกเลขพัสดุ ${shippingCompany}: ${trackingNumber}${nextStatus==="shipped" ? " และเปลี่ยนเป็นกำลังจัดส่ง" : ""}` : `Saved tracking ${shippingCompany}: ${trackingNumber}${nextStatus==="shipped" ? " and moved to shipping" : ""}`);
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o, shippingCompany, trackingNumber, status:nextStatus, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? { ...prev, shippingCompany, trackingNumber, status:nextStatus, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) } : prev);
+    const changedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}):o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("order_tracking_saved", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({ ...prev, shippingCompany, trackingNumber, trackingUpdatedAt:changedAt, status:nextStatus, statusUpdatedAt:changedAt, updatedAt:changedAt, timeline:[event, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80) }) : prev);
     logActivity("tracking_update", `Saved tracking for ${order.id}: ${shippingCompany} ${trackingNumber}${nextStatus==="shipped" ? " and moved to shipping" : ""}`);
     alert(lang==="th" ? "บันทึกเลขพัสดุแล้ว ลูกค้าจะเห็นในประวัติคำสั่งซื้อ" : "Tracking saved. Customer can see it in order history.");
   }
@@ -3412,21 +4631,34 @@ function App() {
 
   function exportOrdersCSV(rows = orders) {
     const headers = [
-      "Order ID","Date","Customer","Phone","Email","Address","Brand","Model","Quantity","Year","Price","Status","Delivery Method","Payment Method","Payment","Admin Flag","Shipping Company","Tracking","Customer Note","Admin Note"
+      "Order ID","Date","Customer","Phone","Email","Address","Brand","Model","Quantity","Year","Price","Status","Delivery Method","Payment Method","Payment","Admin Flag","Shipping Company","Tracking","Customer Note","Admin Note","Shipping Record ID","Sender","Sender Address","Receiver","Receiver Phone","Receiver Address","Label Printed At","Label Print Count","COD Amount","Items JSON"
     ];
     const csvCell = (value) => `"${String(value ?? "").replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
     const lines = [
       headers.map(csvCell).join(","),
-      ...rows.map(o => [
-        o.id, o.date, o.customer, o.phone, o.customerEmail, o.address,
-        o.brand, o.model, o.quantity || 1, o.year, o.price,
-        ta.statusLabels[o.status] || o.status,
-        deliveryMethodLabel(o.deliveryMethod),
-        paymentMethodLabel(o.paymentMethod),
-        ta.paymentLabels[o.paymentStatus || "waiting_review"] || o.paymentStatus || "",
-        orderFlagLabel(o.adminFlag),
-        o.shippingCompany, o.trackingNumber, o.customerNote, o.adminNote
-      ].map(csvCell).join(","))
+      ...rows.map(o => {
+        const record = getShippingRecord(o);
+        return [
+          o.id, o.date, o.customer, o.phone, o.customerEmail, o.address,
+          o.brand, o.model, o.quantity || 1, o.year, o.price,
+          ta.statusLabels[o.status] || o.status,
+          deliveryMethodLabel(o.deliveryMethod),
+          paymentMethodLabel(o.paymentMethod),
+          ta.paymentLabels[o.paymentStatus || "waiting_review"] || o.paymentStatus || "",
+          orderFlagLabel(o.adminFlag),
+          o.shippingCompany, o.trackingNumber, o.customerNote, o.adminNote,
+          record.id,
+          record.sender?.name,
+          record.sender?.address,
+          record.receiver?.name,
+          record.receiver?.phone,
+          record.receiver?.address,
+          record.printedAt,
+          record.printedCount,
+          record.payment?.codAmount,
+          JSON.stringify(record.items || [])
+        ].map(csvCell).join(",");
+      })
     ];
     const blob = new Blob(["\uFEFF" + lines.join("\n")], { type:"text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -3440,6 +4672,40 @@ function App() {
     logActivity("backup_download", "Downloaded business backup");
   }
 
+  function exportAnalyticsCSV(rows = analytics) {
+    const headers = [
+      "Time","Visitor ID","Customer ID","Customer Name","Customer Phone","Event","Page","Brand","Model","SKU","Seconds Stayed","Reason"
+    ];
+    const csvCell = (value) => `"${String(value ?? "").replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
+    const lines = [
+      headers.map(csvCell).join(","),
+      ...rows.map(e => [
+        e.date,
+        e.visitor,
+        e.customerId,
+        e.customerName,
+        e.customerPhone,
+        e.type,
+        e.page,
+        e.brand,
+        e.model,
+        e.sku,
+        e.seconds,
+        e.reason,
+      ].map(csvCell).join(","))
+    ];
+    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type:"text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `skkj-customer-interest-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    logActivity("analytics_download", "Downloaded customer interest history");
+  }
+
   function downloadBackup() {
     const backup = {
       type:"skkj-business-backup",
@@ -3451,6 +4717,7 @@ function App() {
       accounts,
       activityLog,
       analytics,
+      syncEvents,
       hiddenPartTypes,
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type:"application/json;charset=utf-8" });
@@ -3481,16 +4748,30 @@ function App() {
       setCustomers(backup.customers);
       setAccounts(backup.accounts);
       setHiddenPartTypes(Array.isArray(backup.hiddenPartTypes) ? backup.hiddenPartTypes : []);
-      setActivityLog([{
+      const restoredActivityLog = [{
         id: Date.now(),
         type:"backup_restore",
         detail:`Restored backup file ${file.name}`,
         user: currentUser?.name || currentUser?.email || (lang==="th" ? "ระบบ" : "System"),
         date: new Date().toLocaleString(lang==="th" ? "th-TH" : "en-US"),
-      }, ...(Array.isArray(backup.activityLog) ? backup.activityLog : [])].slice(0, 200));
+      }, ...(Array.isArray(backup.activityLog) ? backup.activityLog : [])].slice(0, 200);
+      setActivityLog(restoredActivityLog);
       const restoredAnalytics = Array.isArray(backup.analytics) ? backup.analytics : [];
       setAnalytics(restoredAnalytics);
+      const restoredSyncEvents = Array.isArray(backup.syncEvents) ? backup.syncEvents : [];
+      setSyncEvents(restoredSyncEvents);
+      queueImmediateOnlineSave("backup_restored", {
+        brands: backup.brands,
+        orders: backup.orders,
+        customers: backup.customers,
+        accounts: backup.accounts,
+        hiddenPartTypes: Array.isArray(backup.hiddenPartTypes) ? backup.hiddenPartTypes : [],
+        activityLog: restoredActivityLog,
+        analytics: restoredAnalytics,
+        syncEvents: restoredSyncEvents,
+      });
       try { localStorage.setItem("skkj_v2_analytics_v1", JSON.stringify(restoredAnalytics)); } catch (error) {}
+      try { localStorage.setItem("skkj_v2_sync_events_v1", JSON.stringify(restoredSyncEvents)); } catch (error) {}
       setBasket([]);
       setEditOrder(null);
       setNewOrderModal(false);
@@ -3512,8 +4793,11 @@ function App() {
     const labelEvent = makeOrderEvent("label", order.status === "pending"
       ? (lang==="th" ? "พิมพ์ป้าย A6 และเปลี่ยนเป็นกำลังบรรจุ" : "Printed A6 label and moved to packing")
       : (lang==="th" ? "พิมพ์ป้าย A6" : "Printed A6 label"));
-    setOrders(prev=>prev.map(o=>o.id===order.id?{...o,labelPrinted:true,status:o.status==="pending"?"processing":o.status,timeline:[labelEvent, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}:o));
-    setDetailOrder(prev=>prev && prev.id===order.id ? {...prev,labelPrinted:true,status:prev.status==="pending"?"processing":prev.status,timeline:[labelEvent, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)} : prev);
+    const printedAt = new Date().toISOString();
+    const nextOrders = orders.map(o=>o.id===order.id?attachShippingRecord({...o,labelPrinted:true,labelPrintedAt:printedAt,status:o.status==="pending"?"processing":o.status,statusUpdatedAt:o.status==="pending"?printedAt:o.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(o.timeline) ? o.timeline : [])].slice(0, 80)}, { printed:true, now:printedAt }):o);
+    setOrders(nextOrders);
+    queueImmediateOnlineSave("delivery_label_printed", { orders: nextOrders });
+    setDetailOrder(prev=>prev && prev.id===order.id ? attachShippingRecord({...prev,labelPrinted:true,labelPrintedAt:printedAt,status:prev.status==="pending"?"processing":prev.status,statusUpdatedAt:prev.status==="pending"?printedAt:prev.statusUpdatedAt,updatedAt:printedAt,timeline:[labelEvent, ...(Array.isArray(prev.timeline) ? prev.timeline : [])].slice(0, 80)}, { printed:true, now:printedAt }) : prev);
     logActivity("label_print", `Printed A6 label for ${order.id}${order.status === "pending" ? " and moved status to packing" : ""}`);
     labelWindow.document.write(`
       <!doctype html>
@@ -3623,11 +4907,11 @@ function App() {
         @keyframes v2FloatIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
         @keyframes v2SoftPulse{0%,100%{box-shadow:0 0 0 0 rgba(154,0,24,.18)}50%{box-shadow:0 0 0 8px rgba(154,0,24,0)}}
         @keyframes v2HeroSlide{from{opacity:0;transform:translateX(34px) scale(.985)}to{opacity:1;transform:translateX(0) scale(1)}}
-        @keyframes favoritePump{0%{transform:scale(1)}35%{transform:scale(1.34)}62%{transform:scale(.92)}100%{transform:scale(1)}}
-        .favorite-heart-btn{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:0!important;width:32px;height:32px;color:#777;cursor:pointer;font-family:Arial,sans-serif;font-size:29px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transform-origin:center;transition:color .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1),opacity .28s cubic-bezier(.22,1,.36,1)}
+        @keyframes favoritePump{0%{transform:scale(1);color:#BDB8B0}20%{transform:scale(1.45);color:#E82A3C}55%{transform:scale(.88)}80%{transform:scale(1.1);color:#E82A3C}100%{transform:scale(1);color:#E82A3C}}
+        .favorite-heart-btn{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:0!important;width:32px;height:32px;color:#BDB8B0;cursor:pointer;font-family:Arial,sans-serif;font-size:29px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transform-origin:center;transition:color .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1),opacity .28s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent;outline:none}
         .favorite-heart-btn:hover{transform:scale(1.1);box-shadow:none!important}
         .favorite-heart-btn:active{transform:scale(1.24)!important}
-        .favorite-heart-btn.is-favorite{color:#1A1A1A}
+        .favorite-heart-btn.is-favorite{color:#E82A3C}
         .favorite-heart-btn.favorite-pump{animation:favoritePump .42s cubic-bezier(.22,1,.36,1)}
         button{transition:transform .34s cubic-bezier(.22,1,.36,1), box-shadow .34s cubic-bezier(.22,1,.36,1), border-color .34s cubic-bezier(.22,1,.36,1), background .34s cubic-bezier(.22,1,.36,1), color .34s cubic-bezier(.22,1,.36,1), opacity .34s cubic-bezier(.22,1,.36,1)}
         button:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(17,17,17,.12)}
@@ -3673,7 +4957,7 @@ function App() {
         .v2-home-sub{margin-left:0!important;margin-right:0!important;max-width:570px!important;font-size:16px!important}
         .v2-home-actions{justify-content:flex-start!important}
         .v2-hero-visual{position:relative;min-height:350px;border-radius:22px;background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.8);box-shadow:0 24px 60px rgba(17,17,17,.14);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-right:4px;max-width:430px;width:100%;justify-self:end}
-        .v2-hero-visual:before{content:"Thong-in Autoparts";position:absolute;color:rgba(0,0,0,.08);font-size:28px;font-style:italic;font-weight:900;transform:rotate(-5deg)}
+        .v2-hero-visual:before{content:"SKKJ Autopart";position:absolute;color:rgba(0,0,0,.04);font-size:22px;font-style:italic;font-weight:900;transform:rotate(-5deg)}
         .v2-hero-slide{position:relative;z-index:1;width:100%;height:100%;min-height:350px;display:flex;align-items:center;justify-content:center;animation:v2HeroSlide .68s cubic-bezier(.22,1,.36,1)}
         .v2-hero-visual img.v2-hero-main-image{width:108%;height:285px;object-fit:contain;position:relative;z-index:1;filter:none;transition:transform .55s cubic-bezier(.22,1,.36,1)}
         .v2-hero-visual:hover img.v2-hero-main-image{transform:scale(1.045) rotate(-1deg)}
@@ -3684,11 +4968,12 @@ function App() {
         .v2-hero-price span{font-size:11px;color:#777;font-weight:900}
         .v2-hero-fast{position:absolute;top:18px;right:18px;z-index:2;background:var(--skkj-red);color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;box-shadow:0 14px 28px rgba(154,0,24,.26)}
         .v2-logo-strip{position:absolute;left:18px;top:18px;z-index:2;pointer-events:none}
-        .v2-logo-strip > span{min-width:96px;height:42px;background:rgba(255,255,255,.88);border:1px solid rgba(227,222,212,.9);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:6px 13px;box-shadow:0 12px 26px rgba(17,17,17,.08);backdrop-filter:blur(10px)}
-        .v2-logo-strip img{max-width:none;max-height:none;object-fit:contain}
+        .v2-logo-strip > span{width:112px;height:54px;background:rgba(255,255,255,.88);border:1px solid rgba(227,222,212,.9);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:7px 12px;box-shadow:0 12px 26px rgba(17,17,17,.08);backdrop-filter:blur(10px);overflow:hidden;box-sizing:border-box}
+        .v2-logo-strip [data-logo-place="heroBadge"]{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
+        .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:72%!important;max-width:88px!important;max-height:38px!important;object-fit:contain!important;transform:none!important;flex-shrink:1!important}
         .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:16px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
         .v2-hero-order:disabled{background:#eee;color:#999;box-shadow:none;cursor:not-allowed}
-        .v2-hero-nav{position:absolute;top:50%;z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
+        .v2-hero-nav{position:absolute;top:38%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
         .v2-hero-nav.left{left:14px}
         .v2-hero-nav.right{right:14px}
         .fitment-control{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E6E1D8;border-radius:22px;padding:10px;box-shadow:0 14px 34px rgba(17,17,17,0.08);margin:0 auto 22px}
@@ -3760,14 +5045,16 @@ function App() {
           .v2-hero-slide{min-height:230px!important}
           .v2-hero-visual img.v2-hero-main-image{height:180px!important;width:112%!important}
           .v2-logo-strip{left:12px!important;top:12px!important}
-          .v2-logo-strip > span{min-width:76px!important;height:36px!important}
+          .v2-logo-strip > span{width:86px!important;height:42px!important;padding:6px 8px!important;overflow:hidden!important;box-sizing:border-box!important}
+          .v2-logo-strip [data-logo-place="heroBadge"]{width:100%!important;height:100%!important;overflow:hidden!important}
+          .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:70%!important;max-width:68px!important;max-height:28px!important;object-fit:contain!important;transform:none!important}
           .v2-hero-title{bottom:82px!important;max-width:calc(100% - 118px)!important}
           .v2-hero-price{left:12px!important;bottom:12px!important;padding:9px 11px!important}
           .v2-hero-price strong{font-size:18px!important}
           .v2-hero-fast{top:12px!important;right:12px!important}
           .v2-hero-title{bottom:58px!important;max-width:178px!important;overflow:hidden!important;text-overflow:ellipsis!important}
           .v2-hero-order{right:12px!important;bottom:12px!important;padding:10px 12px!important;font-size:12px!important;border-radius:13px!important}
-          .v2-hero-nav{width:30px!important;height:38px!important;font-size:22px!important}
+          .v2-hero-nav{width:30px!important;height:38px!important;font-size:22px!important;transform:translateY(-50%)!important;padding:0!important}
           .v2-brand-heading{align-items:flex-start!important;flex-direction:column!important;gap:4px!important}
           .feature-card { min-height: 0 !important; padding: 18px 20px !important; border-radius: 14px !important; }
           .feature-card-icon { font-size: 24px !important; margin-bottom: 10px !important; }
@@ -3793,11 +5080,11 @@ function App() {
           .admin-orders-table .order-status-cell { margin-top: 10px !important; }
           .admin-orders-table .order-actions-cell > div { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 7px !important; }
           .admin-orders-table .order-actions-cell button, .admin-orders-table .order-actions-cell select { width: 100% !important; min-width: 0 !important; text-align: center !important; }
-          .mobile-login-btn { width: 36px !important; height: 36px !important; border-radius: 18px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 0 !important; overflow: visible !important; }
-          .mobile-login-btn::before { content: "🔐"; font-size: 16px; line-height: 1; }
+          .mobile-login-btn { width: 36px !important; height: 36px !important; border-radius: 18px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 0 !important; overflow: hidden !important; box-sizing: border-box !important; line-height: 1 !important; }
+          .mobile-login-btn::before { content: "🔐"; width: 100% !important; height: 100% !important; font-size: 16px !important; line-height: 1 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; transform: none !important; }
           .mobile-login-btn.customer-profile::before { content: "" !important; }
           .mobile-login-btn span { display: none !important; }
-          .mobile-login-btn > span:first-child { display: inline-flex !important; font-size: 14px !important; }
+          .mobile-login-btn > span:first-child { display: inline-flex !important; width: 24px !important; height: 24px !important; min-width: 24px !important; min-height: 24px !important; margin: 0 !important; padding: 0 !important; align-items: center !important; justify-content: center !important; font-size: 12px !important; line-height: 1 !important; transform: none !important; position: static !important; }
           .desktop-admin-btn { display: none !important; }
           .mobile-admin-btn { width: 44px !important; height: 44px !important; border-radius: 22px !important; padding: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 17px !important; position: fixed !important; top: auto !important; right: auto !important; left: 12px !important; bottom: 12px !important; z-index: 140 !important; background: #1A1A1A !important; border: 1px solid rgba(255,255,255,.28) !important; color: #fff !important; cursor: pointer !important; box-shadow: 0 12px 30px rgba(17,17,17,.28) !important; }
           .lang-switch { position: absolute !important; top: 0 !important; right: 0 !important; z-index: 2 !important; }
@@ -3817,8 +5104,21 @@ function App() {
           .checkout-actions button { min-height: 44px !important; }
           .order-success-banner { top: auto !important; left: 12px !important; right: 12px !important; bottom: 78px !important; transform: none !important; width: auto !important; max-width: none !important; white-space: normal !important; justify-content: center !important; text-align: center !important; padding: 12px 14px !important; border-radius: 13px !important; font-size: 13px !important; line-height: 1.45 !important; }
           .line-help-float { right: 12px !important; bottom: 12px !important; max-width: calc(100vw - 24px) !important; }
-          .line-help-card { width: min(210px, calc(100vw - 24px)) !important; }
+          .line-help-card { width: min(340px, calc(100vw - 24px)) !important; max-height: calc(100vh - 190px) !important; overflow-y: auto !important; }
+          .line-help-line-card { width: min(340px, calc(100vw - 24px)) !important; grid-template-columns: 54px 1fr !important; padding: 10px !important; }
+          .line-help-line-card img { width: 54px !important; height: 54px !important; }
           .line-help-button { padding: 11px 14px !important; font-size: 14px !important; max-width: calc(100vw - 24px) !important; }
+        @keyframes backToTopFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes skeletonShimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+        .skk-skeleton{background:#EFEDE8;background-image:linear-gradient(90deg,#EFEDE8 0px,#F7F5F1 200px,#EFEDE8 400px);background-size:800px 100%;animation:skeletonShimmer 1.3s linear infinite;border-radius:8px}
+        .skk-skel-card{background:#fff;border:1px solid #ECECEC;border-radius:14px;overflow:hidden;padding:0}
+        .skk-breadcrumb{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:12.5px;color:#999;margin-bottom:14px}
+        .skk-breadcrumb a,.skk-breadcrumb span.crumb{color:#777;cursor:pointer;font-weight:700;text-decoration:none}
+        .skk-breadcrumb a:hover,.skk-breadcrumb span.crumb:hover{color:#1A1A1A}
+        .skk-breadcrumb .crumb-current{color:#1A1A1A;font-weight:900;cursor:default}
+        .skk-breadcrumb .crumb-sep{color:#CCC;font-weight:700}
+        .back-to-top-btn{position:fixed;left:18px;bottom:18px;z-index:9998;width:44px;height:44px;border-radius:50%;background:#1A1A1A;color:#fff;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(17,17,17,0.22);animation:backToTopFadeIn .28s cubic-bezier(.22,1,.36,1);transition:background .2s,transform .2s}
+        .back-to-top-btn:hover{background:#333;transform:translateY(-2px)!important}
           .admin-label-alert { top: auto !important; left: 12px !important; right: 12px !important; bottom: 78px !important; max-width: none !important; }
           .purchase-history-panel { padding: 16px !important; border-radius: 14px !important; }
           .customer-order-summary { grid-template-columns: 1fr !important; }
@@ -3879,11 +5179,12 @@ function App() {
           .v2-hero-visual:before { font-size: 18px !important; opacity: .7 !important; }
           .v2-hero-visual img.v2-hero-main-image { height: 150px !important; width: 108% !important; }
           .v2-logo-strip { left: 10px !important; top: 10px !important; }
-          .v2-logo-strip > span { min-width: 64px !important; width: 64px !important; height: 32px !important; border-radius: 10px !important; padding: 5px !important; }
-          .v2-logo-strip img { max-width: none !important; max-height: none !important; }
+          .v2-logo-strip > span { min-width: 0 !important; width: 74px !important; height: 36px !important; border-radius: 10px !important; padding: 5px 7px !important; overflow: hidden !important; box-sizing: border-box !important; }
+          .v2-logo-strip [data-logo-place="heroBadge"] { width: 100% !important; height: 100% !important; overflow: hidden !important; }
+          .v2-logo-strip [data-logo-place="heroBadge"] img { width: 82% !important; height: 68% !important; max-width: 58px !important; max-height: 23px !important; object-fit: contain !important; transform: none !important; }
           .v2-hero-fast { top: 10px !important; right: 10px !important; padding: 6px 10px !important; font-size: 10px !important; }
           .v2-hero-title { display: none !important; }
-          .v2-hero-nav { width: 28px !important; height: 36px !important; border-radius: 11px !important; font-size: 20px !important; }
+          .v2-hero-nav { width: 28px !important; height: 36px !important; border-radius: 11px !important; font-size: 20px !important; transform: translateY(-50%) !important; padding: 0 !important; }
           .v2-hero-nav.left { left: 9px !important; }
           .v2-hero-nav.right { right: 9px !important; }
           .v2-hero-price { left: 10px !important; bottom: 10px !important; padding: 8px 10px !important; border-radius: 13px !important; }
@@ -3915,7 +5216,19 @@ function App() {
           .v2-brand-grid button div { color: inherit !important; -webkit-text-fill-color: inherit !important; }
           .v2-brand-grid button div[style*="color:#888"], .v2-brand-grid button div[style*="color: #888"] { color: #888 !important; -webkit-text-fill-color: #888 !important; }
           .v2-brand-grid button > div:first-child { margin-bottom: 7px !important; min-height: 48px !important; align-items: center !important; }
-          .v2-brand-grid button img { max-height: none !important; object-fit: contain !important; }
+          .v2-brand-grid button [data-logo-place="brandCard"] {
+            width: 86px !important;
+            height: 40px !important;
+            overflow: hidden !important;
+          }
+          .v2-brand-grid button [data-logo-place="brandCard"] img {
+            width: auto !important;
+            height: auto !important;
+            max-width: 78px !important;
+            max-height: 34px !important;
+            object-fit: contain !important;
+            transform: translateY(0) !important;
+          }
 
           .v2-catalog-tools { border-radius: 14px !important; padding: 12px !important; margin-bottom: 14px !important; }
           .v2-catalog-tools > div { flex-wrap: wrap !important; }
@@ -3953,7 +5266,6 @@ function App() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg>
             </div>
             <span style={{ fontWeight:800, fontSize:18, letterSpacing:"-0.5px", color:"#111" }}>SKKJ Autopart</span>
-            <span className="v2-concept-badge" style={{ padding:"4px 8px", fontSize:10 }}>Version 2</span>
           </div>
           <div className="site-actions" style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap", justifyContent:"flex-end" }}>
             {navPages.map(p=>(
@@ -4318,6 +5630,7 @@ function App() {
         const sc = ORDER_STATUS[detailOrder.status] || ORDER_STATUS.pending;
         const pc = PAYMENT_STATUS[detailOrder.paymentStatus || "waiting_review"] || PAYMENT_STATUS.waiting_review;
         const fc = orderFlagMeta(detailOrder.adminFlag);
+        const shippingRecord = getShippingRecord(detailOrder);
         return (
           <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:210, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
             <div className="skkj-modal-card" style={{ background:"#fff", borderRadius:16, padding:28, width:"100%", maxWidth:720, maxHeight:"90vh", overflowY:"auto" }}>
@@ -4399,6 +5712,61 @@ function App() {
                   <button onClick={()=>saveOrderTracking(detailOrder)} style={{ marginTop:10, width:"100%", background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:9, padding:"10px 12px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"บันทึกเลขพัสดุ และเปลี่ยนเป็นกำลังจัดส่ง":"Save tracking and mark as shipping"}
                   </button>
+                </div>
+              </div>
+
+              <div style={{ border:"1px solid #E0DDD8", borderRadius:14, padding:14, background:"#FAFAF8", marginBottom:16 }}>
+                <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:12 }}>
+                  <div>
+                    <div style={{ fontSize:14, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ประวัติข้อมูลจัดส่งที่บันทึกไว้":"Saved Delivery Record"}</div>
+                    <div style={{ fontSize:11, color:"#777", marginTop:2 }}>{lang==="th"?"ส่วนนี้ไม่พิมพ์ลงป้าย A6 แต่บันทึกไว้กับออเดอร์ใน Supabase สำหรับแอดมินตรวจย้อนหลัง":"This is not printed on the A6 label. It is saved with the order for admin history."}</div>
+                  </div>
+                  <span style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#777", borderRadius:999, padding:"4px 9px", fontSize:11, fontWeight:800 }}>{shippingRecord.id}</span>
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))", gap:10, marginBottom:12 }}>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ผู้ส่ง":"Sender"}</div>
+                    <div style={{ fontSize:13, color:"#1A1A1A", fontWeight:900 }}>{shippingRecord.sender?.name || "SKKJ Autopart"}</div>
+                    <div style={{ marginTop:5, fontSize:12, color:"#555", lineHeight:1.5 }}>{shippingRecord.sender?.address || "-"}</div>
+                  </div>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ผู้รับ":"Receiver"}</div>
+                    <div style={{ fontSize:13, color:"#1A1A1A", fontWeight:900 }}>{shippingRecord.receiver?.name || "-"}</div>
+                    <div style={{ marginTop:5, fontSize:12, color:"#555", lineHeight:1.5 }}>{shippingRecord.receiver?.phone || "-"}<br/>{shippingRecord.receiver?.address || "-"}</div>
+                  </div>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ขนส่ง / ชำระเงิน":"Delivery / Payment"}</div>
+                    <div style={{ fontSize:12, color:"#555", lineHeight:1.65 }}>
+                      {lang==="th"?"จัดส่ง":"Delivery"}: <strong style={{ color:"#1A1A1A" }}>{shippingRecord.delivery?.methodLabel || "-"}</strong><br/>
+                      {lang==="th"?"บริษัท":"Company"}: {shippingRecord.delivery?.company || "-"}<br/>
+                      {lang==="th"?"เลขพัสดุ":"Tracking"}: {shippingRecord.delivery?.trackingNumber || "-"}<br/>
+                      {lang==="th"?"จ่ายเงิน":"Payment"}: {shippingRecord.payment?.methodLabel || "-"} / {shippingRecord.payment?.statusLabel || "-"}<br/>
+                      {lang==="th"?"ยอดรวม":"Total"}: <strong style={{ color:"#9A0018" }}>{fmt(shippingRecord.payment?.total || 0)}</strong>
+                    </div>
+                  </div>
+                  <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, padding:12 }}>
+                    <div style={{ fontSize:10, color:"#888", fontWeight:900, marginBottom:6 }}>{lang==="th"?"ข้อมูลป้าย":"Label Info"}</div>
+                    <div style={{ fontSize:12, color:"#555", lineHeight:1.65 }}>
+                      {lang==="th"?"พิมพ์แล้ว":"Printed"}: <strong style={{ color:shippingRecord.delivery?.labelPrinted?"#166534":"#777" }}>{shippingRecord.delivery?.labelPrinted ? (lang==="th"?"ใช่":"Yes") : (lang==="th"?"ยัง":"No")}</strong><br/>
+                      {lang==="th"?"จำนวนครั้ง":"Print count"}: {shippingRecord.printedCount || 0}<br/>
+                      {lang==="th"?"พิมพ์ล่าสุด":"Last printed"}: {shippingRecord.printedAt ? new Date(shippingRecord.printedAt).toLocaleString(lang==="th"?"th-TH":"en-US") : "-"}<br/>
+                      {lang==="th"?"ยอดปลายทาง":"COD amount"}: {fmt(shippingRecord.payment?.codAmount || 0)}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:11, overflow:"hidden" }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"minmax(160px,1fr) 70px 92px", gap:8, padding:"9px 11px", background:"#FAFAF8", color:"#777", fontSize:11, fontWeight:900 }}>
+                    <div>{lang==="th"?"สินค้า":"Item"}</div>
+                    <div>{lang==="th"?"จำนวน":"Qty"}</div>
+                    <div>{lang==="th"?"ราคา":"Total"}</div>
+                  </div>
+                  {(shippingRecord.items || []).map((item, index)=>(
+                    <div key={index} style={{ display:"grid", gridTemplateColumns:"minmax(160px,1fr) 70px 92px", gap:8, padding:"10px 11px", borderTop:index===0?"none":"1px solid #F0EEE8", fontSize:12, color:"#333" }}>
+                      <div><strong>{item.brand} {item.model}</strong><br/><span style={{ color:"#888", fontSize:11 }}>{item.year || "-"} · {item.sku || "-"}</span></div>
+                      <div style={{ fontFamily:"monospace", fontWeight:900 }}>{item.quantity || 1}</div>
+                      <div style={{ fontFamily:"monospace", fontWeight:900 }}>{fmt(item.total || 0)}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -4498,7 +5866,7 @@ function App() {
                   <div className="fitment-control">
                     <div className="part-type-picker" style={{ display:"inline-flex", alignItems:"center", gap:10, background:"transparent", border:"none", borderRadius:16, padding:"0", margin:0, boxShadow:"none" }}>
                       <span style={{ color:"#777", fontSize:12, fontWeight:800, whiteSpace:"nowrap" }}>{lang==="th"?"เลือกอะไหล่":"Choose part"}</span>
-                      <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"9px 28px 9px 12px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
+                      <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ width:lang==="th"?146:158, maxWidth:"100%", background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"9px 26px 9px 12px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
                         {customerPartTypes.length===0 && <option value="">{lang==="th"?"ไม่มีหมวดที่เปิดอยู่":"No visible sections"}</option>}
                         {customerPartTypes.map(part => (
                           <option key={part.id} value={part.id}>{lang==="th"?part.th:part.en}</option>
@@ -4590,6 +5958,19 @@ function App() {
         {/* ══ CATALOG ══ */}
         {page==="catalog"&&(
           <div style={{ padding:"40px 0" }}>
+            <nav className="skk-breadcrumb" aria-label="breadcrumb">
+              <span className="crumb" onClick={()=>setPage("home")}>{lang==="th"?"หน้าหลัก":"Home"}</span>
+              <span className="crumb-sep">›</span>
+              {selectedBrand ? (
+                <>
+                  <span className="crumb" onClick={()=>setSelectedBrand(null)}>{lang==="th"?"สินค้าทั้งหมด":"All products"}</span>
+                  <span className="crumb-sep">›</span>
+                  <span className="crumb-current">{lang==="th"?brands.find(b=>b.id===selectedBrand)?.nameTh:brands.find(b=>b.id===selectedBrand)?.nameEn}</span>
+                </>
+              ) : (
+                <span className="crumb-current">{lang==="th"?"สินค้าทั้งหมด":"All products"}</span>
+              )}
+            </nav>
             <div style={{ marginBottom:26, display:"flex", alignItems:"flex-start", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
               <h2 style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", margin:0 }}>
                 {selectedBrand ? (lang==="th"?brands.find(b=>b.id===selectedBrand)?.nameTh:brands.find(b=>b.id===selectedBrand)?.nameEn) : t.allBrands}
@@ -4608,7 +5989,7 @@ function App() {
                 <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"ใช้ทดสอบเวลาเรามีสินค้าอื่นนอกจากแร็คพวงมาลัย":"Testing how the site works with other product types"}</div>
               </div>
               <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap", justifyContent:"flex-end" }}>
-                <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ minWidth:220, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 32px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
+                <select value={selectedPartType} onChange={e=>{ setSelectedPartType(e.target.value); setSelectedBrand(null); setFindBrandId(""); setFindModelId(""); setCatalogSearch(""); }} style={{ width:lang==="th"?154:166, maxWidth:"100%", background:"#1A1A1A", color:"#fff", border:"none", borderRadius:13, padding:"11px 28px 11px 13px", fontSize:13, fontWeight:900, fontFamily:thF, cursor:"pointer", outline:"none" }}>
                   {customerPartTypes.length===0 && <option value="">{lang==="th"?"ไม่มีหมวดที่เปิดอยู่":"No visible sections"}</option>}
                   {customerPartTypes.map(part => (
                     <option key={part.id} value={part.id}>{lang==="th"?part.th:part.en}</option>
@@ -4690,7 +6071,26 @@ function App() {
               </div>
             </div>
 
-            {catalogBrands.length === 0 && (
+            {catalogBrands.length === 0 && dbStatus.loading && (
+              <div style={{ marginBottom:30 }}>
+                <div className="skk-skeleton" style={{ width:160, height:22, marginBottom:16 }} />
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(240px,100%),1fr))", gap:16 }}>
+                  {[0,1,2,3,4,5,6,7].map(i => (
+                    <div key={i} className="skk-skel-card">
+                      <div className="skk-skeleton" style={{ height:160, borderRadius:0 }} />
+                      <div style={{ padding:14 }}>
+                        <div className="skk-skeleton" style={{ width:"55%", height:11, marginBottom:9 }} />
+                        <div className="skk-skeleton" style={{ width:"85%", height:15, marginBottom:12 }} />
+                        <div className="skk-skeleton" style={{ width:"40%", height:18, marginBottom:12 }} />
+                        <div className="skk-skeleton" style={{ width:"100%", height:38, borderRadius:10 }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {catalogBrands.length === 0 && !dbStatus.loading && (
               <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, padding:"32px 18px", textAlign:"center", color:"#999", marginBottom:30 }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>⌕</div>
                 <div style={{ fontSize:14, fontWeight:700 }}>{lang==="th"?"ไม่พบสินค้าที่ค้นหา":"No matching products"}</div>
@@ -4722,6 +6122,10 @@ function App() {
                     return (
                       <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 10px 24px rgba(26,26,26,0.035)", position:"relative" }}>
                         <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} onMagnify={setLightboxImage} onOpenDetail={()=>openProductDetail(brand, model)} />
+                        <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"4px 8px", fontSize:11, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
+                          <span style={{ fontSize:12 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
+                          {lang==="th"?"เทียบ":"Compare"}
+                        </button>
                         <div style={{ padding:"14px 16px 16px" }}>
                           <div style={{ cursor:"pointer", borderRadius:10, padding:"2px 0 6px" }}>
                             <h4 style={{ margin:"0 0 2px", fontSize:15, fontWeight:800, color:"#111" }}>{brandName} {modelName}</h4>
@@ -4744,6 +6148,17 @@ function App() {
                           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10 }}>
                             <span style={{ fontSize:18, fontWeight:800 }}>{fmt(model.price)}</span>
                             <div style={{ display:"flex", gap:6 }}>
+                              {/* OPEN PRODUCT IN NEW TAB */}
+                              <a
+                                href={productNewTabUrl(brand.id, model.id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onMouseDown={(e)=>{ e.stopPropagation(); }}
+                                onClick={(e)=>{ e.stopPropagation(); }}
+                                title={lang==="th"?"เปิดสินค้าในแท็บใหม่":"Open product in new tab"}
+                                style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:10, width:34, minWidth:34, height:32, display:"inline-flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, textDecoration:"none", whiteSpace:"nowrap" }}>
+                                ↗
+                              </a>
                               {/* ADD TO BASKET */}
                               <button
                                 disabled={model.stock===0}
@@ -4772,9 +6187,47 @@ function App() {
           </div>
         )}
 
-        {/* ══ PRODUCT DETAIL ══ */}
-        {page==="product"&&detailBrand&&detailModel&&(
+        {/* ══ RECENTLY VIEWED (catalog page bottom) ══ */}
+        {page==="catalog" && recentlyViewed.length > 0 && (() => {
+          const items = recentlyViewed
+            .map(rv => {
+              const b = brands.find(x => x.id === rv.brandId);
+              const m = b?.models.find(x => x.id === rv.modelId && isProductVisible(x) && isPartTypeVisible(getModelPartType(x)));
+              return b && m ? { brand:b, model:m } : null;
+            })
+            .filter(Boolean);
+          if (items.length === 0) return null;
+          return (
+            <div style={{ maxWidth:1180, margin:"0 auto", padding:"8px 0 50px" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14 }}>
+                <h3 style={{ margin:0, fontSize:20, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ดูล่าสุด":"Recently viewed"}</h3>
+                <button onClick={()=>{ setRecentlyViewed([]); try{localStorage.removeItem("skkj_v2_recently_viewed_v1");}catch(_e){} }} style={{ background:"none", border:"none", color:"#999", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ล้าง":"Clear"}</button>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
+                {items.map(({ brand, model }) => (
+                  <div key={`${brand.id}__${model.id}`} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(brand, model); } }} style={{ border:"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                    <div style={{ height:90, background:"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+                      <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} height={90} onMagnify={()=>{}} onOpenDetail={()=>openProductDetail(brand, model)} />
+                    </div>
+                    <div style={{ padding:"8px 10px 10px" }}>
+                      <div style={{ fontSize:11, color:"#999", fontWeight:700, textTransform:"uppercase" }}>{lang==="th"?brand.nameTh:brand.nameEn}</div>
+                      <div style={{ fontSize:12, fontWeight:900, color:"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?model.nameTh:model.nameEn}</div>
+                      <div style={{ fontSize:12, fontWeight:900, color:"#9A0018", marginTop:3 }}>{fmt(model.price)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
           <div className="v2-product-page" style={{ padding:"38px 0 60px" }}>
+            <nav className="skk-breadcrumb" aria-label="breadcrumb">
+              <span className="crumb" onClick={()=>setPage("home")}>{lang==="th"?"หน้าหลัก":"Home"}</span>
+              <span className="crumb-sep">›</span>
+              <span className="crumb" onClick={()=>{ setSelectedBrand(detailBrand.id); setPage("catalog"); }}>{lang==="th"?detailBrand.nameTh:detailBrand.nameEn}</span>
+              <span className="crumb-sep">›</span>
+              <span className="crumb-current">{lang==="th"?detailModel.nameTh:detailModel.nameEn}</span>
+            </nav>
             <button onClick={()=>setPage("catalog")} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, marginBottom:18 }}>
               ‹ {lang==="th"?"กลับไปสินค้า":"Back to products"}
             </button>
@@ -4834,12 +6287,43 @@ function App() {
                   <button className="v2-ask-button" onClick={()=>askAboutProduct(detailBrand, detailModel)} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"ถามร้าน":"Ask shop"}
                   </button>
+                  <a className="v2-ask-button" href={productNewTabUrl(detailBrand.id, detailModel.id)} target="_blank" rel="noopener noreferrer" style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF, textAlign:"center", textDecoration:"none" }}>
+                    {lang==="th"?"เปิดแท็บใหม่":"Open new tab"}
+                  </a>
                   <button className="v2-ask-button" onClick={()=>saveCustomerCar(detailBrand, detailModel)} style={{ background:"#FFF7ED", color:"#9A0018", border:"1px solid #F3D7B5", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"บันทึกรถคันนี้":"Save this car"}
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* ══ RELATED PRODUCTS (same brand) ══ */}
+            {(() => {
+              const related = (detailBrand.models || [])
+                .filter(m => m.id !== detailModel.id && isProductVisible(m) && isPartTypeVisible(getModelPartType(m)))
+                .slice(0, 4);
+              if (related.length === 0) return null;
+              return (
+                <div style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
+                  <h3 style={{ margin:"0 0 4px", fontSize:18, fontWeight:900 }}>{lang==="th"?`สินค้า ${detailBrand.nameTh} รุ่นอื่น`:`More from ${detailBrand.nameEn}`}</h3>
+                  <p style={{ margin:"0 0 16px", color:"#777", fontSize:13 }}>{lang==="th"?"แร็คพวงมาลัยรุ่นอื่นในยี่ห้อเดียวกัน":"Other steering racks from the same brand"}</p>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
+                    {related.map(m => (
+                      <div key={m.id} onClick={()=>openProductDetail(detailBrand, m)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(detailBrand, m); } }} style={{ border:"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                        <div style={{ height:90, background:"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+                          <ProductPhotoBox brand={detailBrand} model={m} lang={lang} t={t} height={90} onMagnify={()=>{}} onOpenDetail={()=>openProductDetail(detailBrand, m)} />
+                        </div>
+                        <div style={{ padding:"8px 10px 10px" }}>
+                          <div style={{ fontSize:12, fontWeight:900, color:"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          <div style={{ fontSize:12, fontWeight:900, color:"#9A0018", marginTop:3 }}>{fmt(m.price)}</div>
+                          <div style={{ fontSize:10.5, color:m.stock===0?"#E24B4A":"#888", marginTop:2 }}>{m.stock===0?t.outOfStock:`${m.stock} ${t.inStock}`}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -4916,7 +6400,7 @@ function App() {
                   <span style={{ fontSize:18 }}>LINE</span>
                   <div>
                     <div style={{ fontWeight:700, fontSize:12, marginBottom:8 }}>{lang==="th"?"เพิ่มเพื่อนทาง LINE":"Add us on LINE"}</div>
-                    <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:150, maxWidth:"100%", border:"1px solid #ECECEC", borderRadius:8, display:"block" }} />
+                    <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" loading="lazy" style={{ width:150, maxWidth:"100%", border:"1px solid #ECECEC", borderRadius:8, display:"block" }} />
                   </div>
                 </div>
                 {[{icon:"📍",...t.contact.address},{icon:"📞",...t.contact.phoneInfo},{icon:"🕐",...t.contact.hours},{icon:"📧",...t.contact.emailInfo}].map(c=>(
@@ -5292,12 +6776,35 @@ function App() {
                   <div>
                     <div style={{ fontSize:13, fontWeight:800, color:"#1A1A1A" }}>{lang==="th"?"สำรองข้อมูล":"Backup data"}</div>
                     <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"บันทึกหรือกู้คืนออเดอร์ สต็อก ลูกค้า และบัญชีแอดมิน":"Save or restore orders, stock, customers, and admin accounts"}</div>
+                    <div style={{ fontSize:11, color:dbStatus.mode==="connected"?"#166534":"#777", marginTop:5 }}>
+                      {lang==="th"
+                        ? `Supabase: ${dbStatus.mode==="connected" ? "เชื่อมต่อแล้ว" : dbStatus.mode==="offline" ? "ออฟไลน์/ใช้ข้อมูลในเครื่อง" : "กำลังเชื่อมต่อ"}${latestSyncEvent ? ` • ล่าสุด: ${latestSyncEvent.reason}` : ""}`
+                        : `Supabase: ${dbStatus.mode==="connected" ? "connected" : dbStatus.mode==="offline" ? "offline/local fallback" : "connecting"}${latestSyncEvent ? ` • latest: ${latestSyncEvent.reason}` : ""}`}
+                    </div>
                   </div>
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                     <button onClick={downloadBackup} style={{ background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:9, padding:"8px 13px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"Backup data":"Backup data"}</button>
                     <button onClick={()=>backupInputRef.current?.click()} style={{ background:"#F0EEE8", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:9, padding:"8px 13px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"Restore data":"Restore data"}</button>
                     <input ref={backupInputRef} type="file" accept="application/json,.json" onChange={restoreBackupFile} style={{ display:"none" }} />
                   </div>
+                </div>
+
+                <div style={{ display:"grid", gridTemplateColumns:"minmax(0,1fr) auto", gap:12, alignItems:"center", background:"#fff", border:"1px solid #ECECEC", borderRadius:13, padding:"13px 14px", marginBottom:20 }}>
+                  <div>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+                      <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ส่งออเดอร์เข้า Google Sheet":"Google Sheet order sync"}</div>
+                      <span style={{ background:googleSheetConfig.enabled?"#DCFCE7":"#F0EEE8", color:googleSheetConfig.enabled?"#166534":"#777", borderRadius:999, padding:"3px 8px", fontSize:11, fontWeight:800 }}>{googleSheetConfig.enabled ? (lang==="th"?"เปิดอยู่":"On") : (lang==="th"?"ปิดอยู่":"Off")}</span>
+                    </div>
+                    <div style={{ fontSize:12, color:"#777", marginTop:3 }}>{lang==="th"?"เมื่อมีออเดอร์ใหม่ เว็บไซต์จะส่งข้อมูลไป Google Sheet อัตโนมัติ":"When a new order is created, the website sends it to Google Sheet automatically."}</div>
+                    <div style={{ display:"grid", gridTemplateColumns:"minmax(180px,2fr) minmax(120px,1fr)", gap:8, marginTop:10 }}>
+                      <input value={googleSheetConfig.scriptUrl} onChange={e=>setGoogleSheetConfig(prev=>({...prev, scriptUrl:e.target.value}))} placeholder={lang==="th"?"วาง Google Apps Script URL ที่นี่":"Paste Google Apps Script URL here"} style={{ border:"1px solid #E0DDD8", borderRadius:9, padding:"9px 11px", fontSize:12, fontFamily:thF, minWidth:0 }} />
+                      <input value={googleSheetConfig.token} onChange={e=>setGoogleSheetConfig(prev=>({...prev, token:e.target.value}))} placeholder={lang==="th"?"รหัสลับ ถ้ามี":"Secret token, optional"} style={{ border:"1px solid #E0DDD8", borderRadius:9, padding:"9px 11px", fontSize:12, fontFamily:thF, minWidth:0 }} />
+                    </div>
+                  </div>
+                  <label style={{ display:"flex", alignItems:"center", gap:8, justifyContent:"center", background:googleSheetConfig.enabled?"#1A1A1A":"#F0EEE8", color:googleSheetConfig.enabled?"#fff":"#1A1A1A", border:"1px solid "+(googleSheetConfig.enabled?"#1A1A1A":"#E0DDD8"), borderRadius:10, padding:"10px 13px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:thF, whiteSpace:"nowrap" }}>
+                    <input type="checkbox" checked={googleSheetConfig.enabled} onChange={e=>setGoogleSheetConfig(prev=>({...prev, enabled:e.target.checked}))} style={{ accentColor:"#1A1A1A" }} />
+                    {lang==="th"?"เปิดระบบ":"Enable"}
+                  </label>
                 </div>
 
                 {/* Tabs — owners see extra "accounts" tab */}
@@ -5663,12 +7170,16 @@ function App() {
                         <p style={{ margin:0, color:"#777", fontSize:13 }}>{lang==="th"?"ดูว่าสินค้าไหนมีคนดู ใส่ตะกร้า หรือถามร้าน แต่ยังไม่ซื้อ":"See products people viewed, added, or asked about before buying"}</p>
                       </div>
                       {analytics.length > 0 && (
-                        <button onClick={()=>{ setAnalytics([]); viewedProductsRef.current.clear(); try { localStorage.removeItem("skkj_v2_analytics_v1"); } catch (error) {} logActivity("analytics_clear", "Cleared analytics data"); }} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ล้างข้อมูล":"Clear analytics"}</button>
+                        <div style={{ display:"flex", gap:8, flexWrap:"wrap", justifyContent:"flex-end" }}>
+                          <button onClick={()=>exportAnalyticsCSV(analytics)} style={{ background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดาวน์โหลดประวัติ":"Download history"}</button>
+                          <button onClick={()=>{ setAnalytics([]); viewedProductsRef.current.clear(); try { localStorage.removeItem("skkj_v2_analytics_v1"); } catch (error) {} logActivity("analytics_clear", "Cleared analytics data"); }} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ล้างข้อมูล":"Clear analytics"}</button>
+                        </div>
                       )}
                     </div>
                     <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:10, padding:13, borderBottom:"1px solid #ECECEC", background:"#fff" }}>
                       {[
                         [lang==="th"?"ดูสินค้า":"Views", analyticsTotals.views],
+                        [lang==="th"?"เวลาที่ดู":"Time stayed", `${Math.round(analyticsTotals.staySeconds / 60)}m`],
                         [lang==="th"?"ใส่ตะกร้า":"Cart adds", analyticsTotals.cartAdds],
                         [lang==="th"?"เริ่มสั่งซื้อ":"Order starts", analyticsTotals.orderStarts],
                         [lang==="th"?"ถามร้าน":"Ask clicks", analyticsTotals.asks],
@@ -5681,22 +7192,24 @@ function App() {
                       ))}
                     </div>
                     <div style={{ padding:"12px 13px", background:"#FFFDF5", borderBottom:"1px solid #F0EEE8", fontSize:12, color:"#7c2d12", lineHeight:1.55 }}>
-                      {lang==="th"?"ตอนนี้เป็นข้อมูลในเครื่องพรีวิวนี้เท่านั้น พอขึ้นเว็บจริงต้องต่อกับเซิร์ฟเวอร์เพื่อเห็นข้อมูลจากลูกค้าทุกคน":"This preview tracks only this browser. On the real website, it should connect to the server to see all visitors."}
+                      {lang==="th"?"บันทึกนี้เก็บประวัติความสนใจของลูกค้า เช่น เปิดหน้าสินค้า อยู่กี่วินาที ใส่ตะกร้า ถามร้าน และเริ่มสั่งซื้อ ถ้า Supabase เปิดอยู่ข้อมูลจะถูกบันทึกออนไลน์ด้วย":"This records customer interest history, including product page opens, seconds stayed, cart adds, ask-shop clicks, and checkout starts. When Supabase is enabled, it also saves online."}
                     </div>
                     <div style={{ overflowX:"auto" }}>
                       <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
                         <thead>
                           <tr style={{ background:"#FAFAF8", borderBottom:"1px solid #ECECEC" }}>
-                            {[lang==="th"?"สินค้า":"Product", lang==="th"?"ดู":"Views", lang==="th"?"ตะกร้า":"Cart", lang==="th"?"เริ่มซื้อ":"Started", lang==="th"?"ถามร้าน":"Asked", lang==="th"?"ซื้อแล้ว":"Orders", lang==="th"?"สนใจแต่ยังไม่ซื้อ":"Interested not bought"].map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:600, color:"#777", whiteSpace:"nowrap" }}>{h}</th>)}
+                            {[lang==="th"?"สินค้า":"Product", lang==="th"?"ดู":"Views", lang==="th"?"เปิดหน้า":"Opened", lang==="th"?"เวลาที่ดู":"Time", lang==="th"?"ตะกร้า":"Cart", lang==="th"?"เริ่มซื้อ":"Started", lang==="th"?"ถามร้าน":"Asked", lang==="th"?"ซื้อแล้ว":"Orders", lang==="th"?"สนใจแต่ยังไม่ซื้อ":"Interested not bought"].map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:600, color:"#777", whiteSpace:"nowrap" }}>{h}</th>)}
                           </tr>
                         </thead>
                         <tbody>
                           {analyticsByProduct.filter(row=>row.interest>0 || row.orders>0).length===0 ? (
-                            <tr><td colSpan={7} style={{ padding:"30px 16px", textAlign:"center", color:"#999" }}>{lang==="th"?"ยังไม่มีข้อมูลการดูสินค้า ลองเปิดหน้าสินค้าแล้วกดดู/ถาม/ใส่ตะกร้า":"No analytics yet. Open products and try view/ask/cart actions."}</td></tr>
+                            <tr><td colSpan={9} style={{ padding:"30px 16px", textAlign:"center", color:"#999" }}>{lang==="th"?"ยังไม่มีข้อมูลการดูสินค้า ลองเปิดหน้าสินค้าแล้วกดดู/ถาม/ใส่ตะกร้า":"No analytics yet. Open products and try view/ask/cart actions."}</td></tr>
                           ) : analyticsByProduct.filter(row=>row.interest>0 || row.orders>0).slice(0, 30).map((row,i)=>(
                             <tr key={row.key} style={{ borderBottom:i<Math.min(analyticsByProduct.filter(r=>r.interest>0 || r.orders>0).length,30)-1?"1px solid #ECECEC":"none" }}>
                               <td style={{ padding:"11px 13px", color:"#1A1A1A", fontWeight:700 }}>{row.brandName} {row.modelName}<br/><span style={{ color:"#999", fontSize:11, fontWeight:400, fontFamily:"monospace" }}>{row.sku}</span></td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.views}</td>
+                              <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.detailOpens}</td>
+                              <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.staySeconds}s</td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.cartAdds}</td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.orderStarts}</td>
                               <td style={{ padding:"11px 13px", fontFamily:"monospace" }}>{row.asks}</td>
@@ -5781,21 +7294,170 @@ function App() {
         </div>
         <div style={{ maxWidth:1200, margin:"20px auto 0", borderTop:"1px solid #333", paddingTop:20, fontSize:12, textAlign:"center" }}>{t.footer.copyright}</div>
       </footer>
-      <div className="line-help-float" style={{ position:"fixed", right:18, bottom:18, zIndex:9999, display:"flex", flexDirection:"column", alignItems:"flex-end", gap:10 }}>
-        {lineHelpOpen && (
-          <div className="line-help-card" style={{ background:"#fff", border:"1px solid #E0DDD8", borderRadius:14, padding:14, boxShadow:"0 12px 30px rgba(0,0,0,0.18)", width:210 }}>
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:8 }}>
-              <div style={{ fontSize:13, fontWeight:800, color:"#1A1A1A" }}>{lang==="th"?"ถามร้านทาง LINE":"Ask us on LINE"}</div>
-              <button onClick={()=>setLineHelpOpen(false)} style={{ width:26, height:26, borderRadius:13, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", lineHeight:1, fontSize:16 }}>×</button>
+      {showBackToTop && (
+        <button className="back-to-top-btn" onClick={()=>window.scrollTo({ top:0, behavior:"smooth" })} title={lang==="th"?"กลับด้านบน":"Back to top"} aria-label="Back to top">
+          ↑
+        </button>
+      )}
+
+      {/* ══ COMPARE BAR (floating, shows when items selected) ══ */}
+      {compareList.length > 0 && !compareOpen && (
+        <div style={{ position:"fixed", left:"50%", bottom:18, transform:"translateX(-50%)", zIndex:9997, background:"#1A1A1A", color:"#fff", borderRadius:14, padding:"12px 16px", boxShadow:"0 12px 34px rgba(0,0,0,0.3)", display:"flex", alignItems:"center", gap:14, maxWidth:"calc(100vw - 28px)" }}>
+          <span style={{ fontSize:13, fontWeight:800 }}>{lang==="th"?`เลือกเทียบ ${compareList.length} รายการ`:`${compareList.length} selected`}</span>
+          <button onClick={()=>setCompareOpen(true)} disabled={compareList.length<2} style={{ background:compareList.length<2?"#555":"#fff", color:compareList.length<2?"#999":"#1A1A1A", border:"none", borderRadius:9, padding:"8px 14px", fontSize:13, fontWeight:900, cursor:compareList.length<2?"not-allowed":"pointer", fontFamily:thF }}>
+            {lang==="th"?"เปรียบเทียบ":"Compare"}
+          </button>
+          <button onClick={()=>setCompareList([])} style={{ background:"transparent", color:"#aaa", border:"none", fontSize:18, cursor:"pointer", lineHeight:1 }}>×</button>
+        </div>
+      )}
+
+      {/* ══ COMPARE MODAL ══ */}
+      {compareOpen && compareList.length >= 2 && (() => {
+        const items = compareList.map(c => {
+          const b = brands.find(x => x.id===c.brandId);
+          const m = b?.models.find(x => x.id===c.modelId);
+          return b && m ? { brand:b, model:m } : null;
+        }).filter(Boolean);
+        if (items.length < 2) return null;
+        const rows = [
+          { label: lang==="th"?"ราคา":"Price", get:({model})=>fmt(model.price) },
+          { label: lang==="th"?"สต็อก":"Stock", get:({model})=>model.stock===0?(lang==="th"?"หมด":"Out"):`${model.stock}` },
+          { label: lang==="th"?"ปีรถ":"Years", get:({model})=>model.years||"-" },
+          { label: lang==="th"?"พวงมาลัย":"Drive side", get:({model})=>getDriveSideLabel(getModelDriveSide(model), lang) },
+          { label: lang==="th"?"ประเภท":"Part type", get:({model})=>getPartTypeLabel(getModelPartType(model), lang) },
+          { label: lang==="th"?"รหัสสินค้า":"SKU", get:({model})=>model.sku||"-" },
+        ];
+        return (
+          <div onClick={()=>setCompareOpen(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+            <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:16, maxWidth:760, width:"100%", maxHeight:"88vh", overflow:"auto", boxShadow:"0 24px 60px rgba(0,0,0,0.3)" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"18px 20px", borderBottom:"1px solid #ECECEC", position:"sticky", top:0, background:"#fff" }}>
+                <h3 style={{ margin:0, fontSize:18, fontWeight:900 }}>{lang==="th"?"เปรียบเทียบสินค้า":"Compare products"}</h3>
+                <button onClick={()=>setCompareOpen(false)} style={{ width:30, height:30, borderRadius:15, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", fontSize:18, lineHeight:1 }}>×</button>
+              </div>
+              <div style={{ padding:20, overflowX:"auto" }}>
+                <table style={{ width:"100%", borderCollapse:"collapse", minWidth:items.length*150 }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign:"left", padding:"8px", fontSize:12, color:"#999", fontWeight:700, verticalAlign:"top", width:90 }}></th>
+                      {items.map(({ brand, model }) => (
+                        <th key={`${brand.id}-${model.id}`} style={{ padding:"8px", textAlign:"center", verticalAlign:"top" }}>
+                          <div style={{ height:80, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:6 }}>
+                            <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} height={80} onMagnify={()=>{}} onOpenDetail={()=>{ setCompareOpen(false); openProductDetail(brand, model); }} />
+                          </div>
+                          <div style={{ fontSize:12.5, fontWeight:900, color:"#1A1A1A", lineHeight:1.3 }}>{lang==="th"?brand.nameTh:brand.nameEn} {lang==="th"?model.nameTh:model.nameEn}</div>
+                          <button onClick={()=>toggleCompare(brand, model)} style={{ marginTop:5, background:"none", border:"none", color:"#E24B4A", fontSize:11, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"นำออก":"Remove"}</button>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, ri) => (
+                      <tr key={ri} style={{ background:ri%2===0?"#FAFAF8":"#fff" }}>
+                        <td style={{ padding:"10px 8px", fontSize:12, color:"#777", fontWeight:800 }}>{row.label}</td>
+                        {items.map(item => (
+                          <td key={`${item.brand.id}-${item.model.id}`} style={{ padding:"10px 8px", textAlign:"center", fontSize:13, fontWeight:700, color:"#1A1A1A" }}>{row.get(item)}</td>
+                        ))}
+                      </tr>
+                    ))}
+                    <tr>
+                      <td style={{ padding:"10px 8px" }}></td>
+                      {items.map(({ brand, model }) => (
+                        <td key={`${brand.id}-${model.id}`} style={{ padding:"10px 8px", textAlign:"center" }}>
+                          <button onClick={()=>{ setCompareOpen(false); openProductDetail(brand, model); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:9, padding:"8px 12px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ดูสินค้า":"View"}</button>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:"100%", aspectRatio:"1/1", objectFit:"cover", border:"1px solid #ECECEC", borderRadius:10, display:"block" }} />
-            <div style={{ fontSize:12, color:"#666", lineHeight:1.5, marginTop:8 }}>{lang==="th"?"สแกน QR เพื่อส่งรูปอะไหล่หรือถามรุ่นรถได้เลย":"Scan the QR to send photos or ask about your car model."}</div>
+          </div>
+        );
+      })()}
+      <div className="line-help-float" style={{ position:"fixed", right:18, bottom:18, zIndex:9999, display:"flex", flexDirection:"column", alignItems:"flex-end", gap:10 }}>
+
+        {/* ── PRODUCT FINDER CARD ── */}
+        {lineFinderOpen && (
+          <div className="line-help-card" style={{ background:"#fff", border:"1px solid #E0DDD8", borderRadius:16, padding:14, boxShadow:"0 18px 44px rgba(0,0,0,0.18)", width:360, maxWidth:"calc(100vw - 28px)" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:8 }}>
+              <div>
+                <div style={{ fontSize:15, fontWeight:900, color:"#1A1A1A" }}>{t.finder.title}</div>
+                <div style={{ fontSize:11.5, color:"#777", lineHeight:1.4, marginTop:2 }}>{t.finder.subtitle}</div>
+              </div>
+              <button type="button" onClick={()=>setLineFinderOpen(false)} style={{ width:26, height:26, borderRadius:13, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", lineHeight:1, fontSize:16 }}>×</button>
+            </div>
+            <div style={{ display:"flex", gap:6, flexWrap:"wrap", margin:"10px 0" }}>
+              {t.finder.quickButtons.map(btn => (
+                <button key={btn.label} type="button" onClick={()=>runProductFinder(btn.query)} style={{ background:"#FAFAF8", border:"1px solid #E0DDD8", borderRadius:999, padding:"6px 9px", fontSize:11.5, fontWeight:800, color:"#1A1A1A", cursor:"pointer", fontFamily:thF }}>
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ maxHeight:260, overflowY:"auto", display:"grid", gap:8, paddingRight:2 }}>
+              {finderMessages.map((msg, idx) => (
+                <div key={idx} style={{ justifySelf:msg.role==="user"?"end":"start", maxWidth:"100%" }}>
+                  <div style={{ background:msg.role==="user"?"#1A1A1A":"#F8F7F4", color:msg.role==="user"?"#fff":"#1A1A1A", border:"1px solid "+(msg.role==="user"?"#1A1A1A":"#ECECEC"), borderRadius:12, padding:"8px 10px", fontSize:12.5, lineHeight:1.45, fontWeight:700 }}>
+                    {msg.text}
+                  </div>
+                  {Array.isArray(msg.results) && msg.results.length > 0 && (
+                    <div style={{ display:"grid", gap:6, marginTop:6 }}>
+                      {msg.results.map(({ brand, model }) => {
+                        const replyLang = msg.lang || lang;
+                        const name = replyLang==="th" ? `${brand.nameTh} ${model.nameTh}` : `${brand.nameEn} ${model.nameEn}`;
+                        return (
+                          <div key={`${brand.id}-${model.id}`} style={{ border:"1px solid #E0DDD8", borderRadius:12, padding:8, background:"#fff" }}>
+                            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                              <BrandLogo logo={brand.logo} size={18} place="navFilter" />
+                              <div style={{ flex:1, minWidth:0 }}>
+                                <div style={{ fontWeight:900, fontSize:12.5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{name}</div>
+                                <div style={{ fontSize:11, color:"#777" }}>{model.years || "-"} · {fmt(model.price)}</div>
+                              </div>
+                            </div>
+                            <div style={{ display:"flex", gap:6, marginTop:7 }}>
+                              <button type="button" onClick={()=>{ openProductDetail(brand, model); setLineFinderOpen(false); }} style={{ flex:1, border:"1px solid #1A1A1A", background:"#1A1A1A", color:"#fff", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.view}</button>
+                              <button type="button" onClick={()=>openLineForProduct(brand, model)} style={{ flex:1, border:"1px solid #06C755", background:"#fff", color:"#06A846", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.askLine}</button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div style={{ display:"flex", gap:7, marginTop:10 }}>
+              <input value={finderQuery} onChange={e=>setFinderQuery(e.target.value)} onKeyDown={e=>{ if(e.key==="Enter") runProductFinder(finderQuery); }} placeholder={t.finder.placeholder} style={{ ...iSLight, padding:"9px 10px", fontSize:12.5 }} />
+              <button type="button" onClick={()=>runProductFinder(finderQuery)} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, padding:"0 12px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{t.finder.send}</button>
+            </div>
           </div>
         )}
-        <button className="line-help-button" onClick={()=>setLineHelpOpen(v=>!v)} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"13px 18px", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, boxShadow:"0 10px 28px rgba(0,0,0,0.28)", display:"flex", alignItems:"center", gap:9 }}>
-          <span style={{ width:22, height:22, borderRadius:11, background:"#fff", color:"#06C755", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:900 }}>L</span>
-          {lang==="th"?"LINE ถามร้าน":"LINE Help"}
-        </button>
+
+        {/* ── LINE CONTACT CARD ── */}
+        {lineContactOpen && (
+          <div className="line-help-line-card" style={{ background:"#fff", border:"1px solid #DDF3E5", borderRadius:16, padding:12, boxShadow:"0 16px 38px rgba(6,199,85,0.18)", width:360, maxWidth:"calc(100vw - 28px)", display:"grid", gridTemplateColumns:"62px 1fr", alignItems:"center", gap:10, position:"relative" }}>
+            <button type="button" onClick={()=>setLineContactOpen(false)} style={{ position:"absolute", top:8, right:8, width:22, height:22, borderRadius:11, border:"1px solid #D0EBD9", background:"#F0FDF4", cursor:"pointer", lineHeight:1, fontSize:13, color:"#166534" }}>×</button>
+            <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:62, height:62, objectFit:"cover", border:"1px solid #ECECEC", borderRadius:10, display:"block", background:"#fff" }} />
+            <div style={{ minWidth:0 }}>
+              <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A", marginBottom:2 }}>{lang==="th"?"LINE ร้าน SKKJ":"SKKJ LINE"}</div>
+              <div style={{ fontSize:11.5, color:"#666", lineHeight:1.45 }}>{lang==="th"?"สแกน QR เพื่อส่งรูปอะไหล่หรือถามพนักงานได้เลย":"Scan the QR to send photos or ask our staff."}</div>
+              <button type="button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ marginTop:7, background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"7px 11px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>
+                {lang==="th"?"เปิด LINE":"Open LINE"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── TWO SEPARATE BUTTONS ── */}
+        <div style={{ display:"flex", gap:8, alignItems:"center", justifyContent:"flex-end" }}>
+          <button className="line-help-button" onClick={()=>{ setLineFinderOpen(v=>!v); setLineContactOpen(false); }} style={{ background:lineFinderOpen?"#1A1A1A":"#F0EEE8", color:lineFinderOpen?"#fff":"#1A1A1A", border:"1px solid "+(lineFinderOpen?"#1A1A1A":"#E0DDD8"), borderRadius:999, padding:"11px 14px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, boxShadow:"0 6px 18px rgba(0,0,0,0.14)", display:"flex", alignItems:"center", gap:7 }}>
+            <span style={{ fontSize:15 }}>🔍</span>
+            {lang==="th"?"หาอะไหล่":"Find parts"}
+          </button>
+          <button className="line-help-button" onClick={()=>{ setLineContactOpen(v=>!v); setLineFinderOpen(false); }} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"11px 14px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, boxShadow:"0 10px 28px rgba(0,0,0,0.28)", display:"flex", alignItems:"center", gap:7 }}>
+            <span style={{ width:20, height:20, borderRadius:10, background:"#fff", color:"#06C755", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:900 }}>L</span>
+            {lang==="th"?"LINE ถามร้าน":"LINE Help"}
+          </button>
+        </div>
       </div>
     </div>
   );
