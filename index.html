@@ -1,12 +1,46 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="th">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ | Steering Racks Thailand</title>
+  <meta name="description" content="SKKJ Autopart ผู้เชี่ยวชาญแร็คพวงมาลัยในกรุงเทพฯ นิสสัน ฮอนด้า อีซูซุ มาสด้า มิตซูบิชิ โตโยต้า ฟอร์ด เอ็มจี รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
+  <meta name="keywords" content="แร็คพวงมาลัย, steering rack, อะไหล่รถยนต์, SKKJ, นิสสัน, ฮอนด้า, อีซูซุ, โตโยต้า, มาสด้า" />
+  <!-- Open Graph — controls how the link looks when shared on LINE, Facebook, Messenger -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
+  <meta property="og:description" content="ผู้เชี่ยวชาญแร็คพวงมาลัย รับประกัน 6 เดือน จัดส่งทั่วประเทศ ถามร้านผ่าน LINE ได้เลย" />
+  <meta property="og:image" content="assets/nissan-teana-j32-top-skkj.png" />
+  <meta property="og:site_name" content="SKKJ Autopart" />
+  <meta property="og:locale" content="th_TH" />
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
+  <meta name="twitter:description" content="ผู้เชี่ยวชาญแร็คพวงมาลัย รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
+  <meta name="twitter:image" content="assets/nissan-teana-j32-top-skkj.png" />
+  <!-- Schema.org — tells Google this is an auto parts store (rich results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoPartsStore",
+    "name": "SKKJ Autopart",
+    "description": "ผู้เชี่ยวชาญแร็คพวงมาลัยและอะไหล่พวงมาลัย ทุกยี่ห้อ",
+    "email": "skkjthailand@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "86/111 หมู่ที่ 7 แขวงแสมดำ เขตบางขุนเทียน",
+      "addressLocality": "กรุงเทพมหานคร",
+      "postalCode": "10150",
+      "addressCountry": "TH"
+    },
+    "areaServed": "TH",
+    "priceRange": "฿฿"
+  }
+  </script>
   <title>SKKJ Version 2 Preview</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
   <style>
     html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
     #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
@@ -626,7 +660,7 @@ function BrandLogo({ logo, size=28, place="default" }) {
   if (src) {
     return (
       <span data-logo-place={place} style={{ width:size*2.3, height:boxHeight, display:"flex", alignItems:"center", justifyContent:"center", overflow:"visible" }}>
-        <img src={displaySrc} alt="" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
+        <img src={displaySrc} alt="brand logo" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
       </span>
     );
   }
@@ -987,7 +1021,7 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
         {model.stock} {t.inStock}
       </div>
       {showImage ? (
-        <img className="product-main-image" src={slide.src} alt={slide.title} onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
+        <img className="product-main-image" src={slide.src} alt={slide.title} loading="lazy" onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
       ) : (
         <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:10 }}>
           <BrandLogo logo={brand.logo} size={54} place="productPhoto" />
@@ -2048,7 +2082,7 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
                 {productForm.imageGallery.map((img, index)=>(
                   <div key={`${img.src}-${index}`} style={{ background:"#fff", border:index===0?"2px solid #1A1A1A":"1px solid #E0DDD8", borderRadius:12, padding:9 }}>
                     <div style={{ height:92, borderRadius:9, background:"#F8F7F4", border:"1px solid #ECECEC", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", marginBottom:8 }}>
-                      <img src={img.src} alt="" style={{ width:"100%", height:"100%", objectFit:"contain" }} />
+                      <img src={img.src} alt={lang==="th"?"รูปสินค้าที่อัปโหลด":"Uploaded product photo"} loading="lazy" style={{ width:"100%", height:"100%", objectFit:"contain" }} />
                     </div>
                     <div style={{ fontSize:10, color:index===0?"#1A1A1A":"#777", fontWeight:900, marginBottom:3 }}>{index===0 ? (lang==="th"?"รูปหลัก":"Main photo") : `${lang==="th"?"รูปที่":"Photo"} ${index+1}`}</div>
                     <div style={{ fontSize:10, color:"#777", lineHeight:1.35, height:28, overflow:"hidden", wordBreak:"break-word" }}>{img.name || (String(img.src).startsWith("data:") ? (lang==="th"?"รูปอัปโหลด":"Uploaded photo") : img.src)}</div>
@@ -2270,16 +2304,15 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
 // role: "owner"    → full access + account management tab
 // role: "admin"    → full dashboard, no account management
 // role: "disabled" → blocked
+// SECURITY: Real credentials must be set in Supabase only.
 const INIT_ACCOUNTS = [
-  { id:1, email:"owner@skkjautopart.co.th",  password:"owner2025",    name:"SKKJ Owner", role:"owner" },
-  { id:2, email:"Thongin50412166@gmail.com", password:"Thongin55@",  name:"Thongin",    role:"owner" },
+  { id:1, email:"owner@skkjautopart.co.th", password:"", name:"SKKJ Owner", role:"owner" },
+  { id:2, email:"admin@skkjautopart.co.th", password:"", name:"Admin",       role:"owner" },
 ];
 
 // ─── CUSTOMER DATABASE ────────────────────────────────────────────────────────
 // Customers self-register; orders are linked by email
-const INIT_CUSTOMERS = [
-  { id:"C001", email:"demo@customer.com", password:"demo1234", name:"Demo Customer", phone:"081-000-0000", joinDate:"2025-01-15" },
-];
+const INIT_CUSTOMERS = [];
 
 const PART_TYPES = [
   { id:"steering_rack", th:"แร็คพวงมาลัย", en:"Rack steering" },
@@ -2407,6 +2440,31 @@ async function skkjSupabaseRequest(config, path, options = {}) {
   throw new Error("Unsupported Supabase database path");
 }
 
+async function skkjSupabaseTableRequest(config, tableName, options = {}) {
+  if (!config?.supabaseUrl || !config?.supabaseKey) throw new Error("Supabase URL or key is missing");
+  const baseUrl = String(config.supabaseUrl).replace(/\/+$/, "");
+  const query = options.query ? String(options.query) : "";
+  const headers = {
+    "Content-Type":"application/json",
+    "apikey":config.supabaseKey,
+    "Authorization":`Bearer ${config.supabaseKey}`,
+    ...(options.prefer ? { "Prefer":options.prefer } : {}),
+    ...(options.headers || {}),
+  };
+  const response = await fetch(`${baseUrl}/rest/v1/${encodeURIComponent(tableName)}${query}`, {
+    method:options.method || "GET",
+    headers,
+    body:options.body === undefined ? undefined : JSON.stringify(options.body),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(data?.message || `${tableName} request failed`);
+  return data;
+}
+
+const cleanText = (value, max = 500) => String(value || "").replace(/[<>]/g, "").trim().slice(0, max);
+const cleanNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+const stableTextId = (prefix, value) => `${prefix}_${String(value || "unknown").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 80) || "unknown"}`;
+
 function normalizeDatabaseState(state) {
   if (!state || typeof state !== "object") return {};
   return {
@@ -2525,7 +2583,9 @@ function App() {
   const [contactBrandId, setContactBrandId] = useState("");
   const [contactModelId, setContactModelId] = useState("");
   const [contactMessage, setContactMessage] = useState("");
-  const [lineHelpOpen, setLineHelpOpen]   = useState(false);
+  const [lineFinderOpen, setLineFinderOpen]   = useState(false);
+  const [lineContactOpen, setLineContactOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop]     = useState(false);
   const [editOrder, setEditOrder]         = useState(null);
   const [detailOrder, setDetailOrder]     = useState(null);
   const [orderTimelineNote, setOrderTimelineNote] = useState("");
@@ -2549,6 +2609,7 @@ function App() {
   const dbConfigRef                       = useRef(readDatabaseConfig());
   const dbLoadedRef                       = useRef(false);
   const dbSaveTimerRef                    = useRef(null);
+  const businessSyncErrorsRef             = useRef(new Set());
   const [dbStatus, setDbStatus]           = useState(() => ({
     enabled: dbConfigRef.current.enabled,
     mode: dbConfigRef.current.enabled ? "online-ready" : "browser",
@@ -2636,6 +2697,8 @@ function App() {
   const detailBrand = productDetail ? brands.find(b=>b.id===productDetail.brandId) : null;
   const detailModel = detailBrand?.models.find(m=>m.id===productDetail.modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m))) || null;
   const productKey = (brandId, modelId) => `${brandId}:${modelId}`;
+  const productHash = (brandId, modelId) => `#product=${encodeURIComponent(brandId || "")}/${encodeURIComponent(modelId || "")}`;
+  const productNewTabUrl = (brandId, modelId) => `${window.location.href.split("#")[0]}${productHash(brandId, modelId)}`;
   const isFavoriteProduct = (brandId, modelId) => !!currentCustomer?.favorites?.includes(productKey(brandId, modelId));
   const savedCarBrand = brands.find(b=>b.id===savedCarBrandId);
   const savedCarModels = savedCarBrand ? savedCarBrand.models.filter(model => isProductVisible(model) && isPartTypeVisible(getModelPartType(model))) : [];
@@ -2646,11 +2709,66 @@ function App() {
     const model = brand?.models.find(m=>m.id===modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m)));
     return brand && model ? { brand, model, key } : null;
   }).filter(Boolean);
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("skkj_v2_recently_viewed_v1") || "[]"); } catch (_e) { return []; }
+  });
+  const [compareList, setCompareList] = useState([]); // [{brandId, modelId}]
+  const [compareOpen, setCompareOpen] = useState(false);
+  const isComparing = (brandId, modelId) => compareList.some(c => c.brandId===brandId && c.modelId===modelId);
+  const toggleCompare = (brand, model) => {
+    setCompareList(prev => {
+      const exists = prev.some(c => c.brandId===brand.id && c.modelId===model.id);
+      if (exists) return prev.filter(c => !(c.brandId===brand.id && c.modelId===model.id));
+      if (prev.length >= 3) return prev; // max 3
+      return [...prev, { brandId:brand.id, modelId:model.id }];
+    });
+  };
   const openProductDetail = (brand, model) => {
     setProductDetail({ brandId:brand.id, modelId:model.id });
     setPage("product");
     setTimeout(()=>window.scrollTo({ top:0, behavior:"smooth" }), 0);
+    // Feature: track recently viewed (keep last 6, newest first, no duplicates)
+    try {
+      setRecentlyViewed(prev => {
+        const key = `${brand.id}__${model.id}`;
+        const next = [{ brandId:brand.id, modelId:model.id }, ...prev.filter(p => `${p.brandId}__${p.modelId}` !== key)].slice(0, 6);
+        localStorage.setItem("skkj_v2_recently_viewed_v1", JSON.stringify(next));
+        return next;
+      });
+    } catch (_e) {}
   };
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive:true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  // Feature: log search terms (debounced — waits 800ms after typing stops)
+  useEffect(() => {
+    const term = String(catalogSearch || "").trim();
+    if (term.length < 2) return;
+    const timer = setTimeout(() => {
+      const matchCount = catalogBrands.reduce((sum, b) => sum + (b.filteredModels ? b.filteredModels.length : 0), 0);
+      trackAnalytics("search", { term, results: matchCount });
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [catalogSearch]);
+  useEffect(() => {
+    const openHashProduct = () => {
+      const match = String(window.location.hash || "").match(/^#product=([^/]+)\/(.+)$/);
+      if (!match) return;
+      const brandId = decodeURIComponent(match[1] || "");
+      const modelId = decodeURIComponent(match[2] || "");
+      const brand = brands.find(b => b.id === brandId);
+      const model = brand?.models.find(m => m.id === modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m)));
+      if (!brand || !model) return;
+      setProductDetail({ brandId, modelId });
+      setPage("product");
+      setTimeout(()=>window.scrollTo({ top:0, behavior:"smooth" }), 0);
+    };
+    openHashProduct();
+    window.addEventListener("hashchange", openHashProduct);
+    return () => window.removeEventListener("hashchange", openHashProduct);
+  }, [brands, hiddenPartTypes]);
   const normalizeCustomerOnlineProfile = (customer) => ({
     ...customer,
     email:String(customer?.email || "").trim(),
@@ -3150,6 +3268,7 @@ function App() {
       ...(Array.isArray(overrides.syncEvents) ? overrides.syncEvents : syncEvents),
     ].slice(0, 500);
     setSyncEvents(nextSyncEvents);
+    syncBusinessTables(reason, overrides);
     const state = makeDatabaseState({
       brands: overrides.brands || brands,
       orders: overrides.orders || orders,
@@ -3185,6 +3304,173 @@ function App() {
           error:error.message || "Database save failed",
         }));
       });
+  }
+
+  function canUseBusinessTables(config = dbConfigRef.current) {
+    return Boolean(config?.enabled && config.provider === "supabase" && config.supabaseUrl && config.supabaseKey);
+  }
+
+  function reportBusinessSyncError(scope, error) {
+    const key = `${scope}:${error?.message || "unknown"}`;
+    if (businessSyncErrorsRef.current.has(key)) return;
+    businessSyncErrorsRef.current.add(key);
+    console.warn("SKKJ business table sync skipped:", scope, error);
+  }
+
+  async function upsertBusinessRows(tableName, rows, scope) {
+    const config = dbConfigRef.current;
+    const list = (Array.isArray(rows) ? rows : [rows]).filter(Boolean);
+    if (!list.length || !canUseBusinessTables(config)) return;
+    try {
+      await skkjSupabaseTableRequest(config, tableName, {
+        method:"POST",
+        prefer:"resolution=merge-duplicates,return=minimal",
+        body:list,
+      });
+    } catch (error) {
+      reportBusinessSyncError(scope || tableName, error);
+    }
+  }
+
+  function customerToBusinessRow(customer) {
+    if (!customer) return null;
+    const id = cleanText(customer.id || stableTextId("customer", customer.email || customer.phone), 100);
+    return {
+      id,
+      email: cleanText(customer.email, 180),
+      phone: cleanText(customer.phone, 60),
+      full_name: cleanText(customer.name, 180),
+      role: cleanText(customer.role || "customer", 30),
+      addresses: Array.isArray(customer.addresses) ? customer.addresses : [],
+      favorites: Array.isArray(customer.favorites) ? customer.favorites.map(String) : [],
+      saved_cars: Array.isArray(customer.savedCars) ? customer.savedCars : [],
+      raw: customer,
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  function addressRowsForCustomer(customer) {
+    if (!customer?.id || !Array.isArray(customer.addresses)) return [];
+    return customer.addresses.map((addr, index) => ({
+      id: cleanText(addr.id || `${customer.id}_address_${index + 1}`, 120),
+      customer_id: cleanText(customer.id, 100),
+      label: cleanText(addr.label || `Address ${index + 1}`, 120),
+      receiver_name: cleanText(addr.customer || customer.name, 180),
+      phone: cleanText(addr.phone || customer.phone, 60),
+      address: cleanText(addr.address, 900),
+      is_default: index === 0,
+      raw: addr,
+      updated_at: new Date().toISOString(),
+    })).filter(row => row.address);
+  }
+
+  function favoriteRowsForCustomer(customer) {
+    if (!customer?.id || !Array.isArray(customer.favorites)) return [];
+    return customer.favorites.map(productKey => ({
+      id: stableTextId("fav", `${customer.id}_${productKey}`),
+      customer_id: cleanText(customer.id, 100),
+      product_key: cleanText(productKey, 140),
+      created_at: new Date().toISOString(),
+    }));
+  }
+
+  function orderToBusinessRow(order) {
+    if (!order?.id) return null;
+    return {
+      id: cleanText(order.id, 100),
+      customer_id: cleanText(order.customerId || order.customerEmail || order.phone || stableTextId("guest", order.customer || order.id), 120),
+      customer_name: cleanText(order.customer, 180),
+      customer_email: cleanText(order.customerEmail, 180),
+      phone: cleanText(order.phone, 60),
+      delivery_address: cleanText(order.address, 900),
+      brand: cleanText(order.brand, 120),
+      model: cleanText(order.model, 220),
+      brand_id: cleanText(order.brandId, 80),
+      model_id: cleanText(order.modelId, 100),
+      quantity: cleanNumber(order.quantity || 1),
+      total: cleanNumber(order.price),
+      order_status: cleanText(order.status || "pending", 60),
+      payment_method: cleanText(order.paymentMethod || "unknown", 60),
+      payment_status: cleanText(order.paymentStatus || "unknown", 80),
+      delivery_method: cleanText(order.deliveryMethod || "standard", 80),
+      label_printed: order.labelPrinted === true,
+      raw: order,
+      created_at: order.createdAt || (order.date ? `${order.date}T00:00:00.000Z` : new Date().toISOString()),
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  function incomeRowForOrder(order) {
+    if (!order?.id || order.status === "cancelled") return null;
+    return {
+      id: stableTextId("income", order.id),
+      order_id: cleanText(order.id, 100),
+      customer_name: cleanText(order.customer, 180),
+      amount: cleanNumber(order.price),
+      payment_method: cleanText(order.paymentMethod || "unknown", 60),
+      payment_status: cleanText(order.paymentStatus || "unknown", 80),
+      order_status: cleanText(order.status || "pending", 60),
+      recorded_date: order.date || new Date().toISOString().slice(0, 10),
+      raw: order,
+      updated_at: new Date().toISOString(),
+    };
+  }
+
+  function adminActionToBusinessRow(type, detail, extra = {}) {
+    const actor = currentUser || {};
+    return {
+      id: `LOG-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      admin_email: cleanText(actor.email || "system", 180),
+      admin_role: cleanText(actor.role || "system", 40),
+      action_type: cleanText(type, 120),
+      target_id: cleanText(extra.targetId || "", 160),
+      old_value: extra.oldValue || {},
+      new_value: extra.newValue || { detail },
+      original_message: cleanText(detail, 900),
+      created_at: new Date().toISOString(),
+    };
+  }
+
+  function syncCustomerToBusinessTables(customer) {
+    const normalized = normalizeCustomerOnlineProfile(customer || {});
+    upsertBusinessRows("skkj_customers", customerToBusinessRow(normalized), "customer");
+    upsertBusinessRows("skkj_customer_addresses", addressRowsForCustomer(normalized), "customer_addresses");
+    upsertBusinessRows("skkj_customer_favorites", favoriteRowsForCustomer(normalized), "customer_favorites");
+  }
+
+  function syncOrdersToBusinessTables(orderList) {
+    const list = (Array.isArray(orderList) ? orderList : [orderList]).filter(Boolean);
+    upsertBusinessRows("skkj_orders", list.map(orderToBusinessRow), "orders");
+    upsertBusinessRows("skkj_income_records", list.map(incomeRowForOrder), "income");
+  }
+
+  function syncAdminActionToBusinessTable(type, detail, extra = {}) {
+    if (!(currentUser?.role === "owner" || currentUser?.role === "admin")) return;
+    upsertBusinessRows("skkj_admin_action_logs", adminActionToBusinessRow(type, detail, extra), "admin_action_logs");
+  }
+
+  function syncBusinessTables(reason = "manual_save", overrides = {}) {
+    if (!canUseBusinessTables() || !dbLoadedRef.current) return;
+    if (Array.isArray(overrides.customers)) {
+      overrides.customers.slice(0, 100).forEach(syncCustomerToBusinessTables);
+    }
+    if (Array.isArray(overrides.orders)) {
+      syncOrdersToBusinessTables(overrides.orders.slice(0, 150));
+    }
+    if (Array.isArray(overrides.activityLog) && overrides.activityLog[0]) {
+      const latest = overrides.activityLog[0];
+      upsertBusinessRows("skkj_admin_action_logs", {
+        id: cleanText(latest.id || `LOG-${Date.now()}`, 120),
+        admin_email: cleanText(currentUser?.email || latest.user || "system", 180),
+        admin_role: cleanText(currentUser?.role || "system", 40),
+        action_type: cleanText(latest.type || reason, 120),
+        target_id: "",
+        old_value: {},
+        new_value: latest,
+        original_message: cleanText(latest.detail, 900),
+        created_at: new Date().toISOString(),
+      }, "activity_log");
+    }
   }
 
   useEffect(() => {
@@ -3356,6 +3642,7 @@ function App() {
   }
 
   function logActivity(type, detail) {
+    syncAdminActionToBusinessTable(type, detail);
     setActivityLog(prev => [{
       id: Date.now() + Math.random(),
       type,
@@ -3479,6 +3766,29 @@ function App() {
     });
     return () => finishProductView("leave_product");
   }, [productDetail?.brandId, productDetail?.modelId, lang]);
+
+  // Feature: cart abandonment detection
+  const basketRef = useRef([]);
+  const checkoutDoneRef = useRef(false);
+  const abandonLoggedRef = useRef(false);
+  useEffect(() => { basketRef.current = basket; if (basket.length > 0) abandonLoggedRef.current = false; }, [basket]);
+  useEffect(() => {
+    const onHide = () => {
+      if (document.visibilityState !== "hidden") return;
+      const items = basketRef.current;
+      if (items.length > 0 && !checkoutDoneRef.current && !abandonLoggedRef.current) {
+        abandonLoggedRef.current = true;
+        const value = items.reduce((sum, i) => sum + (i.price || 0) * (i.quantity || 1), 0);
+        trackAnalytics("cart_abandoned", {
+          itemCount: items.reduce((sum, i) => sum + (i.quantity || 1), 0),
+          value,
+          items: items.map(i => ({ sku:i.sku, modelId:i.modelId, brandId:i.brandId, qty:i.quantity })),
+        });
+      }
+    };
+    document.addEventListener("visibilitychange", onHide);
+    return () => document.removeEventListener("visibilitychange", onHide);
+  }, []);
 
   // ── BASKET TOAST HELPER ──
   const addBToast = useCallback((msg, type="success") => {
@@ -3743,6 +4053,7 @@ function App() {
     (paymentMethod || "promptpay") !== "cod" ? setLastBillOrders(newOrders) : setLastBillOrders(null);
     saveCustomerAddressSlot({ customer, phone, address });
     reduceStockForOrder(basket, { orders: nextOrders });
+    checkoutDoneRef.current = true;
     setBasket([]);
     setCheckoutData(null);
     setBasketOpen(false);
@@ -4596,11 +4907,11 @@ function App() {
         @keyframes v2FloatIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
         @keyframes v2SoftPulse{0%,100%{box-shadow:0 0 0 0 rgba(154,0,24,.18)}50%{box-shadow:0 0 0 8px rgba(154,0,24,0)}}
         @keyframes v2HeroSlide{from{opacity:0;transform:translateX(34px) scale(.985)}to{opacity:1;transform:translateX(0) scale(1)}}
-        @keyframes favoritePump{0%{transform:scale(1)}35%{transform:scale(1.34)}62%{transform:scale(.92)}100%{transform:scale(1)}}
-        .favorite-heart-btn{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:0!important;width:32px;height:32px;color:#777;cursor:pointer;font-family:Arial,sans-serif;font-size:29px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transform-origin:center;transition:color .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1),opacity .28s cubic-bezier(.22,1,.36,1)}
+        @keyframes favoritePump{0%{transform:scale(1);color:#BDB8B0}20%{transform:scale(1.45);color:#E82A3C}55%{transform:scale(.88)}80%{transform:scale(1.1);color:#E82A3C}100%{transform:scale(1);color:#E82A3C}}
+        .favorite-heart-btn{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:0!important;width:32px;height:32px;color:#BDB8B0;cursor:pointer;font-family:Arial,sans-serif;font-size:29px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transform-origin:center;transition:color .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1),opacity .28s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent;outline:none}
         .favorite-heart-btn:hover{transform:scale(1.1);box-shadow:none!important}
         .favorite-heart-btn:active{transform:scale(1.24)!important}
-        .favorite-heart-btn.is-favorite{color:#1A1A1A}
+        .favorite-heart-btn.is-favorite{color:#E82A3C}
         .favorite-heart-btn.favorite-pump{animation:favoritePump .42s cubic-bezier(.22,1,.36,1)}
         button{transition:transform .34s cubic-bezier(.22,1,.36,1), box-shadow .34s cubic-bezier(.22,1,.36,1), border-color .34s cubic-bezier(.22,1,.36,1), background .34s cubic-bezier(.22,1,.36,1), color .34s cubic-bezier(.22,1,.36,1), opacity .34s cubic-bezier(.22,1,.36,1)}
         button:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(17,17,17,.12)}
@@ -4646,7 +4957,7 @@ function App() {
         .v2-home-sub{margin-left:0!important;margin-right:0!important;max-width:570px!important;font-size:16px!important}
         .v2-home-actions{justify-content:flex-start!important}
         .v2-hero-visual{position:relative;min-height:350px;border-radius:22px;background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.8);box-shadow:0 24px 60px rgba(17,17,17,.14);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-right:4px;max-width:430px;width:100%;justify-self:end}
-        .v2-hero-visual:before{content:"Thong-in Autoparts";position:absolute;color:rgba(0,0,0,.08);font-size:28px;font-style:italic;font-weight:900;transform:rotate(-5deg)}
+        .v2-hero-visual:before{content:"SKKJ Autopart";position:absolute;color:rgba(0,0,0,.04);font-size:22px;font-style:italic;font-weight:900;transform:rotate(-5deg)}
         .v2-hero-slide{position:relative;z-index:1;width:100%;height:100%;min-height:350px;display:flex;align-items:center;justify-content:center;animation:v2HeroSlide .68s cubic-bezier(.22,1,.36,1)}
         .v2-hero-visual img.v2-hero-main-image{width:108%;height:285px;object-fit:contain;position:relative;z-index:1;filter:none;transition:transform .55s cubic-bezier(.22,1,.36,1)}
         .v2-hero-visual:hover img.v2-hero-main-image{transform:scale(1.045) rotate(-1deg)}
@@ -4662,7 +4973,7 @@ function App() {
         .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:72%!important;max-width:88px!important;max-height:38px!important;object-fit:contain!important;transform:none!important;flex-shrink:1!important}
         .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:16px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
         .v2-hero-order:disabled{background:#eee;color:#999;box-shadow:none;cursor:not-allowed}
-        .v2-hero-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
+        .v2-hero-nav{position:absolute;top:38%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
         .v2-hero-nav.left{left:14px}
         .v2-hero-nav.right{right:14px}
         .fitment-control{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E6E1D8;border-radius:22px;padding:10px;box-shadow:0 14px 34px rgba(17,17,17,0.08);margin:0 auto 22px}
@@ -4797,6 +5108,17 @@ function App() {
           .line-help-line-card { width: min(340px, calc(100vw - 24px)) !important; grid-template-columns: 54px 1fr !important; padding: 10px !important; }
           .line-help-line-card img { width: 54px !important; height: 54px !important; }
           .line-help-button { padding: 11px 14px !important; font-size: 14px !important; max-width: calc(100vw - 24px) !important; }
+        @keyframes backToTopFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes skeletonShimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+        .skk-skeleton{background:#EFEDE8;background-image:linear-gradient(90deg,#EFEDE8 0px,#F7F5F1 200px,#EFEDE8 400px);background-size:800px 100%;animation:skeletonShimmer 1.3s linear infinite;border-radius:8px}
+        .skk-skel-card{background:#fff;border:1px solid #ECECEC;border-radius:14px;overflow:hidden;padding:0}
+        .skk-breadcrumb{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:12.5px;color:#999;margin-bottom:14px}
+        .skk-breadcrumb a,.skk-breadcrumb span.crumb{color:#777;cursor:pointer;font-weight:700;text-decoration:none}
+        .skk-breadcrumb a:hover,.skk-breadcrumb span.crumb:hover{color:#1A1A1A}
+        .skk-breadcrumb .crumb-current{color:#1A1A1A;font-weight:900;cursor:default}
+        .skk-breadcrumb .crumb-sep{color:#CCC;font-weight:700}
+        .back-to-top-btn{position:fixed;left:18px;bottom:18px;z-index:9998;width:44px;height:44px;border-radius:50%;background:#1A1A1A;color:#fff;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(17,17,17,0.22);animation:backToTopFadeIn .28s cubic-bezier(.22,1,.36,1);transition:background .2s,transform .2s}
+        .back-to-top-btn:hover{background:#333;transform:translateY(-2px)!important}
           .admin-label-alert { top: auto !important; left: 12px !important; right: 12px !important; bottom: 78px !important; max-width: none !important; }
           .purchase-history-panel { padding: 16px !important; border-radius: 14px !important; }
           .customer-order-summary { grid-template-columns: 1fr !important; }
@@ -5636,6 +5958,19 @@ function App() {
         {/* ══ CATALOG ══ */}
         {page==="catalog"&&(
           <div style={{ padding:"40px 0" }}>
+            <nav className="skk-breadcrumb" aria-label="breadcrumb">
+              <span className="crumb" onClick={()=>setPage("home")}>{lang==="th"?"หน้าหลัก":"Home"}</span>
+              <span className="crumb-sep">›</span>
+              {selectedBrand ? (
+                <>
+                  <span className="crumb" onClick={()=>setSelectedBrand(null)}>{lang==="th"?"สินค้าทั้งหมด":"All products"}</span>
+                  <span className="crumb-sep">›</span>
+                  <span className="crumb-current">{lang==="th"?brands.find(b=>b.id===selectedBrand)?.nameTh:brands.find(b=>b.id===selectedBrand)?.nameEn}</span>
+                </>
+              ) : (
+                <span className="crumb-current">{lang==="th"?"สินค้าทั้งหมด":"All products"}</span>
+              )}
+            </nav>
             <div style={{ marginBottom:26, display:"flex", alignItems:"flex-start", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
               <h2 style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", margin:0 }}>
                 {selectedBrand ? (lang==="th"?brands.find(b=>b.id===selectedBrand)?.nameTh:brands.find(b=>b.id===selectedBrand)?.nameEn) : t.allBrands}
@@ -5736,7 +6071,26 @@ function App() {
               </div>
             </div>
 
-            {catalogBrands.length === 0 && (
+            {catalogBrands.length === 0 && dbStatus.loading && (
+              <div style={{ marginBottom:30 }}>
+                <div className="skk-skeleton" style={{ width:160, height:22, marginBottom:16 }} />
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(240px,100%),1fr))", gap:16 }}>
+                  {[0,1,2,3,4,5,6,7].map(i => (
+                    <div key={i} className="skk-skel-card">
+                      <div className="skk-skeleton" style={{ height:160, borderRadius:0 }} />
+                      <div style={{ padding:14 }}>
+                        <div className="skk-skeleton" style={{ width:"55%", height:11, marginBottom:9 }} />
+                        <div className="skk-skeleton" style={{ width:"85%", height:15, marginBottom:12 }} />
+                        <div className="skk-skeleton" style={{ width:"40%", height:18, marginBottom:12 }} />
+                        <div className="skk-skeleton" style={{ width:"100%", height:38, borderRadius:10 }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {catalogBrands.length === 0 && !dbStatus.loading && (
               <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, padding:"32px 18px", textAlign:"center", color:"#999", marginBottom:30 }}>
                 <div style={{ fontSize:28, marginBottom:8 }}>⌕</div>
                 <div style={{ fontSize:14, fontWeight:700 }}>{lang==="th"?"ไม่พบสินค้าที่ค้นหา":"No matching products"}</div>
@@ -5768,6 +6122,10 @@ function App() {
                     return (
                       <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 10px 24px rgba(26,26,26,0.035)", position:"relative" }}>
                         <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} onMagnify={setLightboxImage} onOpenDetail={()=>openProductDetail(brand, model)} />
+                        <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"4px 8px", fontSize:11, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
+                          <span style={{ fontSize:12 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
+                          {lang==="th"?"เทียบ":"Compare"}
+                        </button>
                         <div style={{ padding:"14px 16px 16px" }}>
                           <div style={{ cursor:"pointer", borderRadius:10, padding:"2px 0 6px" }}>
                             <h4 style={{ margin:"0 0 2px", fontSize:15, fontWeight:800, color:"#111" }}>{brandName} {modelName}</h4>
@@ -5790,6 +6148,17 @@ function App() {
                           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10 }}>
                             <span style={{ fontSize:18, fontWeight:800 }}>{fmt(model.price)}</span>
                             <div style={{ display:"flex", gap:6 }}>
+                              {/* OPEN PRODUCT IN NEW TAB */}
+                              <a
+                                href={productNewTabUrl(brand.id, model.id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onMouseDown={(e)=>{ e.stopPropagation(); }}
+                                onClick={(e)=>{ e.stopPropagation(); }}
+                                title={lang==="th"?"เปิดสินค้าในแท็บใหม่":"Open product in new tab"}
+                                style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:10, width:34, minWidth:34, height:32, display:"inline-flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, textDecoration:"none", whiteSpace:"nowrap" }}>
+                                ↗
+                              </a>
                               {/* ADD TO BASKET */}
                               <button
                                 disabled={model.stock===0}
@@ -5818,9 +6187,47 @@ function App() {
           </div>
         )}
 
-        {/* ══ PRODUCT DETAIL ══ */}
-        {page==="product"&&detailBrand&&detailModel&&(
+        {/* ══ RECENTLY VIEWED (catalog page bottom) ══ */}
+        {page==="catalog" && recentlyViewed.length > 0 && (() => {
+          const items = recentlyViewed
+            .map(rv => {
+              const b = brands.find(x => x.id === rv.brandId);
+              const m = b?.models.find(x => x.id === rv.modelId && isProductVisible(x) && isPartTypeVisible(getModelPartType(x)));
+              return b && m ? { brand:b, model:m } : null;
+            })
+            .filter(Boolean);
+          if (items.length === 0) return null;
+          return (
+            <div style={{ maxWidth:1180, margin:"0 auto", padding:"8px 0 50px" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14 }}>
+                <h3 style={{ margin:0, fontSize:20, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ดูล่าสุด":"Recently viewed"}</h3>
+                <button onClick={()=>{ setRecentlyViewed([]); try{localStorage.removeItem("skkj_v2_recently_viewed_v1");}catch(_e){} }} style={{ background:"none", border:"none", color:"#999", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ล้าง":"Clear"}</button>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
+                {items.map(({ brand, model }) => (
+                  <div key={`${brand.id}__${model.id}`} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(brand, model); } }} style={{ border:"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                    <div style={{ height:90, background:"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+                      <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} height={90} onMagnify={()=>{}} onOpenDetail={()=>openProductDetail(brand, model)} />
+                    </div>
+                    <div style={{ padding:"8px 10px 10px" }}>
+                      <div style={{ fontSize:11, color:"#999", fontWeight:700, textTransform:"uppercase" }}>{lang==="th"?brand.nameTh:brand.nameEn}</div>
+                      <div style={{ fontSize:12, fontWeight:900, color:"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?model.nameTh:model.nameEn}</div>
+                      <div style={{ fontSize:12, fontWeight:900, color:"#9A0018", marginTop:3 }}>{fmt(model.price)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
           <div className="v2-product-page" style={{ padding:"38px 0 60px" }}>
+            <nav className="skk-breadcrumb" aria-label="breadcrumb">
+              <span className="crumb" onClick={()=>setPage("home")}>{lang==="th"?"หน้าหลัก":"Home"}</span>
+              <span className="crumb-sep">›</span>
+              <span className="crumb" onClick={()=>{ setSelectedBrand(detailBrand.id); setPage("catalog"); }}>{lang==="th"?detailBrand.nameTh:detailBrand.nameEn}</span>
+              <span className="crumb-sep">›</span>
+              <span className="crumb-current">{lang==="th"?detailModel.nameTh:detailModel.nameEn}</span>
+            </nav>
             <button onClick={()=>setPage("catalog")} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, marginBottom:18 }}>
               ‹ {lang==="th"?"กลับไปสินค้า":"Back to products"}
             </button>
@@ -5880,12 +6287,43 @@ function App() {
                   <button className="v2-ask-button" onClick={()=>askAboutProduct(detailBrand, detailModel)} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"ถามร้าน":"Ask shop"}
                   </button>
+                  <a className="v2-ask-button" href={productNewTabUrl(detailBrand.id, detailModel.id)} target="_blank" rel="noopener noreferrer" style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF, textAlign:"center", textDecoration:"none" }}>
+                    {lang==="th"?"เปิดแท็บใหม่":"Open new tab"}
+                  </a>
                   <button className="v2-ask-button" onClick={()=>saveCustomerCar(detailBrand, detailModel)} style={{ background:"#FFF7ED", color:"#9A0018", border:"1px solid #F3D7B5", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"บันทึกรถคันนี้":"Save this car"}
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* ══ RELATED PRODUCTS (same brand) ══ */}
+            {(() => {
+              const related = (detailBrand.models || [])
+                .filter(m => m.id !== detailModel.id && isProductVisible(m) && isPartTypeVisible(getModelPartType(m)))
+                .slice(0, 4);
+              if (related.length === 0) return null;
+              return (
+                <div style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
+                  <h3 style={{ margin:"0 0 4px", fontSize:18, fontWeight:900 }}>{lang==="th"?`สินค้า ${detailBrand.nameTh} รุ่นอื่น`:`More from ${detailBrand.nameEn}`}</h3>
+                  <p style={{ margin:"0 0 16px", color:"#777", fontSize:13 }}>{lang==="th"?"แร็คพวงมาลัยรุ่นอื่นในยี่ห้อเดียวกัน":"Other steering racks from the same brand"}</p>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
+                    {related.map(m => (
+                      <div key={m.id} onClick={()=>openProductDetail(detailBrand, m)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(detailBrand, m); } }} style={{ border:"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                        <div style={{ height:90, background:"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+                          <ProductPhotoBox brand={detailBrand} model={m} lang={lang} t={t} height={90} onMagnify={()=>{}} onOpenDetail={()=>openProductDetail(detailBrand, m)} />
+                        </div>
+                        <div style={{ padding:"8px 10px 10px" }}>
+                          <div style={{ fontSize:12, fontWeight:900, color:"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          <div style={{ fontSize:12, fontWeight:900, color:"#9A0018", marginTop:3 }}>{fmt(m.price)}</div>
+                          <div style={{ fontSize:10.5, color:m.stock===0?"#E24B4A":"#888", marginTop:2 }}>{m.stock===0?t.outOfStock:`${m.stock} ${t.inStock}`}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -5962,7 +6400,7 @@ function App() {
                   <span style={{ fontSize:18 }}>LINE</span>
                   <div>
                     <div style={{ fontWeight:700, fontSize:12, marginBottom:8 }}>{lang==="th"?"เพิ่มเพื่อนทาง LINE":"Add us on LINE"}</div>
-                    <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:150, maxWidth:"100%", border:"1px solid #ECECEC", borderRadius:8, display:"block" }} />
+                    <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" loading="lazy" style={{ width:150, maxWidth:"100%", border:"1px solid #ECECEC", borderRadius:8, display:"block" }} />
                   </div>
                 </div>
                 {[{icon:"📍",...t.contact.address},{icon:"📞",...t.contact.phoneInfo},{icon:"🕐",...t.contact.hours},{icon:"📧",...t.contact.emailInfo}].map(c=>(
@@ -6856,16 +7294,97 @@ function App() {
         </div>
         <div style={{ maxWidth:1200, margin:"20px auto 0", borderTop:"1px solid #333", paddingTop:20, fontSize:12, textAlign:"center" }}>{t.footer.copyright}</div>
       </footer>
+      {showBackToTop && (
+        <button className="back-to-top-btn" onClick={()=>window.scrollTo({ top:0, behavior:"smooth" })} title={lang==="th"?"กลับด้านบน":"Back to top"} aria-label="Back to top">
+          ↑
+        </button>
+      )}
+
+      {/* ══ COMPARE BAR (floating, shows when items selected) ══ */}
+      {compareList.length > 0 && !compareOpen && (
+        <div style={{ position:"fixed", left:"50%", bottom:18, transform:"translateX(-50%)", zIndex:9997, background:"#1A1A1A", color:"#fff", borderRadius:14, padding:"12px 16px", boxShadow:"0 12px 34px rgba(0,0,0,0.3)", display:"flex", alignItems:"center", gap:14, maxWidth:"calc(100vw - 28px)" }}>
+          <span style={{ fontSize:13, fontWeight:800 }}>{lang==="th"?`เลือกเทียบ ${compareList.length} รายการ`:`${compareList.length} selected`}</span>
+          <button onClick={()=>setCompareOpen(true)} disabled={compareList.length<2} style={{ background:compareList.length<2?"#555":"#fff", color:compareList.length<2?"#999":"#1A1A1A", border:"none", borderRadius:9, padding:"8px 14px", fontSize:13, fontWeight:900, cursor:compareList.length<2?"not-allowed":"pointer", fontFamily:thF }}>
+            {lang==="th"?"เปรียบเทียบ":"Compare"}
+          </button>
+          <button onClick={()=>setCompareList([])} style={{ background:"transparent", color:"#aaa", border:"none", fontSize:18, cursor:"pointer", lineHeight:1 }}>×</button>
+        </div>
+      )}
+
+      {/* ══ COMPARE MODAL ══ */}
+      {compareOpen && compareList.length >= 2 && (() => {
+        const items = compareList.map(c => {
+          const b = brands.find(x => x.id===c.brandId);
+          const m = b?.models.find(x => x.id===c.modelId);
+          return b && m ? { brand:b, model:m } : null;
+        }).filter(Boolean);
+        if (items.length < 2) return null;
+        const rows = [
+          { label: lang==="th"?"ราคา":"Price", get:({model})=>fmt(model.price) },
+          { label: lang==="th"?"สต็อก":"Stock", get:({model})=>model.stock===0?(lang==="th"?"หมด":"Out"):`${model.stock}` },
+          { label: lang==="th"?"ปีรถ":"Years", get:({model})=>model.years||"-" },
+          { label: lang==="th"?"พวงมาลัย":"Drive side", get:({model})=>getDriveSideLabel(getModelDriveSide(model), lang) },
+          { label: lang==="th"?"ประเภท":"Part type", get:({model})=>getPartTypeLabel(getModelPartType(model), lang) },
+          { label: lang==="th"?"รหัสสินค้า":"SKU", get:({model})=>model.sku||"-" },
+        ];
+        return (
+          <div onClick={()=>setCompareOpen(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:10000, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+            <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:16, maxWidth:760, width:"100%", maxHeight:"88vh", overflow:"auto", boxShadow:"0 24px 60px rgba(0,0,0,0.3)" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"18px 20px", borderBottom:"1px solid #ECECEC", position:"sticky", top:0, background:"#fff" }}>
+                <h3 style={{ margin:0, fontSize:18, fontWeight:900 }}>{lang==="th"?"เปรียบเทียบสินค้า":"Compare products"}</h3>
+                <button onClick={()=>setCompareOpen(false)} style={{ width:30, height:30, borderRadius:15, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", fontSize:18, lineHeight:1 }}>×</button>
+              </div>
+              <div style={{ padding:20, overflowX:"auto" }}>
+                <table style={{ width:"100%", borderCollapse:"collapse", minWidth:items.length*150 }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign:"left", padding:"8px", fontSize:12, color:"#999", fontWeight:700, verticalAlign:"top", width:90 }}></th>
+                      {items.map(({ brand, model }) => (
+                        <th key={`${brand.id}-${model.id}`} style={{ padding:"8px", textAlign:"center", verticalAlign:"top" }}>
+                          <div style={{ height:80, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:6 }}>
+                            <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} height={80} onMagnify={()=>{}} onOpenDetail={()=>{ setCompareOpen(false); openProductDetail(brand, model); }} />
+                          </div>
+                          <div style={{ fontSize:12.5, fontWeight:900, color:"#1A1A1A", lineHeight:1.3 }}>{lang==="th"?brand.nameTh:brand.nameEn} {lang==="th"?model.nameTh:model.nameEn}</div>
+                          <button onClick={()=>toggleCompare(brand, model)} style={{ marginTop:5, background:"none", border:"none", color:"#E24B4A", fontSize:11, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"นำออก":"Remove"}</button>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, ri) => (
+                      <tr key={ri} style={{ background:ri%2===0?"#FAFAF8":"#fff" }}>
+                        <td style={{ padding:"10px 8px", fontSize:12, color:"#777", fontWeight:800 }}>{row.label}</td>
+                        {items.map(item => (
+                          <td key={`${item.brand.id}-${item.model.id}`} style={{ padding:"10px 8px", textAlign:"center", fontSize:13, fontWeight:700, color:"#1A1A1A" }}>{row.get(item)}</td>
+                        ))}
+                      </tr>
+                    ))}
+                    <tr>
+                      <td style={{ padding:"10px 8px" }}></td>
+                      {items.map(({ brand, model }) => (
+                        <td key={`${brand.id}-${model.id}`} style={{ padding:"10px 8px", textAlign:"center" }}>
+                          <button onClick={()=>{ setCompareOpen(false); openProductDetail(brand, model); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:9, padding:"8px 12px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ดูสินค้า":"View"}</button>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       <div className="line-help-float" style={{ position:"fixed", right:18, bottom:18, zIndex:9999, display:"flex", flexDirection:"column", alignItems:"flex-end", gap:10 }}>
-        {lineHelpOpen && (
-          <>
+
+        {/* ── PRODUCT FINDER CARD ── */}
+        {lineFinderOpen && (
           <div className="line-help-card" style={{ background:"#fff", border:"1px solid #E0DDD8", borderRadius:16, padding:14, boxShadow:"0 18px 44px rgba(0,0,0,0.18)", width:360, maxWidth:"calc(100vw - 28px)" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:8 }}>
               <div>
                 <div style={{ fontSize:15, fontWeight:900, color:"#1A1A1A" }}>{t.finder.title}</div>
                 <div style={{ fontSize:11.5, color:"#777", lineHeight:1.4, marginTop:2 }}>{t.finder.subtitle}</div>
               </div>
-              <button type="button" onClick={()=>setLineHelpOpen(false)} style={{ width:26, height:26, borderRadius:13, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", lineHeight:1, fontSize:16 }}>×</button>
+              <button type="button" onClick={()=>setLineFinderOpen(false)} style={{ width:26, height:26, borderRadius:13, border:"1px solid #E0DDD8", background:"#fff", cursor:"pointer", lineHeight:1, fontSize:16 }}>×</button>
             </div>
             <div style={{ display:"flex", gap:6, flexWrap:"wrap", margin:"10px 0" }}>
               {t.finder.quickButtons.map(btn => (
@@ -6895,7 +7414,7 @@ function App() {
                               </div>
                             </div>
                             <div style={{ display:"flex", gap:6, marginTop:7 }}>
-                              <button type="button" onClick={()=>{ openProductDetail(brand, model); setLineHelpOpen(false); }} style={{ flex:1, border:"1px solid #1A1A1A", background:"#1A1A1A", color:"#fff", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.view}</button>
+                              <button type="button" onClick={()=>{ openProductDetail(brand, model); setLineFinderOpen(false); }} style={{ flex:1, border:"1px solid #1A1A1A", background:"#1A1A1A", color:"#fff", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.view}</button>
                               <button type="button" onClick={()=>openLineForProduct(brand, model)} style={{ flex:1, border:"1px solid #06C755", background:"#fff", color:"#06A846", borderRadius:9, padding:"7px 8px", fontSize:11.5, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{T[replyLang].finder.askLine}</button>
                             </div>
                           </div>
@@ -6911,7 +7430,12 @@ function App() {
               <button type="button" onClick={()=>runProductFinder(finderQuery)} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, padding:"0 12px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:thF }}>{t.finder.send}</button>
             </div>
           </div>
-          <div className="line-help-line-card" style={{ background:"#fff", border:"1px solid #DDF3E5", borderRadius:16, padding:12, boxShadow:"0 16px 38px rgba(6,199,85,0.18)", width:360, maxWidth:"calc(100vw - 28px)", display:"grid", gridTemplateColumns:"62px 1fr", alignItems:"center", gap:10 }}>
+        )}
+
+        {/* ── LINE CONTACT CARD ── */}
+        {lineContactOpen && (
+          <div className="line-help-line-card" style={{ background:"#fff", border:"1px solid #DDF3E5", borderRadius:16, padding:12, boxShadow:"0 16px 38px rgba(6,199,85,0.18)", width:360, maxWidth:"calc(100vw - 28px)", display:"grid", gridTemplateColumns:"62px 1fr", alignItems:"center", gap:10, position:"relative" }}>
+            <button type="button" onClick={()=>setLineContactOpen(false)} style={{ position:"absolute", top:8, right:8, width:22, height:22, borderRadius:11, border:"1px solid #D0EBD9", background:"#F0FDF4", cursor:"pointer", lineHeight:1, fontSize:13, color:"#166534" }}>×</button>
             <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:62, height:62, objectFit:"cover", border:"1px solid #ECECEC", borderRadius:10, display:"block", background:"#fff" }} />
             <div style={{ minWidth:0 }}>
               <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A", marginBottom:2 }}>{lang==="th"?"LINE ร้าน SKKJ":"SKKJ LINE"}</div>
@@ -6921,12 +7445,19 @@ function App() {
               </button>
             </div>
           </div>
-          </>
         )}
-        <button className="line-help-button" onClick={()=>setLineHelpOpen(v=>!v)} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"13px 18px", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, boxShadow:"0 10px 28px rgba(0,0,0,0.28)", display:"flex", alignItems:"center", gap:9 }}>
-          <span style={{ width:22, height:22, borderRadius:11, background:"#fff", color:"#06C755", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:900 }}>L</span>
-          {lang==="th"?"LINE ถามร้าน":"LINE Help"}
-        </button>
+
+        {/* ── TWO SEPARATE BUTTONS ── */}
+        <div style={{ display:"flex", gap:8, alignItems:"center", justifyContent:"flex-end" }}>
+          <button className="line-help-button" onClick={()=>{ setLineFinderOpen(v=>!v); setLineContactOpen(false); }} style={{ background:lineFinderOpen?"#1A1A1A":"#F0EEE8", color:lineFinderOpen?"#fff":"#1A1A1A", border:"1px solid "+(lineFinderOpen?"#1A1A1A":"#E0DDD8"), borderRadius:999, padding:"11px 14px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, boxShadow:"0 6px 18px rgba(0,0,0,0.14)", display:"flex", alignItems:"center", gap:7 }}>
+            <span style={{ fontSize:15 }}>🔍</span>
+            {lang==="th"?"หาอะไหล่":"Find parts"}
+          </button>
+          <button className="line-help-button" onClick={()=>{ setLineContactOpen(v=>!v); setLineFinderOpen(false); }} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"11px 14px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, boxShadow:"0 10px 28px rgba(0,0,0,0.28)", display:"flex", alignItems:"center", gap:7 }}>
+            <span style={{ width:20, height:20, borderRadius:10, background:"#fff", color:"#06C755", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:900 }}>L</span>
+            {lang==="th"?"LINE ถามร้าน":"LINE Help"}
+          </button>
+        </div>
       </div>
     </div>
   );
