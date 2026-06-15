@@ -2963,13 +2963,12 @@ function App() {
       matches = findProductsByQuery(brands, text, {
         partType:selectedPartType,
         driveSide:selectedDriveSide,
-        hideNoPhoto,
       }).slice(0, 5);
     } catch (error) {
       console.warn("Product finder search failed", error);
     }
     setCatalogSearch(text);
-    setLineHelpOpen(true);
+    setLineFinderOpen(true);
     setFinderMessages(prev => [
       ...prev,
       { role:"user", lang:replyLang, text },
