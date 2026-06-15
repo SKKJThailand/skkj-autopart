@@ -6237,6 +6237,9 @@ function App() {
             </div>
           );
         })()}
+
+        {/* ══ PRODUCT DETAIL ══ */}
+        {page==="product"&&detailBrand&&detailModel&&(
           <div className="v2-product-page" style={{ padding:"38px 0 60px" }}>
             <nav className="skk-breadcrumb" aria-label="breadcrumb">
               <span className="crumb" onClick={()=>setPage("home")}>{lang==="th"?"หน้าหลัก":"Home"}</span>
