@@ -1028,8 +1028,8 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
           <div style={{ fontSize:10, color:"#B8B1A5", letterSpacing:0.5 }}>{t.carPhoto}</div>
         </div>
       )}
-      <button type="button" onClick={(e)=>{ e.stopPropagation(); canMove && move(-1); }} style={{ position:"absolute", left:8, top:"50%", transform:"translateY(-50%)", width:34, height:42, border:"none", background:"rgba(255,255,255,0.78)", color:"#1A1A1A", borderRadius:10, cursor:canMove?"pointer":"default", fontSize:26, lineHeight:1, zIndex:3, opacity:canMove?1:0.35 }}>‹</button>
-      <button type="button" onClick={(e)=>{ e.stopPropagation(); canMove && move(1); }} style={{ position:"absolute", right:8, top:"50%", transform:"translateY(-50%)", width:34, height:42, border:"none", background:"rgba(255,255,255,0.78)", color:"#1A1A1A", borderRadius:10, cursor:canMove?"pointer":"default", fontSize:26, lineHeight:1, zIndex:3, opacity:canMove?1:0.35 }}>›</button>
+      <button type="button" className="slide-arrow" onClick={(e)=>{ e.stopPropagation(); canMove && move(-1); }} style={{ position:"absolute", left:8, top:"50%", transform:"translateY(-50%)", width:34, height:42, border:"none", background:"rgba(255,255,255,0.78)", color:"#1A1A1A", borderRadius:10, cursor:canMove?"pointer":"default", fontSize:26, lineHeight:1, zIndex:3, opacity:canMove?1:0.35 }}>‹</button>
+      <button type="button" className="slide-arrow" onClick={(e)=>{ e.stopPropagation(); canMove && move(1); }} style={{ position:"absolute", right:8, top:"50%", transform:"translateY(-50%)", width:34, height:42, border:"none", background:"rgba(255,255,255,0.78)", color:"#1A1A1A", borderRadius:10, cursor:canMove?"pointer":"default", fontSize:26, lineHeight:1, zIndex:3, opacity:canMove?1:0.35 }}>›</button>
       <button type="button" disabled={!showImage} onClick={(e)=>{ e.stopPropagation(); showImage && onMagnify?.(slide); }} title={lang==="th"?"ดูรูปใหญ่":"View larger"} style={{ position:"absolute", left:10, bottom:10, width:34, height:34, borderRadius:10, border:"1px solid rgba(0,0,0,0.08)", background:"rgba(255,255,255,0.88)", cursor:showImage?"pointer":"default", zIndex:3, fontSize:16, opacity:showImage?1:0.45 }}>⌕</button>
       <div style={{ position:"absolute", right:12, bottom:12, display:"flex", gap:4, zIndex:3 }}>
         {slides.map((s,i)=><span key={`${s.type}-${i}`} style={{ width:i===idx?14:5, height:5, borderRadius:20, background:i===idx?"#1A1A1A":"#CFC7B8", transition:"all 0.2s" }} />)}
@@ -2551,6 +2551,7 @@ function App() {
   const [incomeEndDate, setIncomeEndDate] = useState("");
   const [incomeLayout, setIncomeLayout]   = useState("1");
   const [activityLog, setActivityLog]     = useState([]);
+  const [isDark, setIsDark] = useState(() => { try { return localStorage.getItem("skkj_v2_dark") === "1"; } catch(e) { return false; } });
   const [analytics, setAnalytics]         = useState(() => {
     try { return JSON.parse(localStorage.getItem("skkj_v2_analytics_v1") || "[]"); }
     catch (error) { return []; }
@@ -2754,6 +2755,10 @@ function App() {
       });
     } catch (_e) {}
   };
+  useEffect(() => {
+    try { localStorage.setItem("skkj_v2_dark", isDark ? "1" : "0"); } catch(e) {}
+    document.documentElement.setAttribute("data-dark", isDark ? "1" : "0");
+  }, [isDark]);
   useEffect(() => {
     const onScroll = () => setShowBackToTop(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive:true });
@@ -4914,7 +4919,7 @@ function App() {
   }
 
   return (
-    <div className="skkj-v2" style={{ fontFamily:thF, minHeight:"100vh", background:"#FAFAF8", color:"#1A1A1A" }}>
+    <div className="skkj-v2" data-dark={isDark?"1":"0"} style={{ fontFamily:thF, minHeight:"100vh", background:"#FAFAF8", color:"#1A1A1A" }}>
       <style>{`
         :root{--skkj-black:#111111;--skkj-red:#9A0018;--skkj-gold:#C8A83E;--skkj-cream:#FAFAF8;--skkj-line:#E3DED4;--skkj-soft:#F2EFE8}
         @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
@@ -4924,7 +4929,7 @@ function App() {
         @keyframes v2SoftPulse{0%,100%{box-shadow:0 0 0 0 rgba(154,0,24,.18)}50%{box-shadow:0 0 0 8px rgba(154,0,24,0)}}
         @keyframes v2HeroSlide{from{opacity:0;transform:translateX(34px) scale(.985)}to{opacity:1;transform:translateX(0) scale(1)}}
         @keyframes favoritePump{0%{transform:scale(1);color:#BDB8B0}20%{transform:scale(1.45);color:#E82A3C}55%{transform:scale(.88)}80%{transform:scale(1.1);color:#E82A3C}100%{transform:scale(1);color:#E82A3C}}
-        .favorite-heart-btn{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:0!important;width:32px;height:32px;color:#BDB8B0;cursor:pointer;font-family:Arial,sans-serif;font-size:29px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transform-origin:center;transition:color .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1),opacity .28s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent;outline:none}
+        .favorite-heart-btn{-webkit-appearance:none!important;appearance:none!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:0!important;width:32px;height:32px;color:#BDB8B0;cursor:pointer;font-family:Arial,sans-serif;font-size:29px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transform-origin:center;transition:color .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1),opacity .28s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent;outline:none}
         .favorite-heart-btn:hover{transform:scale(1.1);box-shadow:none!important}
         .favorite-heart-btn:active{transform:scale(1.24)!important}
         .favorite-heart-btn.is-favorite{color:#E82A3C}
@@ -4932,7 +4937,50 @@ function App() {
         button{transition:transform .34s cubic-bezier(.22,1,.36,1), box-shadow .34s cubic-bezier(.22,1,.36,1), border-color .34s cubic-bezier(.22,1,.36,1), background .34s cubic-bezier(.22,1,.36,1), color .34s cubic-bezier(.22,1,.36,1), opacity .34s cubic-bezier(.22,1,.36,1)}
         button:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(17,17,17,.12)}
         .favorite-heart-btn:hover{transform:scale(1.1)!important;box-shadow:none!important}
+        .slide-arrow{transition:none!important}
+        .slide-arrow:hover{transform:translateY(-50%)!important;box-shadow:none!important;transition:none!important}
         .v2-product-card .favorite-heart-btn{min-height:0!important;border-radius:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+        /* ── Dark mode: True Black OLED ───────────────────────────────────── */
+        .skkj-v2[data-dark="1"]{background:#000!important;color:#fff!important}
+        .skkj-v2[data-dark="1"]:before,.skkj-v2[data-dark="1"]:after{opacity:0!important}
+        .skkj-v2[data-dark="1"] .site-nav{background:#0A0A0A!important;border-bottom:1px solid #1E1E1E!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .app-main{background:#000!important}
+        .skkj-v2[data-dark="1"] footer{background:#000!important;border-top:1px solid #1E1E1E!important}
+        .skkj-v2[data-dark="1"] footer div,.skkj-v2[data-dark="1"] footer p,.skkj-v2[data-dark="1"] footer span,.skkj-v2[data-dark="1"] footer a{color:#777!important}
+        .skkj-v2[data-dark="1"] h1,.skkj-v2[data-dark="1"] h2,.skkj-v2[data-dark="1"] h3,.skkj-v2[data-dark="1"] h4,.skkj-v2[data-dark="1"] h5,.skkj-v2[data-dark="1"] h6{color:#fff!important}
+        .skkj-v2[data-dark="1"] p,.skkj-v2[data-dark="1"] span,.skkj-v2[data-dark="1"] label,.skkj-v2[data-dark="1"] li{color:#ccc!important}
+        .skkj-v2[data-dark="1"] div{color:#fff!important}
+        .skkj-v2[data-dark="1"] .v2-product-card{background:#111!important;border-color:#1E1E1E!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .v2-product-card:hover{border-color:#333!important;box-shadow:0 8px 24px rgba(0,0,0,.6)!important}
+        .skkj-v2[data-dark="1"] .product-photo-box{background:linear-gradient(135deg,#0A0A0A,#111)!important;border-bottom-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] input,.skkj-v2[data-dark="1"] select,.skkj-v2[data-dark="1"] textarea{background:#111!important;border-color:#2A2A2A!important;color:#fff!important}
+        .skkj-v2[data-dark="1"] input::placeholder,.skkj-v2[data-dark="1"] textarea::placeholder{color:#555!important}
+        .skkj-v2[data-dark="1"] .lang-switch{background:#111!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .mobile-page-tabs button{background:#111!important;border-color:#1E1E1E!important;color:#888!important}
+        .skkj-v2[data-dark="1"] .v2-brand-grid button{background:#111!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .v2-brand-grid button:hover{border-color:#333!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .feature-card,.skkj-v2[data-dark="1"] .customer-order-card{background:#111!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .feature-card:hover,.skkj-v2[data-dark="1"] .customer-order-card:hover{border-color:#333!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .slide-arrow{background:rgba(17,17,17,0.9)!important;color:#fff!important;border:1px solid #2A2A2A!important}
+        .skkj-v2[data-dark="1"] .back-to-top{background:#D00020!important;border-color:#D00020!important}
+        .skkj-v2[data-dark="1"] .skkj-modal-card{background:#111!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .checkout-step{background:#111!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .checkout-step span{background:#1E1E1E!important;color:#999!important}
+        .skkj-v2[data-dark="1"] .v2-home-hero{background:#0D0D0D!important;border-color:#1E1E1E!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .v2-home-hero:before{opacity:0!important}
+        .skkj-v2[data-dark="1"] .v2-home-hero:after{opacity:0!important}
+        .skkj-v2[data-dark="1"] .v2-hero-visual{background:#0D0D0D!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .fitment-control{background:#111!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .part-type-picker{background:#111!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .fitment-divider{background:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .drive-side-picker button{background:#111!important;border-color:#1E1E1E!important;color:#888!important}
+        .skkj-v2[data-dark="1"] .drive-side-picker button[style*="rgb(26"]{background:#D00020!important;border-color:#D00020!important;color:#fff!important}
+        .skkj-v2[data-dark="1"] .v2-hero-visual .product-photo-box{background:#0D0D0D!important}
+        .skkj-v2[data-dark="1"] .hero-product-info{background:#111!important;border-top-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .v2-product-card span{background:#1E1E1E!important;color:#aaa!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] [title="เปรียบเทียบ"],.skkj-v2[data-dark="1"] [title="Compare"]{background:#1A1A1A!important;border-color:#2A2A2A!important;color:#888!important}
+        .skkj-v2[data-dark="1"] .slide-arrow{background:rgba(20,20,20,0.92)!important;color:#fff!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] button[title="ดูรูปใหญ่"],.skkj-v2[data-dark="1"] button[title="View larger"]{background:rgba(20,20,20,0.92)!important;border-color:#2A2A2A!important;color:#aaa!important}
         .skkj-v2{position:relative;isolation:isolate;overflow:hidden;background:#FAFAF8!important}
         .skkj-v2:before{content:"";position:fixed;inset:60px 0 0;z-index:0;pointer-events:none;background:linear-gradient(118deg,rgba(255,255,255,.86) 0 20%,rgba(246,243,236,.72) 20% 39%,transparent 39% 63%,rgba(200,168,62,.08) 63% 63.7%,transparent 63.7% 100%),repeating-linear-gradient(90deg,rgba(17,17,17,.018) 0 1px,transparent 1px 76px),repeating-linear-gradient(0deg,rgba(17,17,17,.012) 0 1px,transparent 1px 76px);opacity:.95}
         .skkj-v2:after{content:"";position:fixed;left:-12%;top:470px;width:124%;height:420px;z-index:0;pointer-events:none;background:linear-gradient(153deg,transparent 0 45%,rgba(200,168,62,.10) 45% 51%,transparent 51% 71%,rgba(154,0,24,.045) 71% 76%,transparent 76% 100%);opacity:.9}
@@ -4989,7 +5037,8 @@ function App() {
         .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:72%!important;max-width:88px!important;max-height:38px!important;object-fit:contain!important;transform:none!important;flex-shrink:1!important}
         .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:16px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
         .v2-hero-order:disabled{background:#eee;color:#999;box-shadow:none;cursor:not-allowed}
-        .v2-hero-nav{position:absolute;top:38%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08)}
+        .v2-hero-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08);transition:none!important}
+        .v2-hero-nav:hover{transform:translateY(-50%)!important;box-shadow:0 10px 24px rgba(17,17,17,.08)!important;background:rgba(255,255,255,.95)!important}
         .v2-hero-nav.left{left:14px}
         .v2-hero-nav.right{right:14px}
         .fitment-control{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E6E1D8;border-radius:22px;padding:10px;box-shadow:0 14px 34px rgba(17,17,17,0.08);margin:0 auto 22px}
@@ -5198,6 +5247,8 @@ function App() {
           .v2-logo-strip > span { min-width: 0 !important; width: 74px !important; height: 36px !important; border-radius: 10px !important; padding: 5px 7px !important; overflow: hidden !important; box-sizing: border-box !important; }
           .v2-logo-strip [data-logo-place="heroBadge"] { width: 100% !important; height: 100% !important; overflow: hidden !important; }
           .v2-logo-strip [data-logo-place="heroBadge"] img { width: 82% !important; height: 68% !important; max-width: 58px !important; max-height: 23px !important; object-fit: contain !important; transform: none !important; }
+          [data-logo-place="heroMain"] img { max-width: 130px !important; max-height: 56px !important; object-fit: contain !important; }
+          [data-logo-place="productPhoto"] img { max-width: 96px !important; max-height: 42px !important; object-fit: contain !important; }
           .v2-hero-fast { top: 10px !important; right: 10px !important; padding: 6px 10px !important; font-size: 10px !important; }
           .v2-hero-title { display: none !important; }
           .v2-hero-nav { width: 28px !important; height: 36px !important; border-radius: 11px !important; font-size: 20px !important; transform: translateY(-50%) !important; padding: 0 !important; }
@@ -5327,6 +5378,7 @@ function App() {
                 </button>
               ))}
             </div>
+            <button onClick={()=>setIsDark(d=>!d)} title={isDark?"โหมดสว่าง":"โหมดมืด"} style={{ background:isDark?"#1A1A1A":"#F0EEE8", border:"1px solid "+(isDark?"#333":"#E0DDD8"), borderRadius:20, width:36, height:36, cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{isDark?"☀️":"🌙"}</button>
           </div>
           <div className="mobile-page-tabs">
             {navPages.map(p=>(
