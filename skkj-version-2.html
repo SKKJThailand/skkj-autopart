@@ -5066,10 +5066,9 @@ function App() {
             <td style="text-align:right">฿${fmt2(unitPrice)}</td>
             <td style="text-align:right">฿${fmt2(unitPrice)}</td>
           </tr>
-          <tr><td colspan="4" style="height:6mm"></td></tr>
-          <tr><td colspan="4" style="height:6mm"></td></tr>
         </tbody>
       </table>
+      <div class="spacer"></div>
       <div class="total-section">
         <div class="total-box">
           <div class="total-label">รวมเงิน / Total</div>
@@ -5082,15 +5081,14 @@ function App() {
       </div>
     </div>`;
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>บิลเงินสด ${order.id}</title><style>
-      @page{size:A4 portrait;margin:8mm}
+      @page{size:A6 portrait;margin:4mm}
       *{box-sizing:border-box;margin:0;padding:0}
       body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff;font-size:10px}
       .print-tools{display:flex;gap:8px;padding:8px;font-size:11px}
       .print-btn{padding:6px 14px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:12px}
       @media print{.print-tools{display:none}}
-      .page{display:flex;flex-direction:column;gap:0}
-      .cut{border-top:1.5px dashed #555;text-align:center;font-size:8px;color:#777;padding:1.5mm 0;margin:0}
-      .bill{border:1.5px solid #000;padding:3mm;position:relative}
+      .bill{padding:2mm;position:relative;page-break-after:always;min-height:calc(148mm - 8mm);display:flex;flex-direction:column}
+      .bill:last-child{page-break-after:auto}
       .top-header{text-align:center;border-bottom:1px solid #000;padding-bottom:1.5mm;margin-bottom:1.5mm;position:relative}
       .samna-badge{position:absolute;top:0;right:0;background:#000;color:#fff;font-size:9px;font-weight:900;padding:1mm 2mm;border-radius:0 0 0 3mm}
       .shop-name{font-size:15px;font-weight:900;letter-spacing:.3px}
@@ -5101,21 +5099,19 @@ function App() {
       .info-label{color:#555;font-size:8px}
       .info-val{font-weight:700;font-size:9.5px;border-bottom:1px solid #999;min-width:60px}
       table{width:100%;border-collapse:collapse;margin-bottom:1.5mm}
-      th{background:#000;color:#fff;padding:1.5mm;font-size:8.5px;font-weight:700;border:1px solid #000}
+      th{background:#000;color:#fff;padding:2mm 1.5mm;font-size:8.5px;font-weight:700;border:1px solid #000}
       td{padding:1.5mm;font-size:8.5px;border:1px solid #ccc;vertical-align:top}
+      .spacer{flex:1}
       .total-section{display:flex;justify-content:flex-end;border-top:1px solid #000;padding-top:1mm;margin-bottom:1.5mm}
       .total-label{font-size:9px;color:#555}
       .total-val{font-size:13px;font-weight:900}
-      .sig-row{display:flex;justify-content:space-between;margin-top:2mm;padding-top:1mm;border-top:1px solid #000}
+      .sig-row{display:flex;justify-content:space-between;padding-top:1mm;border-top:1px solid #000}
       .sig{text-align:center;width:45%;font-size:8.5px}
-      .sig-line{border-bottom:1px solid #000;margin-bottom:1mm;height:5mm}
+      .sig-line{border-bottom:1px solid #000;margin-bottom:1mm;height:6mm}
     </style></head><body>
-    <div class="print-tools"><button class="print-btn" onclick="window.print()">🖨 พิมพ์</button></div>
-    <div class="page">
-      ${billHTML(false)}
-      <div class="cut">✂ ตัดตรงนี้ / Cut here</div>
-      ${billHTML(true)}
-    </div>
+    <div class="print-tools"><button class="print-btn" onclick="window.print()">🖨 พิมพ์ (2 หน้า)</button></div>
+    ${billHTML(false)}
+    ${billHTML(true)}
     </body></html>`);
     w.document.close();
     w.focus();
@@ -5124,60 +5120,64 @@ function App() {
   }
 
   function printWarranty(order) {
-    const w = window.open("", "_blank", "width=430,height=650");
+    const w = window.open("", "_blank", "width=650,height=450");
     if (!w) { alert(lang==="th" ? "เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่" : "Browser blocked pop-up. Please allow pop-ups and try again."); return; }
     const orderDate = new Date(order.createdAt || order.date || Date.now());
     const dateStr = orderDate.toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
     const expiry = new Date(orderDate); expiry.setMonth(expiry.getMonth() + 6);
     const expiryStr = expiry.toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>ใบรับประกัน ${order.id}</title><style>
-      @page{size:A6 portrait;margin:5mm}
+      @page{size:A6 landscape;margin:5mm}
       *{box-sizing:border-box;margin:0;padding:0}
-      body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff;padding:3mm}
+      body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff;padding:3mm;width:144mm}
       .print-tools{display:flex;gap:8px;margin-bottom:8px}
-      .print-btn{padding:6px 14px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:12px}
+      .print-btn{padding:6px 14px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:13px}
       @media print{.print-tools{display:none}}
-      .card{border:2px solid #000;padding:3mm}
-      .header{text-align:center;border-bottom:2px solid #000;padding-bottom:2mm;margin-bottom:2mm}
-      .title-th{font-size:15px;font-weight:900}
-      .title-en{font-size:10px;font-weight:700;color:#444}
-      .shop{font-size:11px;font-weight:700;margin-top:1mm}
-      .row{display:flex;gap:2mm;margin-bottom:2mm;align-items:flex-start}
-      .lbl{font-size:8px;color:#555;min-width:28mm;flex-shrink:0}
-      .val{font-size:9.5px;font-weight:700;border-bottom:1px solid #888;flex:1}
-      .highlight{background:#000;color:#fff;padding:1mm 2mm;border-radius:2mm;font-size:9px;font-weight:900;text-align:center;margin:2mm 0}
-      .terms{border-top:1px solid #000;margin-top:2mm;padding-top:2mm;font-size:7.5px;color:#333;line-height:1.5}
-      .footer{text-align:center;margin-top:2mm;font-size:7.5px;color:#555}
-      .sig-row{display:flex;justify-content:flex-end;margin-top:3mm}
-      .sig{text-align:center;width:45%;font-size:8px}
-      .sig-line{border-bottom:1px solid #000;height:5mm;margin-bottom:1mm}
+      .card{border:2px solid #000;padding:4mm;display:grid;grid-template-columns:52mm 1fr;gap:4mm;height:90mm}
+      .left{border-right:1.5px solid #000;padding-right:4mm;display:flex;flex-direction:column;justify-content:space-between}
+      .title-th{font-size:16px;font-weight:900;line-height:1.2}
+      .title-en{font-size:11px;font-weight:700;color:#444;margin-top:1mm}
+      .shop{font-size:11px;font-weight:700;margin-top:2mm}
+      .highlight{background:#000;color:#fff;padding:2mm 3mm;border-radius:2mm;font-size:11px;font-weight:900;text-align:center;margin-top:3mm;line-height:1.4}
+      .sig{margin-top:auto;padding-top:3mm}
+      .sig-line{border-bottom:1.5px solid #000;margin-bottom:1.5mm}
+      .sig-label{font-size:9px;text-align:center}
+      .right{display:flex;flex-direction:column;gap:2.5mm}
+      .row{display:flex;gap:2mm;align-items:baseline}
+      .lbl{font-size:9px;color:#555;min-width:26mm;flex-shrink:0}
+      .val{font-size:12px;font-weight:700;border-bottom:1px solid #bbb;flex:1;padding-bottom:0.5mm}
+      .terms{margin-top:auto;border-top:1px solid #ccc;padding-top:2mm;font-size:9px;color:#333;line-height:1.6}
+      .footer{font-size:8px;color:#888;text-align:right;margin-top:2mm}
     </style></head><body>
     <div class="print-tools"><button class="print-btn" onclick="window.print()">🖨 พิมพ์</button></div>
     <div class="card">
-      <div class="header">
-        <div class="title-th">ใบรับประกันสินค้า</div>
-        <div class="title-en">WARRANTY CARD</div>
-        <div class="shop">SKKJ Autopart — แร็คพวงมาลัย</div>
-      </div>
-      <div class="row"><span class="lbl">เลขออเดอร์ / Order ID</span><span class="val">${order.id}</span></div>
-      <div class="row"><span class="lbl">ชื่อลูกค้า / Customer</span><span class="val">${order.customer || "-"}</span></div>
-      <div class="row"><span class="lbl">สินค้า / Product</span><span class="val">${order.brand || ""} ${order.model || ""}${order.year ? " ปี " + order.year : ""}</span></div>
-      <div class="row"><span class="lbl">วันที่ซื้อ / Purchase Date</span><span class="val">${dateStr}</span></div>
-      <div class="highlight">ประกันหมดอายุ / Warranty Expires: ${expiryStr}</div>
-      <div class="terms">
-        เงื่อนไขการรับประกัน / Terms:<br/>
-        1. รับประกัน 6 เดือน นับจากวันที่ซื้อ / 6 months from purchase date<br/>
-        2. ครอบคลุมความบกพร่องจากการผลิตเท่านั้น / Manufacturing defects only<br/>
-        3. ไม่ครอบคลุมความเสียหายจากอุบัติเหตุหรือการใช้งานผิดวิธี / Excludes accident or misuse<br/>
-        4. กรุณาเก็บใบนี้ไว้เป็นหลักฐาน / Please keep this card as proof
-      </div>
-      <div class="sig-row">
+      <div class="left">
+        <div>
+          <div class="title-th">ใบรับประกันสินค้า</div>
+          <div class="title-en">WARRANTY CARD</div>
+          <div class="shop">SKKJ Autopart<br/>แร็คพวงมาลัย</div>
+          <div class="highlight">ประกันหมดอายุ<br/>${expiryStr}</div>
+        </div>
         <div class="sig">
           <div class="sig-line"></div>
-          <div>ผู้มีอำนาจ / Authorized</div>
+          <div class="sig-label">ผู้มีอำนาจ / Authorized</div>
         </div>
       </div>
-      <div class="footer">skkjthailand.github.io/skkj-autopart</div>
+      <div class="right">
+        <div class="row"><span class="lbl">เลขออเดอร์ / Order ID</span><span class="val">${order.id}</span></div>
+        <div class="row"><span class="lbl">ชื่อลูกค้า / Customer</span><span class="val">${order.customer || "-"}</span></div>
+        <div class="row"><span class="lbl">สินค้า / Product</span><span class="val">${order.brand || ""} ${order.model || ""}${order.year ? " ปี "+order.year : ""}</span></div>
+        <div class="row"><span class="lbl">วันที่ซื้อ / Purchase Date</span><span class="val">${dateStr}</span></div>
+        <div class="terms">
+          เงื่อนไข / Terms:<br/>
+          1. ลูกค้าต้องตรวจสอบรุ่นรถ ปีรถ และรายละเอียดสินค้าให้ถูกต้องก่อนสั่งซื้อ<br/>
+          2. ทางร้านไม่รับผิดชอบในกรณีที่ลูกค้ากรอกชื่อ ที่อยู่ หรือเบอร์โทรศัพท์ผิดพลาด<br/>
+          3. การรับประกันครอบคลุมเฉพาะความเสียหายจากตัวสินค้า ตามระยะเวลาที่ทางร้านกำหนด (20,000 กิโลเมตร หรือ 6 เดือน)<br/>
+          4. ทางร้านไม่รับประกันสินค้าในกรณีติดตั้งผิดวิธี ใช้งานผิดประเภท ตัดแปลงสินค้า หรือเกิดความเสียหายจากอุบัติเหตุ<br/>
+          5. สินค้าที่หมดระยะเวลารับประกันแล้ว ทางร้านจะไม่รับผิดชอบค่าเสียหาย การเปลี่ยนสินค้า หรือค่าติดตั้งใดๆ
+        </div>
+        <div class="footer">skkjthailand.github.io/skkj-autopart</div>
+      </div>
     </div>
     </body></html>`);
     w.document.close();
@@ -5282,6 +5282,7 @@ function App() {
           </div>
 
           <div class="note">หมายเหตุ: กรุณาตรวจสอบชื่อ เบอร์โทรศัพท์ และที่อยู่ก่อนจัดส่ง</div>
+          <div class="note" style="margin-top:2mm;border-top:1px dashed #aaa;padding-top:2mm;color:#444;">ทางร้านไม่รับประกันสินค้าในกรณีติดตั้งผิดวิธี ใช้งานผิดประเภท ตัดแปลงสินค้า หรือเกิดความเสียหายจากอุบัติเหตุ</div>
         </div>
       </body>
       </html>
