@@ -2635,6 +2635,11 @@ function App() {
   const bToastRef                         = useRef(0);
   const backupInputRef                    = useRef(null);
   const dbConfigRef                       = useRef(readDatabaseConfig());
+  const [allReviews, setAllReviews]       = useState({});
+  const [reviewFormRating, setReviewFormRating] = useState(0);
+  const [reviewFormComment, setReviewFormComment] = useState("");
+  const [reviewFormSubmitting, setReviewFormSubmitting] = useState(false);
+  const [reviewFormDone, setReviewFormDone] = useState(false);
   const dbLoadedRef                       = useRef(false);
   const dbSaveTimerRef                    = useRef(null);
   const businessSyncErrorsRef             = useRef(new Set());
@@ -2725,6 +2730,11 @@ function App() {
   const detailBrand = productDetail ? brands.find(b=>b.id===productDetail.brandId) : null;
   const detailModel = detailBrand?.models.find(m=>m.id===productDetail.modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m))) || null;
   const productKey = (brandId, modelId) => `${brandId}:${modelId}`;
+  const avgRating = (brandId, modelId) => {
+    const ratings = allReviews[`${brandId}__${modelId}`];
+    if (!ratings || ratings.length === 0) return null;
+    return { avg: ratings.reduce((s,r)=>s+r,0)/ratings.length, count: ratings.length };
+  };
   const productHash = (brandId, modelId) => `#product=${encodeURIComponent(brandId || "")}/${encodeURIComponent(modelId || "")}`;
   const productNewTabUrl = (brandId, modelId) => `${window.location.href.split("#")[0]}${productHash(brandId, modelId)}`;
   const isFavoriteProduct = (brandId, modelId) => !!currentCustomer?.favorites?.includes(productKey(brandId, modelId));
@@ -2774,6 +2784,31 @@ function App() {
     window.addEventListener("scroll", onScroll, { passive:true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  // Feature: load product reviews from Supabase on mount
+  useEffect(() => {
+    const cfg = dbConfigRef.current;
+    if (!cfg.supabaseUrl || !cfg.supabaseKey) return;
+    fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?select=brand_id,model_id,rating`, {
+      headers: { apikey: cfg.supabaseKey, Authorization: `Bearer ${cfg.supabaseKey}` }
+    })
+      .then(r => r.ok ? r.json() : [])
+      .then(rows => {
+        const map = {};
+        for (const row of rows) {
+          const key = `${row.brand_id}__${row.model_id}`;
+          if (!map[key]) map[key] = [];
+          map[key].push(Number(row.rating));
+        }
+        setAllReviews(map);
+      })
+      .catch(() => {});
+  }, []);
+  // Feature: reset review form when switching products
+  useEffect(() => {
+    setReviewFormRating(0);
+    setReviewFormComment("");
+    setReviewFormDone(false);
+  }, [productDetail?.brandId, productDetail?.modelId]);
   // Feature: log search terms (debounced — waits 800ms after typing stops)
   useEffect(() => {
     const term = String(catalogSearch || "").trim();
@@ -6224,7 +6259,7 @@ function App() {
                 <span className="v2-result-pill">{catalogBrands.reduce((sum,b)=>sum+b.filteredModels.length,0)} {lang==="th"?"รายการที่แสดง":"shown"}</span>
               </div>
               <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-                <input value={catalogSearch} onChange={e=>setCatalogSearch(e.target.value)} placeholder={lang==="th"?"ค้นหายี่ห้อ รุ่น ปีรถ หรือรหัสสินค้า":"Search brand, model, year, or SKU"} style={{ flex:1, minWidth:0, background:"#FAFAF8", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 13px", fontSize:14, color:"#1A1A1A", fontFamily:thF, outline:"none" }} />
+                <input value={catalogSearch} onChange={e=>setCatalogSearch(e.target.value)} placeholder={lang==="th"?"ค้นหายี่ห้อ รุ่น ปีรถ หรือรหัสสินค้า":"Search brand, model, year, or SKU"} style={{ flex:1, minWidth:0, background:"#FAFAF8", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 13px", fontSize:16, minHeight:44, color:"#1A1A1A", fontFamily:thF, outline:"none" }} />
                 {(catalogSearch || selectedBrand) && <button className="v2-filter-reset" onClick={()=>{ setCatalogSearch(""); setSelectedBrand(null); }}>{lang==="th"?"ล้างตัวกรอง":"Clear filters"}</button>}
               </div>
             </div>
@@ -6298,6 +6333,16 @@ function App() {
                               <span style={{ display:"inline-flex", alignItems:"center", background:getModelDriveSide(model)==="left"?"#FEE2E2":"#F8F7F4", color:getModelDriveSide(model)==="left"?"#9A0018":"#555", border:"1px solid "+(getModelDriveSide(model)==="left"?"#FECACA":"#E0DDD8"), borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
                                 {getDriveSideLabel(getModelDriveSide(model), lang)}
                               </span>
+                              {model.stock > 0 && model.stock <= 5 && (
+                                <span style={{ display:"inline-flex", alignItems:"center", background:"#FFF7ED", color:"#C2410C", border:"1px solid #FDBA74", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
+                                  {lang==="th"?`เหลือ ${model.stock} ชิ้น`:`${model.stock} left`}
+                                </span>
+                              )}
+                              {(()=>{ const r=avgRating(brand.id,model.id); return r ? (
+                                <span style={{ display:"inline-flex", alignItems:"center", gap:2, background:"#FFFBEB", color:"#92400E", border:"1px solid #FDE68A", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
+                                  {"★".repeat(Math.round(r.avg))}{"☆".repeat(5-Math.round(r.avg))} {r.avg.toFixed(1)} ({r.count})
+                                </span>
+                              ) : null; })()}
                             </div>
                             <button type="button" className={`favorite-heart-btn ${isFav?"is-favorite":""} ${favoritePulseKey===favKey?"favorite-pump":""}`} onMouseDown={(e)=>{ e.preventDefault(); e.stopPropagation(); }} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleFavoriteProduct(brand, model); }} title={lang==="th"?"บันทึกเป็นรายการโปรด":"Save as favorite"}>
                               {isFav ? "♥" : "♡"}
@@ -6455,6 +6500,58 @@ function App() {
                     {lang==="th"?"บันทึกรถคันนี้":"Save this car"}
                   </button>
                 </div>
+
+                {/* ══ REVIEWS ══ */}
+                <div style={{ borderTop:"1px solid #ECECEC", paddingTop:18 }}>
+                  <div style={{ fontSize:14, fontWeight:800, color:"#1A1A1A", marginBottom:12 }}>{lang==="th"?"รีวิวจากผู้ซื้อ":"Customer Reviews"}</div>
+                  {(()=>{
+                    const rList = allReviews[`${detailBrand.id}__${detailModel.id}`];
+                    if (!rList || rList.length === 0) return (
+                      <div style={{ color:"#AAA", fontSize:13, marginBottom:14 }}>{lang==="th"?"ยังไม่มีรีวิว — เป็นคนแรก":"No reviews yet — be the first"}</div>
+                    );
+                    const avg = rList.reduce((s,r)=>s+r,0)/rList.length;
+                    return (
+                      <div style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"14px 16px", marginBottom:14, display:"flex", alignItems:"center", gap:10 }}>
+                        <span style={{ fontSize:26, fontWeight:900, color:"#1A1A1A" }}>{avg.toFixed(1)}</span>
+                        <div>
+                          <div style={{ fontSize:18, color:"#F59E0B", lineHeight:1 }}>{"★".repeat(Math.round(avg))}{"☆".repeat(5-Math.round(avg))}</div>
+                          <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{rList.length} {lang==="th"?"รีวิว":"reviews"}</div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  {reviewFormDone ? (
+                    <div style={{ color:"#16A34A", fontSize:13, fontWeight:700, padding:"10px 0" }}>{lang==="th"?"ขอบคุณสำหรับรีวิว!":"Thanks for your review!"}</div>
+                  ) : (
+                    <div style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"14px 16px" }}>
+                      <div style={{ fontSize:12, fontWeight:800, color:"#555", marginBottom:8 }}>{lang==="th"?"ให้คะแนนสินค้านี้":"Rate this product"}</div>
+                      <div style={{ display:"flex", gap:4, marginBottom:10 }}>
+                        {[1,2,3,4,5].map(n=>(
+                          <button key={n} onClick={()=>setReviewFormRating(n)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:28, color:reviewFormRating>=n?"#F59E0B":"#DDD", padding:"0 2px", lineHeight:1 }}>{reviewFormRating>=n?"★":"☆"}</button>
+                        ))}
+                      </div>
+                      <textarea value={reviewFormComment} onChange={e=>setReviewFormComment(e.target.value)} placeholder={lang==="th"?"ความคิดเห็น (ไม่บังคับ)":"Comment (optional)"} rows={2} style={{ width:"100%", boxSizing:"border-box", background:"#fff", border:"1px solid #E0DDD8", borderRadius:10, padding:"10px 12px", fontSize:14, fontFamily:thF, resize:"vertical", outline:"none", marginBottom:10, display:"block" }} />
+                      <button disabled={reviewFormRating===0||reviewFormSubmitting} onClick={async()=>{
+                        if (reviewFormRating===0) return;
+                        setReviewFormSubmitting(true);
+                        const cfg = dbConfigRef.current;
+                        try {
+                          await fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews`,{
+                            method:"POST",
+                            headers:{ apikey:cfg.supabaseKey, Authorization:`Bearer ${cfg.supabaseKey}`, "Content-Type":"application/json", Prefer:"return=minimal" },
+                            body:JSON.stringify({ brand_id:detailBrand.id, model_id:detailModel.id, rating:reviewFormRating, comment:reviewFormComment })
+                          });
+                          const key=`${detailBrand.id}__${detailModel.id}`;
+                          setAllReviews(prev=>({...prev,[key]:[...(prev[key]||[]),reviewFormRating]}));
+                          setReviewFormDone(true);
+                        } catch(_e){} finally{ setReviewFormSubmitting(false); }
+                      }} style={{ background:reviewFormRating===0?"#eee":"#1A1A1A", color:reviewFormRating===0?"#aaa":"#fff", border:"none", borderRadius:10, padding:"10px 18px", cursor:reviewFormRating===0?"not-allowed":"pointer", fontSize:13, fontWeight:800, fontFamily:thF }}>
+                        {reviewFormSubmitting?(lang==="th"?"กำลังส่ง...":"Sending..."):(lang==="th"?"ส่งรีวิว":"Submit Review")}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
               </div>
             </div>
 
@@ -7059,6 +7156,16 @@ function App() {
                       <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                         <button onClick={()=>exportOrdersCSV(orders)} style={{ background:"#F0EEE8", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดาวน์โหลดทั้งหมด":"Download all"}</button>
                         <button onClick={()=>exportOrdersCSV(filteredAdminOrders)} style={{ background:"#1A1A1A", border:"1px solid #1A1A1A", color:"#fff", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดาวน์โหลดที่ค้นหา":"Download filtered"}</button>
+                        <button onClick={()=>{
+                          const todayStr = new Date().toISOString().slice(0,10);
+                          const todayOrders = orders.filter(o=>(o.createdAt||"").slice(0,10)===todayStr);
+                          const lines = todayOrders.length
+                            ? todayOrders.map((o,i)=>`${i+1}. ${o.customer||"-"} | ${o.brand||""} ${o.model||""} | ฿${Number(o.price||0).toLocaleString("th-TH")} | ${o.status||"pending"}`).join("\n")
+                            : (lang==="th"?"ยังไม่มีออเดอร์วันนี้":"No orders today");
+                          const subject = encodeURIComponent(`SKKJ สรุปออเดอร์ ${todayStr}`);
+                          const body = encodeURIComponent(`SKKJ สรุปออเดอร์วันนี้ (${todayStr})\nรวม ${todayOrders.length} รายการ\n\n${lines}`);
+                          window.open(`mailto:rtythongin55@gmail.com?subject=${subject}&body=${body}`);
+                        }} style={{ background:"#2563EB", border:"1px solid #2563EB", color:"#fff", borderRadius:9, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ส่งสรุปวันนี้":"Email today"}</button>
                       </div>
                     </div>
                     {newOrderCount > 0 && (
