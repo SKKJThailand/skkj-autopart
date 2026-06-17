@@ -44,6 +44,7 @@
   <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <style>
     html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
     #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
@@ -2349,6 +2350,37 @@ const getDriveSideLabel = (side, lang) => {
 };
 const isProductVisible = (model) => !model.hidden;
 
+// ─── PROMPTPAY QR HELPERS ────────────────────────────────────────────────────
+function buildPromptPayPayload(promptPayId, amount) {
+  const sanitize = s => String(s).replace(/[^0-9]/g, "");
+  const tag = (id, val) => String(id).padStart(2,"0") + String(val.length).padStart(2,"0") + val;
+  let target = sanitize(promptPayId);
+  if (target.length === 10 && target.startsWith("0")) {
+    target = "0066" + target.slice(1);       // mobile: 0XXXXXXXXX → 0066XXXXXXXXX
+  } else if (target.length === 13) {
+    target = target;                          // national ID: 13 digits as-is
+  }
+  const merchantAccContent = tag(0, "A000000677010111") + tag(1, target);
+  let payload =
+    tag(0,  "01") +
+    tag(1,  "12") +
+    tag(29, merchantAccContent) +
+    tag(52, "0000") +
+    tag(53, "764") +
+    (amount > 0 ? tag(54, amount.toFixed(2)) : "") +
+    tag(58, "TH") +
+    tag(59, "N/A") +
+    tag(60, "Bangkok") +
+    "6304";
+  // CRC-16/CCITT-FALSE
+  let crc = 0xFFFF;
+  for (let i = 0; i < payload.length; i++) {
+    crc ^= payload.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+  }
+  return payload + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, "0");
+}
+
 // ─── DATABASE-READY BRIDGE ───────────────────────────────────────────────────
 // This keeps GitHub Pages working now, and lets us plug in a real server later.
 const SKKJ_DATABASE_CONFIG = {
@@ -2640,6 +2672,11 @@ function App() {
   const [reviewFormComment, setReviewFormComment] = useState("");
   const [reviewFormSubmitting, setReviewFormSubmitting] = useState(false);
   const [reviewFormDone, setReviewFormDone] = useState(false);
+  const [qrPromptPayId, setQrPromptPayId] = useState(() => { try { return localStorage.getItem("skkj_promptpay_id") || ""; } catch(e) { return ""; } });
+  const [qrAmount, setQrAmount]           = useState("");
+  const [qrDataUrl, setQrDataUrl]         = useState("");
+  const [qrGenerating, setQrGenerating]   = useState(false);
+  const [qrError, setQrError]             = useState("");
   const dbLoadedRef                       = useRef(false);
   const dbSaveTimerRef                    = useRef(null);
   const businessSyncErrorsRef             = useRef(new Set());
@@ -7139,7 +7176,7 @@ function App() {
                 </div>
 
                 <div className="admin-tabs" style={{ display:"flex", gap:2, background:"#F0EEE8", borderRadius:11, padding:4, marginBottom:20, width:"fit-content", border:"1px solid #E0DDD8", flexWrap:"wrap" }}>
-                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
+                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["qr", lang==="th"?"QR ชำระเงิน":"QR Pay"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
                     <button key={tv} onClick={()=>setAdminTab(tv)} style={{ background:adminTab===tv?"#1A1A1A":"transparent", border:"none", borderRadius:8, padding:"8px 16px", cursor:"pointer", fontSize:13, fontWeight:adminTab===tv?700:400, color:adminTab===tv?"#fff":"#555", fontFamily:thF, boxShadow:"none", display:"flex", alignItems:"center", gap:7 }}>
                       <span>{tl}</span>
                       {tv==="orders" && newOrderCount > 0 && <span style={{ background:"#ef4444", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{newOrderCount}</span>}
@@ -7524,6 +7561,95 @@ function App() {
                         </tbody>
                       </table>
                     </div>
+                  </div>
+                )}
+
+                {/* ── QR PAY TAB ── */}
+                {adminTab==="qr" && (
+                  <div style={{ background:"#fff", borderRadius:13, border:"1px solid #ECECEC", padding:28, maxWidth:480 }}>
+                    <div style={{ fontSize:16, fontWeight:900, color:"#1A1A1A", marginBottom:6 }}>{lang==="th"?"สร้าง QR PromptPay":"PromptPay QR Generator"}</div>
+                    <div style={{ fontSize:13, color:"#888", marginBottom:24 }}>{lang==="th"?"พิมพ์จำนวนเงิน → กด สร้าง QR → ดาวน์โหลดหรือแชร์ไป LINE":"Enter amount → Generate → Download or share to LINE"}</div>
+
+                    <div style={{ marginBottom:14 }}>
+                      <label style={{ display:"block", fontSize:12, fontWeight:800, color:"#555", marginBottom:6 }}>{lang==="th"?"เบอร์ PromptPay หรือเลขบัตรประชาชน":"PromptPay phone or national ID"}</label>
+                      <input
+                        value={qrPromptPayId}
+                        onChange={e=>{ setQrPromptPayId(e.target.value); setQrDataUrl(""); setQrError(""); try{ localStorage.setItem("skkj_promptpay_id", e.target.value); }catch(_){} }}
+                        placeholder={lang==="th"?"เช่น 0812345678 หรือ 1234567890123":"e.g. 0812345678 or 1234567890123"}
+                        style={{ width:"100%", boxSizing:"border-box", background:"#FAFAF8", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 13px", fontSize:16, fontFamily:thF, outline:"none" }}
+                      />
+                      <div style={{ fontSize:11, color:"#AAA", marginTop:4 }}>{lang==="th"?"บันทึกอัตโนมัติ ไม่ต้องพิมพ์ซ้ำ":"Saved automatically — no need to retype"}</div>
+                    </div>
+
+                    <div style={{ marginBottom:20 }}>
+                      <label style={{ display:"block", fontSize:12, fontWeight:800, color:"#555", marginBottom:6 }}>{lang==="th"?"จำนวนเงิน (บาท)":"Amount (THB)"}</label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={qrAmount}
+                        onChange={e=>{ setQrAmount(e.target.value); setQrDataUrl(""); setQrError(""); }}
+                        placeholder={lang==="th"?"เช่น 3500":"e.g. 3500"}
+                        style={{ width:"100%", boxSizing:"border-box", background:"#FAFAF8", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 13px", fontSize:20, fontWeight:800, fontFamily:thF, outline:"none" }}
+                      />
+                    </div>
+
+                    <button
+                      disabled={!qrPromptPayId || !qrAmount || qrGenerating}
+                      onClick={async()=>{
+                        setQrError("");
+                        setQrDataUrl("");
+                        setQrGenerating(true);
+                        try {
+                          const payload = buildPromptPayPayload(qrPromptPayId, parseFloat(qrAmount));
+                          const url = await new Promise((resolve, reject) => {
+                            window.QRCode.toDataURL(payload, { width:400, margin:2, color:{ dark:"#000000", light:"#ffffff" } }, (err, u) => err ? reject(err) : resolve(u));
+                          });
+                          setQrDataUrl(url);
+                        } catch(e) {
+                          setQrError(lang==="th"?"เกิดข้อผิดพลาด กรุณาตรวจสอบเบอร์ PromptPay":"Error — check your PromptPay ID");
+                        }
+                        setQrGenerating(false);
+                      }}
+                      style={{ width:"100%", background:(!qrPromptPayId||!qrAmount||qrGenerating)?"#eee":"#1A1A1A", color:(!qrPromptPayId||!qrAmount||qrGenerating)?"#aaa":"#fff", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:900, fontFamily:thF, cursor:(!qrPromptPayId||!qrAmount||qrGenerating)?"not-allowed":"pointer", marginBottom:20 }}
+                    >
+                      {qrGenerating ? (lang==="th"?"กำลังสร้าง...":"Generating...") : (lang==="th"?`สร้าง QR ฿${Number(qrAmount||0).toLocaleString("th-TH")}`:`Generate QR ฿${Number(qrAmount||0).toLocaleString()}`)}
+                    </button>
+
+                    {qrError && <div style={{ color:"#9A0018", fontSize:13, fontWeight:700, marginBottom:16 }}>{qrError}</div>}
+
+                    {qrDataUrl && (
+                      <div style={{ textAlign:"center" }}>
+                        <div style={{ display:"inline-block", background:"#fff", border:"2px solid #1A1A1A", borderRadius:16, padding:16, marginBottom:16 }}>
+                          <img src={qrDataUrl} alt="PromptPay QR" style={{ width:220, height:220, display:"block" }} />
+                          <div style={{ marginTop:10, fontSize:13, fontWeight:800, color:"#1A1A1A" }}>PromptPay · ฿{Number(qrAmount).toLocaleString("th-TH")}</div>
+                        </div>
+                        <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
+                          <a
+                            href={qrDataUrl}
+                            download={`promptpay-${qrAmount}-baht.png`}
+                            style={{ background:"#1A1A1A", color:"#fff", borderRadius:10, padding:"11px 20px", fontSize:13, fontWeight:800, fontFamily:thF, textDecoration:"none", display:"inline-flex", alignItems:"center", gap:7 }}
+                          >
+                            ↓ {lang==="th"?"ดาวน์โหลด PNG":"Download PNG"}
+                          </a>
+                          {typeof navigator !== "undefined" && navigator.share && (
+                            <button
+                              onClick={async()=>{
+                                try {
+                                  const res = await fetch(qrDataUrl);
+                                  const blob = await res.blob();
+                                  const file = new File([blob], `promptpay-${qrAmount}baht.png`, { type:"image/png" });
+                                  await navigator.share({ files:[file], title:`PromptPay QR ฿${qrAmount}` });
+                                } catch(_){}
+                              }}
+                              style={{ background:"#16A34A", color:"#fff", border:"none", borderRadius:10, padding:"11px 20px", fontSize:13, fontWeight:800, fontFamily:thF, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7 }}
+                            >
+                              ↑ {lang==="th"?"แชร์ไป LINE":"Share to LINE"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
