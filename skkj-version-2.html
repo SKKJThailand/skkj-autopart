@@ -4955,10 +4955,10 @@ function App() {
       .section-title{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
       .info-row{font-size:15px;margin-bottom:4px}
       table{width:100%;border-collapse:collapse;margin-bottom:20px}
-      thead tr{background:#1A1A1A;color:#fff}
+      thead tr{background:#9B0018;color:#fff}
       th{padding:10px 14px;text-align:left;font-size:13px;font-weight:700}
       td{padding:10px 14px;font-size:14px;border-bottom:1px solid #eee}
-      .total-row td{font-size:17px;font-weight:900;border-bottom:none;border-top:2px solid #111}
+      .total-row td{font-size:17px;font-weight:900;border-bottom:none;border-top:2px solid #9B0018}
       .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
       .footer{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:12px;color:#888;text-align:center}
       .print-tools{display:flex;gap:10px;margin-bottom:24px}
@@ -5008,6 +5008,182 @@ function App() {
     <div class="footer">ขอบคุณที่ใช้บริการ SKKJ Autopart | skkjthailand.github.io/skkj-autopart</div>
     </body></html>`);
     invoiceWindow.document.close();
+  }
+
+  function printCashBill(order) {
+    const w = window.open("", "_blank", "width=700,height=900");
+    if (!w) { alert(lang==="th" ? "เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่" : "Browser blocked pop-up. Please allow pop-ups and try again."); return; }
+    const dateStr = new Date(order.createdAt || order.date || Date.now()).toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
+    const qty = Number(order.quantity) || 1;
+    const unitPrice = Number(order.price) || 0;
+    const fmt2 = n => Number(n).toLocaleString("th-TH");
+    const billHTML = (isCopy) => `
+    <div class="bill">
+      <div class="top-header">
+        ${isCopy ? '<div class="samna-badge">สำเนา</div>' : ''}
+        <div class="shop-name">SKKJ Autopart</div>
+        <div class="shop-sub">แร็คพวงมาลัย | Steering Rack Specialist</div>
+        <div class="shop-sub">skkjthailand.github.io/skkj-autopart</div>
+      </div>
+      <div class="cashsale-row">
+        <span>CASHSALE</span>
+        <span class="cashsale-center">บิลเงินสด</span>
+        <span>CASHSALE</span>
+      </div>
+      <div class="info-grid">
+        <div>
+          <div class="info-label">ชื่อ / Customer</div>
+          <div class="info-val">${order.customer || ""}</div>
+        </div>
+        <div>
+          <div class="info-label">วันที่ / Date</div>
+          <div class="info-val">${dateStr}</div>
+        </div>
+        <div style="grid-column:1/-1">
+          <div class="info-label">ที่อยู่ / Address</div>
+          <div class="info-val">${order.address || "-"}</div>
+        </div>
+        <div>
+          <div class="info-label">เบอร์โทร / Phone</div>
+          <div class="info-val">${order.phone || "-"}</div>
+        </div>
+        <div>
+          <div class="info-label">เลขออเดอร์ / Order</div>
+          <div class="info-val">${order.id}</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="width:12%">จำนวน<br/>Qty</th>
+          <th>รายการ<br/>Description</th>
+          <th style="width:22%;text-align:right">หน่วยละ<br/>Unit Price</th>
+          <th style="width:22%;text-align:right">จำนวนเงิน<br/>Amount</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center">${qty}</td>
+            <td>${order.brand || ""} ${order.model || ""}${order.year ? " ปี " + order.year : ""}</td>
+            <td style="text-align:right">฿${fmt2(unitPrice)}</td>
+            <td style="text-align:right">฿${fmt2(unitPrice)}</td>
+          </tr>
+          <tr><td colspan="4" style="height:6mm"></td></tr>
+          <tr><td colspan="4" style="height:6mm"></td></tr>
+        </tbody>
+      </table>
+      <div class="total-section">
+        <div class="total-box">
+          <div class="total-label">รวมเงิน / Total</div>
+          <div class="total-val">฿${fmt2(unitPrice)}</div>
+        </div>
+      </div>
+      <div class="sig-row">
+        <div class="sig"><div class="sig-line"></div><div class="sig-label">ผู้รับสินค้า / Receiver</div></div>
+        <div class="sig"><div class="sig-line"></div><div class="sig-label">ผู้รับเงิน / Collector</div></div>
+      </div>
+    </div>`;
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>บิลเงินสด ${order.id}</title><style>
+      @page{size:A4 portrait;margin:8mm}
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff;font-size:10px}
+      .print-tools{display:flex;gap:8px;padding:8px;font-size:11px}
+      .print-btn{padding:6px 14px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:12px}
+      @media print{.print-tools{display:none}}
+      .page{display:flex;flex-direction:column;gap:0}
+      .cut{border-top:1.5px dashed #555;text-align:center;font-size:8px;color:#777;padding:1.5mm 0;margin:0}
+      .bill{border:1.5px solid #000;padding:3mm;position:relative}
+      .top-header{text-align:center;border-bottom:1px solid #000;padding-bottom:1.5mm;margin-bottom:1.5mm;position:relative}
+      .samna-badge{position:absolute;top:0;right:0;background:#000;color:#fff;font-size:9px;font-weight:900;padding:1mm 2mm;border-radius:0 0 0 3mm}
+      .shop-name{font-size:15px;font-weight:900;letter-spacing:.3px}
+      .shop-sub{font-size:8px;color:#333;margin-top:1px}
+      .cashsale-row{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:700;border-bottom:1px solid #000;padding-bottom:1.5mm;margin-bottom:1.5mm}
+      .cashsale-center{font-size:13px;font-weight:900;text-align:center}
+      .info-grid{display:grid;grid-template-columns:1fr auto;gap:1mm 3mm;font-size:9px;margin-bottom:1.5mm;border-bottom:1px solid #000;padding-bottom:1.5mm}
+      .info-label{color:#555;font-size:8px}
+      .info-val{font-weight:700;font-size:9.5px;border-bottom:1px solid #999;min-width:60px}
+      table{width:100%;border-collapse:collapse;margin-bottom:1.5mm}
+      th{background:#000;color:#fff;padding:1.5mm;font-size:8.5px;font-weight:700;border:1px solid #000}
+      td{padding:1.5mm;font-size:8.5px;border:1px solid #ccc;vertical-align:top}
+      .total-section{display:flex;justify-content:flex-end;border-top:1px solid #000;padding-top:1mm;margin-bottom:1.5mm}
+      .total-label{font-size:9px;color:#555}
+      .total-val{font-size:13px;font-weight:900}
+      .sig-row{display:flex;justify-content:space-between;margin-top:2mm;padding-top:1mm;border-top:1px solid #000}
+      .sig{text-align:center;width:45%;font-size:8.5px}
+      .sig-line{border-bottom:1px solid #000;margin-bottom:1mm;height:5mm}
+    </style></head><body>
+    <div class="print-tools"><button class="print-btn" onclick="window.print()">🖨 พิมพ์</button></div>
+    <div class="page">
+      ${billHTML(false)}
+      <div class="cut">✂ ตัดตรงนี้ / Cut here</div>
+      ${billHTML(true)}
+    </div>
+    </body></html>`);
+    w.document.close();
+    w.focus();
+    w.addEventListener?.("load", () => setTimeout(() => { w.focus(); w.print(); }, 250));
+    setTimeout(() => { try { w.focus(); w.print(); } catch(e) {} }, 700);
+  }
+
+  function printWarranty(order) {
+    const w = window.open("", "_blank", "width=430,height=650");
+    if (!w) { alert(lang==="th" ? "เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่" : "Browser blocked pop-up. Please allow pop-ups and try again."); return; }
+    const orderDate = new Date(order.createdAt || order.date || Date.now());
+    const dateStr = orderDate.toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
+    const expiry = new Date(orderDate); expiry.setMonth(expiry.getMonth() + 6);
+    const expiryStr = expiry.toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>ใบรับประกัน ${order.id}</title><style>
+      @page{size:A6 portrait;margin:5mm}
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff;padding:3mm}
+      .print-tools{display:flex;gap:8px;margin-bottom:8px}
+      .print-btn{padding:6px 14px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:12px}
+      @media print{.print-tools{display:none}}
+      .card{border:2px solid #000;padding:3mm}
+      .header{text-align:center;border-bottom:2px solid #000;padding-bottom:2mm;margin-bottom:2mm}
+      .title-th{font-size:15px;font-weight:900}
+      .title-en{font-size:10px;font-weight:700;color:#444}
+      .shop{font-size:11px;font-weight:700;margin-top:1mm}
+      .row{display:flex;gap:2mm;margin-bottom:2mm;align-items:flex-start}
+      .lbl{font-size:8px;color:#555;min-width:28mm;flex-shrink:0}
+      .val{font-size:9.5px;font-weight:700;border-bottom:1px solid #888;flex:1}
+      .highlight{background:#000;color:#fff;padding:1mm 2mm;border-radius:2mm;font-size:9px;font-weight:900;text-align:center;margin:2mm 0}
+      .terms{border-top:1px solid #000;margin-top:2mm;padding-top:2mm;font-size:7.5px;color:#333;line-height:1.5}
+      .footer{text-align:center;margin-top:2mm;font-size:7.5px;color:#555}
+      .sig-row{display:flex;justify-content:flex-end;margin-top:3mm}
+      .sig{text-align:center;width:45%;font-size:8px}
+      .sig-line{border-bottom:1px solid #000;height:5mm;margin-bottom:1mm}
+    </style></head><body>
+    <div class="print-tools"><button class="print-btn" onclick="window.print()">🖨 พิมพ์</button></div>
+    <div class="card">
+      <div class="header">
+        <div class="title-th">ใบรับประกันสินค้า</div>
+        <div class="title-en">WARRANTY CARD</div>
+        <div class="shop">SKKJ Autopart — แร็คพวงมาลัย</div>
+      </div>
+      <div class="row"><span class="lbl">เลขออเดอร์ / Order ID</span><span class="val">${order.id}</span></div>
+      <div class="row"><span class="lbl">ชื่อลูกค้า / Customer</span><span class="val">${order.customer || "-"}</span></div>
+      <div class="row"><span class="lbl">สินค้า / Product</span><span class="val">${order.brand || ""} ${order.model || ""}${order.year ? " ปี " + order.year : ""}</span></div>
+      <div class="row"><span class="lbl">วันที่ซื้อ / Purchase Date</span><span class="val">${dateStr}</span></div>
+      <div class="highlight">ประกันหมดอายุ / Warranty Expires: ${expiryStr}</div>
+      <div class="terms">
+        เงื่อนไขการรับประกัน / Terms:<br/>
+        1. รับประกัน 6 เดือน นับจากวันที่ซื้อ / 6 months from purchase date<br/>
+        2. ครอบคลุมความบกพร่องจากการผลิตเท่านั้น / Manufacturing defects only<br/>
+        3. ไม่ครอบคลุมความเสียหายจากอุบัติเหตุหรือการใช้งานผิดวิธี / Excludes accident or misuse<br/>
+        4. กรุณาเก็บใบนี้ไว้เป็นหลักฐาน / Please keep this card as proof
+      </div>
+      <div class="sig-row">
+        <div class="sig">
+          <div class="sig-line"></div>
+          <div>ผู้มีอำนาจ / Authorized</div>
+        </div>
+      </div>
+      <div class="footer">skkjthailand.github.io/skkj-autopart</div>
+    </div>
+    </body></html>`);
+    w.document.close();
+    w.focus();
+    w.addEventListener?.("load", () => setTimeout(() => { w.focus(); w.print(); }, 250));
+    setTimeout(() => { try { w.focus(); w.print(); } catch(e) {} }, 700);
   }
 
   function printDeliveryLabel(order) {
@@ -7356,6 +7532,8 @@ function App() {
                                     {o.paymentSlip&&<button onClick={()=>openPaymentSlip(o)} style={{ background:"#DCFCE7", border:"1px solid #BBF7D0", color:"#166534", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดูสลิป":"View Slip"}</button>}
                                     {o.trackingNumber&&<button onClick={()=>copyTrackingNumber(o.trackingNumber)} style={{ background:"#EFF6FF", border:"1px solid #BFDBFE", color:"#1D4ED8", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>{lang==="th"?"คัดลอกเลข":"Copy Tracking"}</button>}
                                     <button onClick={()=>printInvoice(o)} style={{ background:"#16A34A", border:"1px solid #16A34A", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e43\u0e1a\u0e40\u0e2a\u0e23\u0e47\u0e08":"Invoice"}</button>
+                                    <button onClick={()=>printCashBill(o)} style={{ background:"#444", border:"1px solid #444", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e1a\u0e34\u0e25\u0e40\u0e07\u0e34\u0e19\u0e2a\u0e14":"Cash Bill"}</button>
+                                    <button onClick={()=>printWarranty(o)} style={{ background:"#444", border:"1px solid #444", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e1b\u0e23\u0e30\u0e01\u0e31\u0e19":"Warranty"}</button>
                                     <button onClick={()=>printDeliveryLabel(o)} style={{ background:"#1A1A1A", border:"1px solid #1A1A1A", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th" ? "\u0e1e\u0e34\u0e21\u0e1e\u0e4c\u0e1b\u0e49\u0e32\u0e22" : "Print Label"}</button>
                                     <select value={o.status || "pending"} onChange={e=>updateOrderStatus(o,e.target.value)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>
                                       {Object.keys(ORDER_STATUS).map(s=><option key={s} value={s}>{ta.statusLabels[s]}</option>)}
