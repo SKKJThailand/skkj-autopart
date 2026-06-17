@@ -4150,14 +4150,14 @@ function App() {
     fetch("https://bxwawwrxwkwqqhfgapdn.supabase.co/functions/v1/order-alert", {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": "Bearer sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R" },
-      body: JSON.stringify({ orderId: newOrder.id, customer: newOrder.customer, brand: newOrder.brand, model: newOrder.model, price: newOrder.price, phone: newOrder.phone, paymentMethod }),
+      body: JSON.stringify({ orderId: newOrder.id || "-", customer: newOrder.customer || "-", brand: newOrder.brand || "-", model: newOrder.model || "-", price: Number(newOrder.price) || 0, phone: newOrder.phone || "-", paymentMethod: paymentMethod || "promptpay" }),
     }).catch(() => {});
-    if (paymentSlip) {
+    {
       const cfg = dbConfigRef.current;
       fetch(`${cfg.supabaseUrl}/rest/v1/skkj_slips`, {
         method: "POST",
         headers: { apikey: cfg.supabaseKey, Authorization: `Bearer ${cfg.supabaseKey}`, "Content-Type": "application/json", Prefer: "return=minimal" },
-        body: JSON.stringify({ order_id: newOrder.id, order_date: newOrder.date, slip_data: paymentSlip, slip_name: paymentSlipName || "slip.png" }),
+        body: JSON.stringify({ order_id: newOrder.id, order_date: newOrder.date, slip_data: paymentSlip || "", slip_name: paymentSlipName || "", customer: newOrder.customer || "-", brand: newOrder.brand || "-", model: newOrder.model || "-", price: Number(newOrder.price) || 0, phone: newOrder.phone || "-", address: newOrder.address || "-", payment_method: paymentMethod || "-", delivery_method: newOrder.deliveryMethod || "-" }),
       }).catch(() => {});
     }
     paymentMethod !== "cod" ? setLastBillOrders([newOrder]) : setLastBillOrders(null);
