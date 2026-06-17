@@ -659,7 +659,7 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const displaySrc = src;
   if (src) {
     return (
-      <span data-logo-place={place} style={{ width:size*2.3, height:boxHeight, display:"flex", alignItems:"center", justifyContent:"center", overflow:"visible" }}>
+      <span data-logo-place={place} data-brand={isHonda?"honda":isNissan?"nissan":isIsuzu?"isuzu":isMazda?"mazda":isMitsubishi?"mitsubishi":isToyota?"toyota":isFord?"ford":isMg?"mg":"other"} style={{ width:size*2.3, height:boxHeight, display:"flex", alignItems:"center", justifyContent:"center", overflow:"visible" }}>
         <img src={displaySrc} alt="brand logo" style={{ width:size*2.3*scale, height:size*scale, maxWidth:"none", maxHeight:"none", objectFit:"contain", display:"block", transform:`translateY(${yOffset}px)`, flexShrink:0 }} />
       </span>
     );
@@ -1813,6 +1813,13 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
     const short = displayName.length>28 ? displayName.slice(0,28)+"…" : displayName;
     addToast(`"${short}" → ${newStock} ${ta.invUnits}`);
     onLog?.("stock_update", `Set ${displayName} stock to ${newStock}`);
+    if (newStock === 0) {
+      fetch("https://bxwawwrxwkwqqhfgapdn.supabase.co/functions/v1/low-stock-alert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R" },
+        body: JSON.stringify({ product: displayName }),
+      }).catch(()=>{});
+    }
   }, [setBrands, addToast, ta.invUnits, onLog]);
 
   const adjust = useCallback((p, delta) => {
@@ -4802,6 +4809,81 @@ function App() {
     }
   }
 
+  function printInvoice(order) {
+    const invoiceWindow = window.open("", "_blank", "width=700,height=900");
+    if (!invoiceWindow) { alert(lang==="th" ? "เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่" : "Browser blocked pop-up. Please allow pop-ups and try again."); return; }
+    const dateStr = new Date(order.createdAt || order.date || Date.now()).toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
+    const isCod = order.paymentMethod === "cod";
+    invoiceWindow.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>ใบเสร็จ ${order.id}</title><style>
+      @page{size:A4 portrait;margin:20mm}
+      *{box-sizing:border-box}
+      body{margin:0;font-family:'Sarabun',Tahoma,Arial,sans-serif;color:#111;background:#fff;padding:32px}
+      .header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #111;padding-bottom:16px;margin-bottom:24px}
+      .brand{font-size:26px;font-weight:900}
+      .brand-sub{font-size:13px;color:#555;margin-top:4px}
+      .inv-meta{text-align:right}
+      .inv-title{font-size:20px;font-weight:900}
+      .inv-id{font-family:monospace;font-size:14px;margin-top:4px}
+      .inv-date{font-size:13px;color:#555;margin-top:2px}
+      .section{margin-bottom:20px}
+      .section-title{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+      .info-row{font-size:15px;margin-bottom:4px}
+      table{width:100%;border-collapse:collapse;margin-bottom:20px}
+      thead tr{background:#1A1A1A;color:#fff}
+      th{padding:10px 14px;text-align:left;font-size:13px;font-weight:700}
+      td{padding:10px 14px;font-size:14px;border-bottom:1px solid #eee}
+      .total-row td{font-size:17px;font-weight:900;border-bottom:none;border-top:2px solid #111}
+      .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+      .footer{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:12px;color:#888;text-align:center}
+      .print-tools{display:flex;gap:10px;margin-bottom:24px}
+      .print-btn{padding:10px 20px;background:#111;color:#fff;border:0;border-radius:6px;cursor:pointer;font-weight:700;font-size:14px}
+      @media print{.print-tools{display:none}}
+    </style></head><body>
+    <div class="print-tools"><button class="print-btn" onclick="window.print()">🖨 ${lang==="th"?"พิมพ์":"Print"}</button></div>
+    <div class="header">
+      <div><div class="brand">SKKJ Autopart</div><div class="brand-sub">แร็คพวงมาลัย | Steering Rack Specialist</div></div>
+      <div class="inv-meta">
+        <div class="inv-title">${lang==="th"?"ใบเสร็จรับเงิน":"Receipt / Invoice"}</div>
+        <div class="inv-id">#${order.id}</div>
+        <div class="inv-date">${dateStr}</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">${lang==="th"?"ข้อมูลลูกค้า":"Customer"}</div>
+      <div class="info-row"><b>${order.customer || "-"}</b></div>
+      ${order.phone ? `<div class="info-row">${order.phone}</div>` : ""}
+      ${order.address ? `<div class="info-row">${order.address}</div>` : ""}
+    </div>
+    <table>
+      <thead><tr>
+        <th>${lang==="th"?"สินค้า":"Product"}</th>
+        <th>${lang==="th"?"ปีรถ":"Year"}</th>
+        <th style="text-align:center">${lang==="th"?"จำนวน":"Qty"}</th>
+        <th style="text-align:right">${lang==="th"?"ราคา":"Price"}</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>${order.brand || ""} ${order.model || ""}</td>
+          <td>${order.year || "-"}</td>
+          <td style="text-align:center">${order.quantity || 1}</td>
+          <td style="text-align:right">฿${Number(order.price||0).toLocaleString("th-TH")}</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="3">${lang==="th"?"รวมทั้งหมด":"Total"}</td>
+          <td style="text-align:right">฿${Number(order.price||0).toLocaleString("th-TH")}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="section">
+      <div class="section-title">${lang==="th"?"การชำระเงิน":"Payment"}</div>
+      <div class="info-row">${lang==="th"?"วิธีชำระ":"Method"}: ${isCod ? (lang==="th"?"เก็บเงินปลายทาง":"Cash on Delivery") : (lang==="th"?"โอนเงิน":"Bank Transfer")}</div>
+      ${order.trackingNumber ? `<div class="info-row">${lang==="th"?"เลขพัสดุ":"Tracking"}: <b>${order.trackingNumber}</b>${order.shippingCompany ? " ("+order.shippingCompany+")" : ""}</div>` : ""}
+    </div>
+    <div class="footer">ขอบคุณที่ใช้บริการ SKKJ Autopart | skkjthailand.github.io/skkj-autopart</div>
+    </body></html>`);
+    invoiceWindow.document.close();
+  }
+
   function printDeliveryLabel(order) {
     const deliveryAddress = order.address || (lang==="th" ? "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e08\u0e31\u0e14\u0e2a\u0e48\u0e07" : "No delivery address saved");
     const isCod = order.paymentMethod === "cod";
@@ -5249,6 +5331,8 @@ function App() {
           .v2-logo-strip [data-logo-place="heroBadge"] img { width: 82% !important; height: 68% !important; max-width: 58px !important; max-height: 23px !important; object-fit: contain !important; transform: none !important; }
           [data-logo-place="heroMain"] img { max-width: 130px !important; max-height: 56px !important; object-fit: contain !important; }
           [data-logo-place="productPhoto"] img { max-width: 96px !important; max-height: 42px !important; object-fit: contain !important; }
+          .v2-brand-grid button [data-logo-place="brandCard"][data-brand="honda"] img { max-width: 110px !important; max-height: 54px !important; }
+          .v2-brand-grid button [data-logo-place="brandCard"][data-brand="honda"] { width: 110px !important; height: 54px !important; overflow: visible !important; }
           .v2-hero-fast { top: 10px !important; right: 10px !important; padding: 6px 10px !important; font-size: 10px !important; }
           .v2-hero-title { display: none !important; }
           .v2-hero-nav { width: 28px !important; height: 36px !important; border-radius: 11px !important; font-size: 20px !important; transform: translateY(-50%) !important; padding: 0 !important; }
@@ -7059,6 +7143,7 @@ function App() {
                                     )}
                                     {o.paymentSlip&&<button onClick={()=>openPaymentSlip(o)} style={{ background:"#DCFCE7", border:"1px solid #BBF7D0", color:"#166534", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดูสลิป":"View Slip"}</button>}
                                     {o.trackingNumber&&<button onClick={()=>copyTrackingNumber(o.trackingNumber)} style={{ background:"#EFF6FF", border:"1px solid #BFDBFE", color:"#1D4ED8", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>{lang==="th"?"คัดลอกเลข":"Copy Tracking"}</button>}
+                                    <button onClick={()=>printInvoice(o)} style={{ background:"#16A34A", border:"1px solid #16A34A", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e43\u0e1a\u0e40\u0e2a\u0e23\u0e47\u0e08":"Invoice"}</button>
                                     <button onClick={()=>printDeliveryLabel(o)} style={{ background:"#1A1A1A", border:"1px solid #1A1A1A", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th" ? "\u0e1e\u0e34\u0e21\u0e1e\u0e4c\u0e1b\u0e49\u0e32\u0e22" : "Print Label"}</button>
                                     <select value={o.status || "pending"} onChange={e=>updateOrderStatus(o,e.target.value)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>
                                       {Object.keys(ORDER_STATUS).map(s=><option key={s} value={s}>{ta.statusLabels[s]}</option>)}
