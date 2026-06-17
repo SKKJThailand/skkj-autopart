@@ -2668,10 +2668,18 @@ function App() {
   const backupInputRef                    = useRef(null);
   const dbConfigRef                       = useRef(readDatabaseConfig());
   const [allReviews, setAllReviews]       = useState({});
+  const [pendingReviews, setPendingReviews] = useState([]);
   const [reviewFormRating, setReviewFormRating] = useState(0);
   const [reviewFormComment, setReviewFormComment] = useState("");
   const [reviewFormSubmitting, setReviewFormSubmitting] = useState(false);
   const [reviewFormDone, setReviewFormDone] = useState(false);
+  const [promoDiscount, setPromoDiscount] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const amt = parseInt(p.get("promo") || "0", 10);
+      return amt > 0 ? amt : 0;
+    } catch(_) { return 0; }
+  });
   const [qrPromptPayId, setQrPromptPayId] = useState(() => { try { return localStorage.getItem("skkj_promptpay_id") || ""; } catch(e) { return ""; } });
   const [qrAmount, setQrAmount]           = useState("");
   const [qrDataUrl, setQrDataUrl]         = useState("");
@@ -2821,11 +2829,40 @@ function App() {
     window.addEventListener("scroll", onScroll, { passive:true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  // Feature: fetch pending (unapproved) reviews when admin logs in
+  useEffect(() => {
+    if (!adminAuth) return;
+    const cfg = dbConfigRef.current;
+    if (!cfg.supabaseUrl || !cfg.supabaseKey) return;
+    fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?approved=eq.false&order=created_at.asc`, {
+      headers: { apikey: cfg.supabaseKey, Authorization: `Bearer ${cfg.supabaseKey}` }
+    })
+      .then(r => r.ok ? r.json() : [])
+      .then(rows => setPendingReviews(Array.isArray(rows) ? rows : []))
+      .catch(() => {});
+  }, [adminAuth]);
+  // Feature: auto-purge payment slips older than 6 months when admin logs in
+  useEffect(() => {
+    if (!adminAuth) return;
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - 6);
+    setOrders(prev => {
+      let changed = false;
+      const next = prev.map(o => {
+        if (o.paymentSlip && new Date(o.createdAt || o.date || 0) < cutoff) {
+          changed = true;
+          return { ...o, paymentSlip: "", paymentSlipName: "" };
+        }
+        return o;
+      });
+      return changed ? next : prev;
+    });
+  }, [adminAuth]);
   // Feature: load product reviews from Supabase on mount
   useEffect(() => {
     const cfg = dbConfigRef.current;
     if (!cfg.supabaseUrl || !cfg.supabaseKey) return;
-    fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?select=brand_id,model_id,rating`, {
+    fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?select=brand_id,model_id,rating&approved=eq.true`, {
       headers: { apikey: cfg.supabaseKey, Authorization: `Bearer ${cfg.supabaseKey}` }
     })
       .then(r => r.ok ? r.json() : [])
@@ -4110,6 +4147,19 @@ function App() {
     setOrders(nextOrders);
     queueImmediateOnlineSave("single_product_order_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(newOrder, "single_product_order");
+    fetch("https://bxwawwrxwkwqqhfgapdn.supabase.co/functions/v1/order-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R" },
+      body: JSON.stringify({ orderId: newOrder.id, customer: newOrder.customer, brand: newOrder.brand, model: newOrder.model, price: newOrder.price, phone: newOrder.phone, paymentMethod }),
+    }).catch(() => {});
+    if (paymentSlip) {
+      const cfg = dbConfigRef.current;
+      fetch(`${cfg.supabaseUrl}/rest/v1/skkj_slips`, {
+        method: "POST",
+        headers: { apikey: cfg.supabaseKey, Authorization: `Bearer ${cfg.supabaseKey}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ order_id: newOrder.id, order_date: newOrder.date, slip_data: paymentSlip, slip_name: paymentSlipName || "slip.png" }),
+      }).catch(() => {});
+    }
     paymentMethod !== "cod" ? setLastBillOrders([newOrder]) : setLastBillOrders(null);
     saveCustomerAddressSlot(orderDetails);
     if (orderForm.brandId && orderForm.modelId) reduceStockForOrder([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }], { orders: nextOrders });
@@ -4724,6 +4774,7 @@ function App() {
           <h1>${labelSafe(order.id)} - Payment Slip</h1>
           <div class="meta">${labelSafe(order.customer)}<br />${labelSafe(order.phone)}<br />${labelSafe(order.paymentSlipName || "")}</div>
           <img src="${order.paymentSlip}" alt="Payment slip" />
+          <a href="${order.paymentSlip}" download="${labelSafe(order.id)}_${(order.date||order.createdAt||"").slice(0,10)}.png" style="display:inline-block;margin-top:14px;background:#1A1A1A;color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:700;text-decoration:none;">↓ Download Slip</a>
         </div>
       </body>
       </html>
@@ -6500,7 +6551,17 @@ function App() {
                   </div>
                 </div>
 
-                <div className="v2-product-price" style={{ fontSize:34, fontWeight:900, color:"#9B0018" }}>{fmt(detailModel.price)}</div>
+                <div>
+                  {promoDiscount > 0 && (
+                    <div style={{ display:"inline-flex", alignItems:"center", gap:10, background:"#FFF5F5", border:"1px solid #FECACA", borderRadius:12, padding:"8px 14px", marginBottom:10 }}>
+                      <span style={{ fontSize:13, fontWeight:800, color:"#9A0018" }}>🏷️ {lang==="th"?`ส่วนลดพิเศษ ${fmt(promoDiscount)}`:`Special discount ${fmt(promoDiscount)}`}</span>
+                    </div>
+                  )}
+                  <div className="v2-product-price" style={{ display:"flex", alignItems:"baseline", gap:12 }}>
+                    <span style={{ fontSize:34, fontWeight:900, color:"#9B0018" }}>{fmt(Math.max(0, detailModel.price - promoDiscount))}</span>
+                    {promoDiscount > 0 && <span style={{ fontSize:20, fontWeight:700, color:"#BBB", textDecoration:"line-through" }}>{fmt(detailModel.price)}</span>}
+                  </div>
+                </div>
 
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:10 }}>
                   {[
@@ -6524,7 +6585,7 @@ function App() {
                   <button className="v2-ask-button" disabled={detailModel.stock===0} onClick={()=>detailModel.stock>0&&addToBasket(detailBrand,detailModel)} style={{ background:detailModel.stock===0?"#eee":"#F0EEE8", color:detailModel.stock===0?"#aaa":"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:12, padding:"13px 14px", cursor:detailModel.stock===0?"not-allowed":"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
                     {lang==="th"?"ใส่ตะกร้า":"Add to Basket"}
                   </button>
-                  <button className={detailModel.stock===0?"":"v2-buy-button"} disabled={detailModel.stock===0} onClick={()=>detailModel.stock>0&&setOrderForm({ brand:lang==="th"?detailBrand.nameTh:detailBrand.nameEn, model:lang==="th"?detailModel.nameTh:detailModel.nameEn, brandId:detailBrand.id, modelId:detailModel.id, price:detailModel.price })} style={{ background:detailModel.stock===0?"#eee":"#1A1A1A", color:detailModel.stock===0?"#aaa":"#fff", border:"none", borderRadius:12, padding:"13px 14px", cursor:detailModel.stock===0?"not-allowed":"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
+                  <button className={detailModel.stock===0?"":"v2-buy-button"} disabled={detailModel.stock===0} onClick={()=>detailModel.stock>0&&setOrderForm({ brand:lang==="th"?detailBrand.nameTh:detailBrand.nameEn, model:lang==="th"?detailModel.nameTh:detailModel.nameEn, brandId:detailBrand.id, modelId:detailModel.id, price:Math.max(0, detailModel.price - promoDiscount) })} style={{ background:detailModel.stock===0?"#eee":"#1A1A1A", color:detailModel.stock===0?"#aaa":"#fff", border:"none", borderRadius:12, padding:"13px 14px", cursor:detailModel.stock===0?"not-allowed":"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
                     {detailModel.stock===0?t.outOfStock:t.orderNow}
                   </button>
                   <button className="v2-ask-button" onClick={()=>askAboutProduct(detailBrand, detailModel)} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:12, padding:"13px 14px", cursor:"pointer", fontSize:14, fontWeight:900, fontFamily:thF }}>
@@ -7176,12 +7237,13 @@ function App() {
                 </div>
 
                 <div className="admin-tabs" style={{ display:"flex", gap:2, background:"#F0EEE8", borderRadius:11, padding:4, marginBottom:20, width:"fit-content", border:"1px solid #E0DDD8", flexWrap:"wrap" }}>
-                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["qr", lang==="th"?"QR ชำระเงิน":"QR Pay"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
+                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["reviews", lang==="th"?"รีวิว":"Reviews"], ["qr", lang==="th"?"QR ชำระเงิน":"QR Pay"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
                     <button key={tv} onClick={()=>setAdminTab(tv)} style={{ background:adminTab===tv?"#1A1A1A":"transparent", border:"none", borderRadius:8, padding:"8px 16px", cursor:"pointer", fontSize:13, fontWeight:adminTab===tv?700:400, color:adminTab===tv?"#fff":"#555", fontFamily:thF, boxShadow:"none", display:"flex", alignItems:"center", gap:7 }}>
                       <span>{tl}</span>
                       {tv==="orders" && newOrderCount > 0 && <span style={{ background:"#ef4444", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{newOrderCount}</span>}
                       {tv==="inventory" && lowStockWarningCount > 0 && <span style={{ background:outStockCount>0?"#ef4444":"#f97316", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{lowStockWarningCount}</span>}
                       {tv==="analytics" && analytics.length > 0 && <span style={{ background:"#2563eb", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{analytics.length}</span>}
+                      {tv==="reviews" && pendingReviews.length > 0 && <span style={{ background:"#f97316", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{pendingReviews.length}</span>}
                     </button>
                   ))}
                 </div>
@@ -7529,6 +7591,63 @@ function App() {
                   </div>
                 )}
 
+                {adminTab==="reviews"&&(
+                  <div style={{ background:"#fff", borderRadius:13, border:"1px solid #ECECEC", overflow:"hidden" }}>
+                    <div style={{ padding:"14px 16px", borderBottom:"1px solid #ECECEC", background:"#FAFAF8", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                      <div>
+                        <div style={{ fontSize:14, fontWeight:800, color:"#1A1A1A" }}>{lang==="th"?"รีวิวรอการอนุมัติ":"Pending Reviews"}</div>
+                        <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{lang==="th"?"อนุมัติเพื่อให้แสดงบนเว็บ หรือลบทิ้ง":"Approve to show on site, or delete to remove"}</div>
+                      </div>
+                      {pendingReviews.length > 0 && <span style={{ background:"#f97316", color:"#fff", borderRadius:20, padding:"3px 10px", fontSize:12, fontWeight:800 }}>{pendingReviews.length}</span>}
+                    </div>
+                    {pendingReviews.length === 0 ? (
+                      <div style={{ padding:"32px 20px", textAlign:"center", color:"#AAA", fontSize:13 }}>{lang==="th"?"ไม่มีรีวิวรอการอนุมัติ":"No pending reviews"}</div>
+                    ) : (
+                      <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
+                        {pendingReviews.map((r, i) => {
+                          const brand = brands.find(b => b.id === r.brand_id);
+                          const model = brand?.models.find(m => m.id === r.model_id);
+                          const productName = brand && model ? `${lang==="th"?brand.nameTh:brand.nameEn} ${lang==="th"?model.nameTh:model.nameEn}` : `${r.brand_id} / ${r.model_id}`;
+                          const cfg = dbConfigRef.current;
+                          return (
+                            <div key={r.id} style={{ padding:"14px 16px", borderBottom:i<pendingReviews.length-1?"1px solid #ECECEC":"none", display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:14 }}>
+                              <div style={{ flex:1 }}>
+                                <div style={{ fontSize:12, fontWeight:800, color:"#555", marginBottom:4 }}>{productName}</div>
+                                <div style={{ fontSize:18, color:"#F59E0B", lineHeight:1, marginBottom:6 }}>{"★".repeat(r.rating)}{"☆".repeat(5-r.rating)}</div>
+                                {r.comment && <div style={{ fontSize:13, color:"#333", lineHeight:1.6 }}>"{r.comment}"</div>}
+                                <div style={{ fontSize:11, color:"#AAA", marginTop:4 }}>{new Date(r.created_at).toLocaleDateString("th-TH")}</div>
+                              </div>
+                              <div style={{ display:"flex", gap:8, flexShrink:0 }}>
+                                <button onClick={async()=>{
+                                  await fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?id=eq.${r.id}`, {
+                                    method:"PATCH",
+                                    headers:{ apikey:cfg.supabaseKey, Authorization:`Bearer ${cfg.supabaseKey}`, "Content-Type":"application/json", Prefer:"return=minimal" },
+                                    body:JSON.stringify({ approved:true })
+                                  }).catch(()=>{});
+                                  const key=`${r.brand_id}__${r.model_id}`;
+                                  setAllReviews(prev=>({...prev,[key]:[...(prev[key]||[]),r.rating]}));
+                                  setPendingReviews(prev=>prev.filter(x=>x.id!==r.id));
+                                }} style={{ background:"#16A34A", color:"#fff", border:"none", borderRadius:8, padding:"7px 13px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>
+                                  {lang==="th"?"อนุมัติ":"Approve"}
+                                </button>
+                                <button onClick={async()=>{
+                                  await fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?id=eq.${r.id}`, {
+                                    method:"DELETE",
+                                    headers:{ apikey:cfg.supabaseKey, Authorization:`Bearer ${cfg.supabaseKey}` }
+                                  }).catch(()=>{});
+                                  setPendingReviews(prev=>prev.filter(x=>x.id!==r.id));
+                                }} style={{ background:"#FEE2E2", color:"#9A0018", border:"1px solid #FECACA", borderRadius:8, padding:"7px 13px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>
+                                  {lang==="th"?"ลบ":"Delete"}
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {adminTab==="activity"&&(
                   <div style={{ background:"#fff", borderRadius:13, border:"1px solid #ECECEC", overflow:"hidden" }}>
                     <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, flexWrap:"wrap", padding:"13px", borderBottom:"1px solid #ECECEC", background:"#FAFAF8" }}>
@@ -7569,6 +7688,29 @@ function App() {
                   <div style={{ background:"#fff", borderRadius:13, border:"1px solid #ECECEC", padding:28, maxWidth:480 }}>
                     <div style={{ fontSize:16, fontWeight:900, color:"#1A1A1A", marginBottom:6 }}>{lang==="th"?"สร้าง QR PromptPay":"PromptPay QR Generator"}</div>
                     <div style={{ fontSize:13, color:"#888", marginBottom:24 }}>{lang==="th"?"พิมพ์จำนวนเงิน → กด สร้าง QR → ดาวน์โหลดหรือแชร์ไป LINE":"Enter amount → Generate → Download or share to LINE"}</div>
+
+                    {/* ── DISCOUNT LINKS TOOL ── */}
+                    <div style={{ borderTop:"1px solid #ECECEC", paddingTop:20, marginBottom:24 }}>
+                      <div style={{ fontSize:14, fontWeight:800, color:"#1A1A1A", marginBottom:4 }}>{lang==="th"?"ลิงก์ส่วนลดสินค้า":"Product Discount Links"}</div>
+                      <div style={{ fontSize:12, color:"#888", marginBottom:14 }}>{lang==="th"?"ลูกค้าคลิกลิงก์นี้ → เห็นราคาตัดเหลือ 100 บาท → สั่งซื้อในราคาลด":"Customer clicks this link → sees price crossed out -฿100 → orders at discounted price"}</div>
+                      <div style={{ display:"flex", flexDirection:"column", gap:8, maxHeight:320, overflowY:"auto" }}>
+                        {brands.flatMap(b => (b.models||[]).filter(m=>!m.hidden).map(m => {
+                          const promoUrl = `${window.location.origin}${window.location.pathname}?promo=100#product=${encodeURIComponent(b.id)}/${encodeURIComponent(m.id)}`;
+                          const name = `${lang==="th"?b.nameTh:b.nameEn} ${lang==="th"?m.nameTh:m.nameEn}`;
+                          return (
+                            <div key={`${b.id}_${m.id}`} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:10, padding:"10px 13px" }}>
+                              <div>
+                                <div style={{ fontSize:13, fontWeight:700, color:"#1A1A1A" }}>{name}</div>
+                                <div style={{ fontSize:11, color:"#888" }}>{fmt(m.price)} → <span style={{ color:"#16A34A", fontWeight:800 }}>{fmt(m.price - 100)}</span></div>
+                              </div>
+                              <button onClick={()=>{ navigator.clipboard.writeText(promoUrl).catch(()=>{}); addBToast(lang==="th"?"คัดลอกลิงก์แล้ว":"Link copied!", "success"); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:8, padding:"7px 12px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF, whiteSpace:"nowrap" }}>
+                                🔗 {lang==="th"?"คัดลอก":"Copy"}
+                              </button>
+                            </div>
+                          );
+                        }))}
+                      </div>
+                    </div>
 
                     <div style={{ marginBottom:14 }}>
                       <label style={{ display:"block", fontSize:12, fontWeight:800, color:"#555", marginBottom:6 }}>{lang==="th"?"เบอร์ PromptPay หรือเลขบัตรประชาชน":"PromptPay phone or national ID"}</label>
