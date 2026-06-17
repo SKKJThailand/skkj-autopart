@@ -6,6 +6,9 @@
   <title>SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ | Steering Racks Thailand</title>
   <meta name="description" content="SKKJ Autopart ผู้เชี่ยวชาญแร็คพวงมาลัยในกรุงเทพฯ นิสสัน ฮอนด้า อีซูซุ มาสด้า มิตซูบิชิ โตโยต้า ฟอร์ด เอ็มจี รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
   <meta name="keywords" content="แร็คพวงมาลัย, steering rack, อะไหล่รถยนต์, SKKJ, นิสสัน, ฮอนด้า, อีซูซุ, โตโยต้า, มาสด้า" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;800&display=swap" rel="stylesheet" />
   <!-- Open Graph — controls how the link looks when shared on LINE, Facebook, Messenger -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
@@ -644,13 +647,13 @@ function BrandLogo({ logo, size=28, place="default" }) {
   const isToyota = src.includes("toyota-logo.png");
   const isFord = src.includes("ford-logo.png");
   const isMg = src.includes("mg-logo.png");
-  const brandCardScale = isHonda ? 1.48 : isNissan ? 1.35 : isIsuzu ? 1.12 : isMazda ? 1.2 : isMitsubishi ? 1.28 : isToyota ? 1.2 : isFord ? 1.12 : isMg ? 1.12 : 1;
+  const brandCardScale = isHonda ? 2.4 : isNissan ? 1.6 : isIsuzu ? 1.28 : isMazda ? 1.2 : isMitsubishi ? 1.55 : isToyota ? 1.55 : isFord ? 1.28 : isMg ? 1.45 : 1;
   const logoUse = {
     default: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1, y: isHonda ? size*0.03 : 0, box: 1.18 },
     brandCard: { scale: brandCardScale, y: isHonda ? size*0.02 : isIsuzu ? size*0.05 : isMitsubishi ? size*0.02 : 0, box: isHonda ? 1.58 : 1.48 },
     heroBadge: { scale: isHonda ? 1.9 : (isMitsubishi || isToyota) ? 1.15 : 1.03, y: isHonda ? size*0.04 : 0, box: isHonda ? 1.08 : 1.12 },
     heroMain: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1.05, y: isHonda ? size*0.04 : 0, box: 1.2 },
-    productPhoto: { scale: isHonda ? 1.65 : (isMitsubishi || isToyota) ? 1.22 : 1.04, y: isHonda ? size*0.05 : 0, box: 1.22 },
+    productPhoto: { scale: isHonda ? 3.2 : isNissan ? 1.6 : isIsuzu ? 1.28 : isMazda ? 1.18 : isMitsubishi ? 1.28 : isToyota ? 1.25 : isFord ? 1.28 : isMg ? 1.45 : 1.04, y: isHonda ? size*0.05 : 0, box: 1.22 },
     navFilter: { scale: isHonda ? 1.28 : 1, y: isHonda ? size*0.02 : 0, box: 1.05 },
   }[place] || {};
   const scale = logoUse.scale ?? 1;
@@ -5117,6 +5120,7 @@ function App() {
         .v2-logo-strip > span{width:112px;height:54px;background:rgba(255,255,255,.88);border:1px solid rgba(227,222,212,.9);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:7px 12px;box-shadow:0 12px 26px rgba(17,17,17,.08);backdrop-filter:blur(10px);overflow:hidden;box-sizing:border-box}
         .v2-logo-strip [data-logo-place="heroBadge"]{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
         .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:72%!important;max-width:88px!important;max-height:38px!important;object-fit:contain!important;transform:none!important;flex-shrink:1!important}
+        .v2-logo-strip [data-logo-place="heroBadge"][data-brand="honda"] img{width:135%!important;height:135%!important;max-width:none!important;max-height:none!important}
         .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:16px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
         .v2-hero-order:disabled{background:#eee;color:#999;box-shadow:none;cursor:not-allowed}
         .v2-hero-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08);transition:none!important}
@@ -5331,6 +5335,8 @@ function App() {
           .v2-logo-strip [data-logo-place="heroBadge"] img { width: 82% !important; height: 68% !important; max-width: 58px !important; max-height: 23px !important; object-fit: contain !important; transform: none !important; }
           [data-logo-place="heroMain"] img { max-width: 130px !important; max-height: 56px !important; object-fit: contain !important; }
           [data-logo-place="productPhoto"] img { max-width: 96px !important; max-height: 42px !important; object-fit: contain !important; }
+          [data-logo-place="productPhoto"][data-brand="honda"] img { max-width: 130px !important; max-height: 72px !important; }
+          [data-logo-place="productPhoto"][data-brand="honda"] { width: 130px !important; height: 72px !important; overflow: visible !important; }
           .v2-brand-grid button [data-logo-place="brandCard"][data-brand="honda"] img { max-width: 110px !important; max-height: 54px !important; }
           .v2-brand-grid button [data-logo-place="brandCard"][data-brand="honda"] { width: 110px !important; height: 54px !important; overflow: visible !important; }
           .v2-hero-fast { top: 10px !important; right: 10px !important; padding: 6px 10px !important; font-size: 10px !important; }
@@ -6014,7 +6020,7 @@ function App() {
               <div className="v2-home-grid">
                 <div className="v2-home-copy">
                   <div className="v2-home-badge" style={{ display:"inline-block", background:"#1A1A1A", color:"#fff", fontSize:11, letterSpacing:1.5, padding:"6px 18px", borderRadius:20, marginBottom:24, textTransform:"uppercase" }}>{t.hero.badge}</div>
-                  <h1 className="v2-home-title" style={{ fontSize:"clamp(30px,5vw,56px)", fontWeight:800, letterSpacing:"-2px", margin:"0 0 16px", lineHeight:1.15 }}>{t.hero.h1a}<br/>{t.hero.h1b}</h1>
+                  <h1 className="v2-home-title" style={{ fontSize:"clamp(30px,5vw,56px)", fontWeight:800, letterSpacing:"-2px", margin:"0 0 16px", lineHeight:1.15, fontFamily:"'Kanit', sans-serif" }}>{t.hero.h1a}<br/>{t.hero.h1b}</h1>
                   <div className="fitment-control">
                     <div className="part-type-picker" style={{ display:"inline-flex", alignItems:"center", gap:10, background:"transparent", border:"none", borderRadius:16, padding:"0", margin:0, boxShadow:"none" }}>
                       <span style={{ color:"#777", fontSize:12, fontWeight:800, whiteSpace:"nowrap" }}>{lang==="th"?"เลือกอะไหล่":"Choose part"}</span>
@@ -6042,7 +6048,7 @@ function App() {
                 </div>
                 <div className="v2-hero-visual">
                   <div className="v2-logo-strip">
-                    <span>{heroProduct && <BrandLogo logo={heroProduct.brand.logo} size={42} place="heroBadge" />}</span>
+                    <span data-brand={heroProduct?.brand?.logo?.includes("honda-logo.png")?"honda":heroProduct?.brand?.logo?.includes("nissan-logo.png")?"nissan":"other"}>{heroProduct && <BrandLogo logo={heroProduct.brand.logo} size={42} place="heroBadge" />}</span>
                   </div>
                   <div className="v2-hero-fast">{lang==="th"?"ส่งด่วน กทม.":"FAST BKK"}</div>
                   {heroSimilarProducts.length > 1 && (
