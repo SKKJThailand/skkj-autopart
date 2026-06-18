@@ -6140,6 +6140,10 @@ function App() {
                 </div>
               ))}
             </div>
+            {orderStep===1&&<form className="checkout-form" onSubmit={handleOrderDetailsSubmit} style={{ display:"flex", flexDirection:"column", gap:12 }}>
+              <input name="customer" required value={orderDetails?.customer || ""} onChange={e=>setOrderDetails(prev=>({ ...(prev || {}), customer:e.target.value }))} placeholder={t.order.namePh} style={iSLight} />
+              <input name="phone" required value={orderDetails?.phone || ""} onChange={e=>setOrderDetails(prev=>({ ...(prev || {}), phone:e.target.value }))} placeholder={t.order.phonePh} style={iSLight} />
+              <textarea name="address" required value={orderDetails?.address || ""} onChange={e=>setOrderDetails(prev=>({ ...(prev || {}), address:e.target.value }))} placeholder={lang==="th" ? "ที่อยู่จัดส่งสำหรับติดหน้ากล่อง" : "Delivery address for the shipping label"} rows={3} style={{ ...iSLight, resize:"vertical" }} />
               <div>
                 <textarea name="notes" value={orderDetails?.notes || ""} onChange={e=>setOrderDetails(prev=>({ ...(prev || {}), notes:e.target.value }))} placeholder={t.order.notesPh} rows={3} style={{ ...iSLight, resize:"vertical" }} />
                 <div style={{ color:"#dc2626", fontSize:12, fontWeight:800, lineHeight:1.55, marginTop:7 }}>
