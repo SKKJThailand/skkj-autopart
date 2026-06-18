@@ -31,7 +31,7 @@
     "email": "skkjthailand@gmail.com",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน",
+      "streetAddress": "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน โทร 087-102-2666",
       "addressLocality": "กรุงเทพมหานคร",
       "postalCode": "10150",
       "addressCountry": "TH"
@@ -425,7 +425,7 @@ const T = {
       email:"Email", emailPh:"you@email.com",
       message:"Message", messagePh:"Tell us your car brand, model, year, and any questions...",
       send:"Send Message", sent:"Message Sent!", sentSub:"We'll get back to you within 24 hours.", sendAnother:"Send Another",
-      address:{ title:"Address", val:"36/1 Soi Anamai Ngam Charoen 33\nTha Kham, Bang Khun Thian, Bangkok 10150" },
+      address:{ title:"Address", val:"36/1 Soi Anamai Ngam Charoen 33\nTha Kham, Bang Khun Thian, Bangkok 10150\nTel. 087-102-2666" },
       phoneInfo:{ title:"Phone", val:"087-102-2666" },
       hours:{ title:"Hours", val:"Mon–Sat: 8:00–18:00\nSun: 9:00–15:00" },
       emailInfo:{ title:"Email", val:"skkjthailand@gmail.com" },
@@ -557,7 +557,7 @@ const T = {
       email:"อีเมล", emailPh:"you@email.com",
       message:"ข้อความ", messagePh:"แจ้งยี่ห้อ รุ่น ปี และคำถามของคุณ...",
       send:"ส่งข้อความ", sent:"ส่งข้อความแล้ว!", sentSub:"เราจะติดต่อกลับภายใน 24 ชั่วโมง", sendAnother:"ส่งอีกครั้ง",
-      address:{ title:"ที่อยู่", val:"36/1 ซอยอนามัยงามเจริญ 33\nแขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150" },
+      address:{ title:"ที่อยู่", val:"36/1 ซอยอนามัยงามเจริญ 33\nแขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150\nโทร 087-102-2666" },
       phoneInfo:{ title:"โทรศัพท์", val:"087-102-2666" },
       hours:{ title:"เวลาทำการ", val:"จ–ส: 8:00–18:00\nอา: 9:00–15:00" },
       emailInfo:{ title:"อีเมล", val:"skkjthailand@gmail.com" },
@@ -1418,6 +1418,35 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
     year:"",
     notes:"",
   });
+  const [thaiGeo, setThaiGeo]         = useState(null);
+  const [addrProvince, setAddrProvince] = useState("");
+  const [addrDistrict, setAddrDistrict] = useState("");
+  const [addrTambon,   setAddrTambon]   = useState("");
+  const [addrPostcode, setAddrPostcode] = useState("");
+  const [addrHouse,    setAddrHouse]    = useState("");
+  const [addrRoad,     setAddrRoad]     = useState("");
+  const [addrSoi,      setAddrSoi]      = useState("");
+  const [thaiGeoErr,   setThaiGeoErr]   = useState(false);
+
+  useEffect(() => {
+    const CACHE_KEY = "skkj_thai_geo_v1";
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) { setThaiGeo(JSON.parse(cached)); return; }
+    } catch(e) {}
+    fetch("https://cdn.jsdelivr.net/gh/kongvut/thai-province-data@master/api_province_with_amphure_tambon.json")
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        setThaiGeo(data);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+      })
+      .catch(() => setThaiGeoErr(true));
+  }, []);
+
+  function buildAddressString() {
+    const parts = [addrHouse, addrSoi ? "ซอย"+addrSoi : "", addrRoad ? "ถนน"+addrRoad : "", addrTambon, addrDistrict, addrProvince, addrPostcode].filter(Boolean);
+    return parts.join(" ");
+  }
   const [paymentMethod, setPaymentMethod] = useState("promptpay");
   const [deliveryMethod, setDeliveryMethod] = useState("standard");
   useEffect(() => {
@@ -1427,7 +1456,9 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
   function handleDetailsSubmit(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
-    setDetails({ customer: fd.get("customer"), phone: fd.get("phone"), address: fd.get("address"), year:"", notes: fd.get("notes") });
+    const builtAddr = buildAddressString();
+    const addr = builtAddr || fd.get("address") || "";
+    setDetails({ customer: fd.get("customer"), phone: fd.get("phone"), address: addr, year:"", notes: fd.get("notes") });
     setStep(2);
   }
 
@@ -1486,8 +1517,76 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
             <input name="customer" required value={details?.customer || ""} onChange={e=>setDetails(prev=>({...prev, customer:e.target.value}))} placeholder={t.order.namePh} style={iSLight} /></div>
           <div><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:5 }}>{t.contact.phone}</label>
             <input name="phone" required value={details?.phone || ""} onChange={e=>setDetails(prev=>({...prev, phone:e.target.value}))} placeholder={t.order.phonePh} style={iSLight} /></div>
-          <div><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:5 }}>{lang==="th" ? "\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e08\u0e31\u0e14\u0e2a\u0e48\u0e07" : "Delivery address"}</label>
-            <textarea name="address" required value={details?.address || ""} onChange={e=>setDetails(prev=>({...prev, address:e.target.value}))} placeholder={lang==="th" ? "\u0e01\u0e23\u0e2d\u0e01\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e15\u0e34\u0e14\u0e2b\u0e19\u0e49\u0e32\u0e01\u0e25\u0e48\u0e2d\u0e07" : "Full address for delivery label"} rows={3} style={{ ...iSLight, resize:"vertical" }} /></div>
+          <div>
+            <label style={{ fontSize:12, color:"#888", display:"block", marginBottom:5 }}>{lang==="th"?"\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e08\u0e31\u0e14\u0e2a\u0e48\u0e07":"Delivery address"}</label>
+            {thaiGeoErr ? (
+              <textarea name="address" required value={details?.address || ""} onChange={e=>setDetails(prev=>({...prev, address:e.target.value}))} placeholder={lang==="th"?"\u0e01\u0e23\u0e2d\u0e01\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e15\u0e34\u0e14\u0e2b\u0e19\u0e49\u0e32\u0e01\u0e25\u0e48\u0e2d\u0e07":"Full address for delivery label"} rows={3} style={{ ...iSLight, resize:"vertical" }} />
+            ) : !thaiGeo ? (
+              <div style={{ fontSize:12, color:"#888", padding:"10px 12px", border:"1px solid #E8E6E0", borderRadius:10, background:"#FAFAF8" }}>
+                {lang==="th"?"\u0e01\u0e33\u0e25\u0e31\u0e07\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e31\u0e14...":"Loading province data..."}
+              </div>
+            ) : (()=>{
+              const provinces = thaiGeo.map(p => p.name_th);
+              const selProv   = thaiGeo.find(p => p.name_th === addrProvince);
+              const districts = selProv ? selProv.amphure.map(a => a.name_th.replace(/^(\u0e40\u0e02\u0e15|\u0e2d\u0e33\u0e40\u0e20\u0e2d)/,"")) : [];
+              const selDist   = selProv?.amphure.find(a => a.name_th.replace(/^(\u0e40\u0e02\u0e15|\u0e2d\u0e33\u0e40\u0e20\u0e2d)/,"") === addrDistrict);
+              const tambons   = selDist ? selDist.tambon.map(t => t.name_th.replace(/^(\u0e41\u0e02\u0e27\u0e07|\u0e15\u0e33\u0e1a\u0e25)/,"")) : [];
+              const selTambon = selDist?.tambon.find(t => t.name_th.replace(/^(\u0e41\u0e02\u0e27\u0e07|\u0e15\u0e33\u0e1a\u0e25)/,"") === addrTambon);
+              const selStyle  = { ...iSLight, marginBottom:0 };
+              return (
+                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+                    <div>
+                      <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e31\u0e14":"Province"} *</div>
+                      <select required value={addrProvince} onChange={e=>{ setAddrProvince(e.target.value); setAddrDistrict(""); setAddrTambon(""); setAddrPostcode(""); setDetails(prev=>({...prev, address:""})); }} style={selStyle}>
+                        <option value="">{lang==="th"?"-- \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e31\u0e14 --":"-- Province --"}</option>
+                        {provinces.map(p=><option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e2d\u0e33\u0e40\u0e20\u0e2d/\u0e40\u0e02\u0e15":"District"} *</div>
+                      <select required value={addrDistrict} disabled={!addrProvince} onChange={e=>{ setAddrDistrict(e.target.value); setAddrTambon(""); const d = selProv?.amphure.find(a=>a.name_th.replace(/^(\u0e40\u0e02\u0e15|\u0e2d\u0e33\u0e40\u0e20\u0e2d)/,"")===e.target.value); const zip = d?.tambon?.[0]?.zip_code; if(zip) setAddrPostcode(String(zip)); setDetails(prev=>({...prev, address:""})); }} style={{ ...selStyle, opacity:addrProvince?1:0.5 }}>
+                        <option value="">{lang==="th"?"-- \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e2d\u0e33\u0e40\u0e20\u0e2d --":"-- District --"}</option>
+                        {districts.map(d=><option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e15\u0e33\u0e1a\u0e25/\u0e41\u0e02\u0e27\u0e07":"Sub-district"} *</div>
+                      <select required value={addrTambon} disabled={!addrDistrict} onChange={e=>{ setAddrTambon(e.target.value); const t = selDist?.tambon.find(tb=>tb.name_th.replace(/^(\u0e41\u0e02\u0e27\u0e07|\u0e15\u0e33\u0e1a\u0e25)/,"")===e.target.value); if(t?.zip_code) setAddrPostcode(String(t.zip_code)); setDetails(prev=>({...prev, address:""})); }} style={{ ...selStyle, opacity:addrDistrict?1:0.5 }}>
+                        <option value="">{lang==="th"?"-- \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e15\u0e33\u0e1a\u0e25 --":"-- Sub-district --"}</option>
+                        {tambons.map(t=><option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e23\u0e2b\u0e31\u0e2a\u0e44\u0e1b\u0e23\u0e29\u0e13\u0e35\u0e22\u0e4c":"Postcode"} *</div>
+                      <input required value={addrPostcode} onChange={e=>setAddrPostcode(e.target.value)} placeholder="10xxx" maxLength={5} style={selStyle} />
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e1a\u0e49\u0e32\u0e19\u0e40\u0e25\u0e02\u0e17\u0e35\u0e48 / \u0e2b\u0e49\u0e2d\u0e07 / \u0e2d\u0e32\u0e04\u0e32\u0e23":"House no. / Room / Building"} *</div>
+                    <input required value={addrHouse} onChange={e=>{ setAddrHouse(e.target.value); setDetails(prev=>({...prev, address:""})); }} placeholder={lang==="th"?"\u0e40\u0e0a\u0e48\u0e19 36/1 \u0e2b\u0e21\u0e39\u0e48 5 \u0e2d\u0e32\u0e04\u0e32\u0e23 A":"e.g. 36/1 Moo 5 Bldg A"} style={selStyle} />
+                  </div>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+                    <div>
+                      <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e0b\u0e2d\u0e22":"Soi"}</div>
+                      <input value={addrSoi} onChange={e=>{ setAddrSoi(e.target.value); setDetails(prev=>({...prev, address:""})); }} placeholder={lang==="th"?"\u0e0b\u0e2d\u0e22\u0e2d\u0e30\u0e44\u0e23 (\u0e16\u0e49\u0e32\u0e21\u0e35)":"Soi (if any)"} style={selStyle} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{lang==="th"?"\u0e16\u0e19\u0e19":"Road"}</div>
+                      <input value={addrRoad} onChange={e=>{ setAddrRoad(e.target.value); setDetails(prev=>({...prev, address:""})); }} placeholder={lang==="th"?"\u0e16\u0e19\u0e19\u0e2d\u0e30\u0e44\u0e23 (\u0e16\u0e49\u0e32\u0e21\u0e35)":"Road (if any)"} style={selStyle} />
+                    </div>
+                  </div>
+                  {addrProvince && addrDistrict && addrTambon && addrPostcode && addrHouse && (
+                    <div style={{ background:"#F0FDF4", border:"1px solid #BBF7D0", borderRadius:10, padding:"10px 12px", fontSize:12, color:"#166534", lineHeight:1.6 }}>
+                      <strong>{lang==="th"?"\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e17\u0e35\u0e48\u0e08\u0e30\u0e43\u0e0a\u0e49:":"Address preview:"}</strong><br/>
+                      {buildAddressString()}
+                    </div>
+                  )}
+                  <input type="hidden" name="address" value={buildAddressString()} />
+                </div>
+              );
+            })()}
+          </div>
           <div><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:5 }}>{lang==="th"?"หมายเหตุถึงร้าน":"Note for SKKJ"}</label>
             <textarea name="notes" value={details?.notes || ""} onChange={e=>setDetails(prev=>({...prev, notes:e.target.value}))} placeholder={t.order.notesPh} rows={3} style={{ ...iSLight, resize:"vertical" }} />
             <div style={{ color:"#dc2626", fontSize:12, fontWeight:800, lineHeight:1.55, marginTop:7 }}>
@@ -4195,7 +4294,7 @@ function App() {
       sender: {
         name: "SKKJ Autopart",
         phone: previous.sender?.phone || "",
-        address: "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150",
+        address: "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150 โทร 087-102-2666",
       },
       receiver: {
         name: order?.customer || "",
@@ -5463,7 +5562,7 @@ function App() {
               <div class="role">ผู้ส่ง</div>
               <div class="name">SKKJ Autopart</div>
             </div>
-            <div class="line">36/1 ซอยอนามัยงามเจริญ 33<br />แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150</div>
+            <div class="line">36/1 ซอยอนามัยงามเจริญ 33<br />แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150<br />โทร 087-102-2666</div>
           </div>
 
           <div class="note">หมายเหตุ: กรุณาตรวจสอบชื่อ เบอร์โทรศัพท์ และที่อยู่ก่อนจัดส่ง</div>
