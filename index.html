@@ -31,7 +31,7 @@
     "email": "skkjthailand@gmail.com",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "86/111 หมู่ที่ 7 แขวงแสมดำ เขตบางขุนเทียน",
+      "streetAddress": "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน",
       "addressLocality": "กรุงเทพมหานคร",
       "postalCode": "10150",
       "addressCountry": "TH"
@@ -183,6 +183,156 @@ const INIT_BRANDS = [
   },
 ];
 
+const SPECIAL_REQUEST_BRANDS = [
+  { id:"sr-nissan", nameTh:"นิสสัน", nameEn:"Nissan", logo:"image:assets/nissan-logo.png", models:[
+    { nameTh:"อัลเมร่า N16", nameEn:"Almera N16", years:"2000–2006" },
+    { nameTh:"อัลเมร่า N17", nameEn:"Almera N17", years:"2012–2019" },
+    { nameTh:"อัลเมร่า N18 ใหม่", nameEn:"Almera N18", years:"2020–2026" },
+    { nameTh:"ซิลฟี่ B17", nameEn:"Sylphy B17", years:"2012–2019" },
+    { nameTh:"คิกส์", nameEn:"Kicks", years:"2018–2026" },
+    { nameTh:"เทียน่า J31", nameEn:"Teana J31", years:"2003–2008" },
+    { nameTh:"เทียน่า L33", nameEn:"Teana L33", years:"2014–2019" },
+    { nameTh:"เทอร์ร่า", nameEn:"Terra", years:"2018–2026" },
+    { nameTh:"เอ็กซ์เทรล T30", nameEn:"X-Trail T30", years:"2001–2007" },
+    { nameTh:"เอ็กซ์เทรล T31", nameEn:"X-Trail T31", years:"2007–2013" },
+    { nameTh:"นาวาร่า D21 / D22", nameEn:"Navara D21/D22", years:"1998–2015" },
+    { nameTh:"บลูเบิร์ด / ซันนี่", nameEn:"Bluebird / Sunny", years:"2000–2006" },
+  ]},
+  { id:"sr-honda", nameTh:"ฮอนด้า", nameEn:"Honda", logo:"image:assets/honda-logo.png", models:[
+    { nameTh:"ซีอาร์วี G2", nameEn:"CR-V Gen 2", years:"2002–2006" },
+    { nameTh:"โอดิสซี่ RA6", nameEn:"Odyssey RA6", years:"1999–2003" },
+    { nameTh:"โอดิสซี่ RB1", nameEn:"Odyssey RB1", years:"2003–2008" },
+    { nameTh:"โอดิสซี่ RB3", nameEn:"Odyssey RB3", years:"2008–2013" },
+    { nameTh:"โอดิสซี่ RC1", nameEn:"Odyssey RC1", years:"2014–2021" },
+    { nameTh:"ฟรีด GB3", nameEn:"Freed GB3", years:"2009–2016" },
+    { nameTh:"ฟรีด GB5/6", nameEn:"Freed GB5/6", years:"2016–2023" },
+    { nameTh:"WR-V", nameEn:"WR-V", years:"2023–2026" },
+    { nameTh:"ZR-V", nameEn:"ZR-V", years:"2023–2026" },
+    { nameTh:"แอคคอร์ด G7", nameEn:"Accord G7", years:"2003–2007" },
+    { nameTh:"แอคคอร์ด G10", nameEn:"Accord G10", years:"2018–2026" },
+    { nameTh:"โมบิลิโอ", nameEn:"Mobilio", years:"2014–2019" },
+    { nameTh:"สตรีม", nameEn:"Stream", years:"2001–2006" },
+    { nameTh:"เจด", nameEn:"Jade", years:"2013–2020" },
+    { nameTh:"HR-V Gen 2", nameEn:"HR-V Gen 2", years:"2021–2026" },
+    { nameTh:"ซีวิค ES", nameEn:"Civic ES", years:"2001–2005" },
+  ]},
+  { id:"sr-isuzu", nameTh:"อีซูซุ", nameEn:"Isuzu", logo:"image:assets/isuzu-logo.png", models:[
+    { nameTh:"MU-X", nameEn:"MU-X", years:"2013–2026" },
+    { nameTh:"MU-7", nameEn:"MU-7", years:"2004–2013" },
+    { nameTh:"TFR / Rodeo ขับ 2", nameEn:"TFR / Rodeo 2WD", years:"1997–2004" },
+    { nameTh:"TFR / Rodeo ขับ 4", nameEn:"TFR / Rodeo 4WD", years:"1997–2004" },
+  ]},
+  { id:"sr-mazda", nameTh:"มาสด้า", nameEn:"Mazda", logo:"image:assets/mazda-logo.png", models:[
+    { nameTh:"มาสด้า 3 BL", nameEn:"Mazda 3 BL", years:"2009–2013" },
+    { nameTh:"มาสด้า 5", nameEn:"Mazda 5", years:"2005–2010" },
+    { nameTh:"มาสด้า 6", nameEn:"Mazda 6", years:"2013–2021" },
+    { nameTh:"มาสด้า 323", nameEn:"Mazda 323", years:"2000–2004" },
+    { nameTh:"ซีเอ็กซ์-8", nameEn:"CX-8", years:"2019–2026" },
+    { nameTh:"ซีเอ็กซ์-30", nameEn:"CX-30", years:"2020–2026" },
+    { nameTh:"BT-50 Pro ขับ 2", nameEn:"BT-50 Pro 2WD", years:"2011–2020" },
+    { nameTh:"BT-50 Pro ขับ 4", nameEn:"BT-50 Pro 4WD", years:"2011–2020" },
+  ]},
+  { id:"sr-mitsubishi", nameTh:"มิตซูบิชิ", nameEn:"Mitsubishi", logo:"image:assets/mitsubishi-logo.png", models:[
+    { nameTh:"เอาท์แลนเดอร์", nameEn:"Outlander", years:"2013–2026" },
+    { nameTh:"อีคลิปส์ ครอส", nameEn:"Eclipse Cross", years:"2018–2026" },
+    { nameTh:"แลนเซอร์ CK", nameEn:"Lancer CK", years:"1996–2003" },
+    { nameTh:"แลนเซอร์ CS", nameEn:"Lancer CS", years:"2003–2009" },
+    { nameTh:"แลนเซอร์ EX", nameEn:"Lancer EX", years:"2008–2017" },
+    { nameTh:"คอลท์", nameEn:"Colt", years:"2002–2012" },
+    { nameTh:"สเปซ สตาร์", nameEn:"Space Star", years:"2014–2026" },
+    { nameTh:"ปาเจโร่ V80", nameEn:"Pajero V80", years:"2006–2021" },
+    { nameTh:"กาแลนท์", nameEn:"Galant", years:"2004–2012" },
+  ]},
+  { id:"sr-toyota", nameTh:"โตโยต้า", nameEn:"Toyota", logo:"image:assets/toyota-logo.png", models:[
+    { nameTh:"แคมรี่ ACV50", nameEn:"Camry ACV50", years:"2012–2017" },
+    { nameTh:"แคมรี่ ACV70", nameEn:"Camry ACV70", years:"2018–2026" },
+    { nameTh:"ฟอร์จูนเนอร์ AN60", nameEn:"Fortuner AN60", years:"2005–2015" },
+    { nameTh:"ฟอร์จูนเนอร์ AN160", nameEn:"Fortuner AN160", years:"2015–2026" },
+    { nameTh:"อินโนว่า", nameEn:"Innova", years:"2005–2015" },
+    { nameTh:"อินโนว่า คริสต้า", nameEn:"Innova Crysta", years:"2016–2026" },
+    { nameTh:"รัช", nameEn:"Rush", years:"2017–2026" },
+    { nameTh:"เวโลซ์", nameEn:"Veloz", years:"2021–2026" },
+    { nameTh:"ราเซ่", nameEn:"Raize", years:"2021–2026" },
+    { nameTh:"ซีเอนต้า", nameEn:"Sienta", years:"2016–2026" },
+    { nameTh:"ปริอุส", nameEn:"Prius", years:"2003–2026" },
+    { nameTh:"ไฮเอซ แวน", nameEn:"HiAce Van", years:"2005–2026" },
+    { nameTh:"แกรนด์ ไฮเอซ", nameEn:"Grand HiAce", years:"2019–2026" },
+    { nameTh:"แลนด์ครุยเซอร์ ปราโด 120", nameEn:"Land Cruiser Prado 120", years:"2002–2009" },
+    { nameTh:"แลนด์ครุยเซอร์ ปราโด 150", nameEn:"Land Cruiser Prado 150", years:"2009–2026" },
+    { nameTh:"แลนด์ครุยเซอร์ 200", nameEn:"Land Cruiser 200", years:"2007–2021" },
+    { nameTh:"แลนด์ครุยเซอร์ 300", nameEn:"Land Cruiser 300", years:"2021–2026" },
+    { nameTh:"อะวานซ่า", nameEn:"Avanza", years:"2004–2019" },
+    { nameTh:"วิออส NCP150", nameEn:"Vios NCP150", years:"2013–2017" },
+    { nameTh:"วิออส XP150", nameEn:"Vios XP150", years:"2017–2022" },
+    { nameTh:"โคโรลล่า E120", nameEn:"Corolla E120", years:"2001–2007" },
+    { nameTh:"โคโรลล่า E140", nameEn:"Corolla E140", years:"2008–2013" },
+    { nameTh:"ไอคิว", nameEn:"iQ", years:"2008–2015" },
+  ]},
+  { id:"sr-ford", nameTh:"ฟอร์ด", nameEn:"Ford", logo:"image:assets/ford-logo.png", models:[
+    { nameTh:"เอเวอเรสต์ ตัวเก่า", nameEn:"Everest (Old)", years:"2003–2014" },
+    { nameTh:"เอเวอเรสต์ (2015–2021)", nameEn:"Everest 2015–2021", years:"2015–2021" },
+    { nameTh:"เอเวอเรสต์ Next Gen", nameEn:"Everest Next Gen", years:"2022–2026" },
+    { nameTh:"เรนเจอร์ T5", nameEn:"Ranger T5", years:"2006–2011" },
+    { nameTh:"เรนเจอร์ Next Gen", nameEn:"Ranger Next Gen", years:"2022–2026" },
+    { nameTh:"เทอร์ริทอรี่", nameEn:"Territory", years:"2022–2026" },
+  ]},
+  { id:"sr-mg", nameTh:"เอ็มจี", nameEn:"MG", logo:"image:assets/mg-logo.png", models:[
+    { nameTh:"เอ็มจี 3", nameEn:"MG3", years:"2012–2022" },
+    { nameTh:"Extender ขับ 2", nameEn:"Extender 2WD", years:"2020–2026" },
+    { nameTh:"Extender ขับ 4", nameEn:"Extender 4WD", years:"2020–2026" },
+    { nameTh:"EP", nameEn:"EP", years:"2021–2026" },
+    { nameTh:"MG4", nameEn:"MG4", years:"2022–2026" },
+    { nameTh:"VS", nameEn:"VS", years:"2021–2026" },
+  ]},
+  { id:"sr-suzuki", nameTh:"ซูซูกิ", nameEn:"Suzuki", logo:"🟡", models:[
+    { nameTh:"สวิฟต์", nameEn:"Swift", years:"2005–2026" },
+    { nameTh:"วิทาร่า", nameEn:"Vitara", years:"2015–2026" },
+    { nameTh:"แกรนด์ วิทาร่า", nameEn:"Grand Vitara", years:"2006–2015" },
+    { nameTh:"เซียซ", nameEn:"Ciaz", years:"2014–2026" },
+    { nameTh:"เอิร์ติก้า", nameEn:"Ertiga", years:"2012–2026" },
+    { nameTh:"เอ็กซ์แอล7", nameEn:"XL7", years:"2020–2026" },
+    { nameTh:"จิมนี่", nameEn:"Jimny", years:"2018–2026" },
+    { nameTh:"เซเลริโอ", nameEn:"Celerio", years:"2015–2026" },
+    { nameTh:"บาเลโน", nameEn:"Baleno", years:"2016–2026" },
+    { nameTh:"เอสซ์ 4", nameEn:"SX4", years:"2006–2013" },
+  ]},
+  { id:"sr-chevrolet", nameTh:"เชฟโรเลต", nameEn:"Chevrolet", logo:"🔵", models:[
+    { nameTh:"โคโลราโด ขับ 2", nameEn:"Colorado 2WD", years:"2003–2020" },
+    { nameTh:"โคโลราโด ขับ 4", nameEn:"Colorado 4WD", years:"2003–2020" },
+    { nameTh:"เทรลเบลเซอร์", nameEn:"Trailblazer", years:"2012–2022" },
+    { nameTh:"แคปติวา", nameEn:"Captiva", years:"2006–2019" },
+    { nameTh:"โซนิค / ครูซ", nameEn:"Sonic / Cruze", years:"2009–2016" },
+    { nameTh:"สปิน", nameEn:"Spin", years:"2013–2019" },
+  ]},
+  { id:"sr-subaru", nameTh:"ซูบารุ", nameEn:"Subaru", logo:"⭐", models:[
+    { nameTh:"ฟอเรสเตอร์", nameEn:"Forester", years:"2000–2026" },
+    { nameTh:"ออตแบ็ค", nameEn:"Outback", years:"2000–2026" },
+    { nameTh:"เอ็กซ์วี / ครอสเทรก", nameEn:"XV / Crosstrek", years:"2011–2026" },
+    { nameTh:"อิมเพรซา", nameEn:"Impreza", years:"2000–2026" },
+    { nameTh:"เลกาซี่", nameEn:"Legacy", years:"2000–2014" },
+    { nameTh:"บีอาร์ซี", nameEn:"BRZ", years:"2013–2026" },
+  ]},
+  { id:"sr-kia", nameTh:"เกีย", nameEn:"Kia", logo:"🔶", models:[
+    { nameTh:"สปอร์ทาจ", nameEn:"Sportage", years:"2004–2026" },
+    { nameTh:"ซอเรนโต", nameEn:"Sorento", years:"2002–2026" },
+    { nameTh:"เซลโตส", nameEn:"Seltos", years:"2020–2026" },
+    { nameTh:"นิโร", nameEn:"Niro", years:"2017–2026" },
+    { nameTh:"คาร์นิวัล", nameEn:"Carnival", years:"2006–2026" },
+    { nameTh:"ริโอ", nameEn:"Rio", years:"2000–2017" },
+  ]},
+  { id:"sr-hyundai", nameTh:"ฮุนได", nameEn:"Hyundai", logo:"🔷", models:[
+    { nameTh:"ทูซอน", nameEn:"Tucson", years:"2004–2026" },
+    { nameTh:"ซันต้าเฟ่", nameEn:"Santa Fe", years:"2001–2026" },
+    { nameTh:"อีแลนตร้า", nameEn:"Elantra", years:"2000–2026" },
+    { nameTh:"เวนิว", nameEn:"Venue", years:"2019–2026" },
+    { nameTh:"ครีต้า", nameEn:"Creta", years:"2022–2026" },
+    { nameTh:"สตาเร็กซ์", nameEn:"Starex", years:"2007–2021" },
+  ]},
+  { id:"sr-other", nameTh:"อื่นๆ / ไม่มีในรายการ", nameEn:"Other / Not listed", logo:"❓", models:[
+    { nameTh:"อื่นๆ (พิมพ์รุ่นของคุณด้านล่าง)", nameEn:"Other (type your model below)", years:"" },
+  ]},
+];
+
 const INIT_ORDERS = [
   { id:"ORD-001", customer:"สมชาย ก.",  brand:"นิสสัน",    model:"เทียน่า J32",                       year:"2011", price:4800, status:"delivered",  date:"2025-04-20", phone:"081-234-5678" },
   { id:"ORD-002", customer:"วนิดา พ.",  brand:"ฮอนด้า",    model:"ซีอาร์วี เจน 3",                   year:"2009", price:4600, status:"processing", date:"2025-05-08", phone:"089-876-5432" },
@@ -275,8 +425,8 @@ const T = {
       email:"Email", emailPh:"you@email.com",
       message:"Message", messagePh:"Tell us your car brand, model, year, and any questions...",
       send:"Send Message", sent:"Message Sent!", sentSub:"We'll get back to you within 24 hours.", sendAnother:"Send Another",
-      address:{ title:"Address", val:"86/111 Moo 7\nSamae Dam, Bang Khun Thian, Bangkok 10150" },
-      phoneInfo:{ title:"Phone", val:"02-123-4567\n081-234-5678 (Line/WhatsApp)" },
+      address:{ title:"Address", val:"36/1 Soi Anamai Ngam Charoen 33\nTha Kham, Bang Khun Thian, Bangkok 10150" },
+      phoneInfo:{ title:"Phone", val:"087-102-2666" },
       hours:{ title:"Hours", val:"Mon–Sat: 8:00–18:00\nSun: 9:00–15:00" },
       emailInfo:{ title:"Email", val:"skkjthailand@gmail.com" },
     },
@@ -407,8 +557,8 @@ const T = {
       email:"อีเมล", emailPh:"you@email.com",
       message:"ข้อความ", messagePh:"แจ้งยี่ห้อ รุ่น ปี และคำถามของคุณ...",
       send:"ส่งข้อความ", sent:"ส่งข้อความแล้ว!", sentSub:"เราจะติดต่อกลับภายใน 24 ชั่วโมง", sendAnother:"ส่งอีกครั้ง",
-      address:{ title:"ที่อยู่", val:"86/111 หมู่ที่ 7\nแขวงแสมดำ เขตบางขุนเทียน กรุงเทพมหานคร 10150" },
-      phoneInfo:{ title:"โทรศัพท์", val:"02-123-4567\n081-234-5678 (Line/WhatsApp)" },
+      address:{ title:"ที่อยู่", val:"36/1 ซอยอนามัยงามเจริญ 33\nแขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150" },
+      phoneInfo:{ title:"โทรศัพท์", val:"087-102-2666" },
       hours:{ title:"เวลาทำการ", val:"จ–ส: 8:00–18:00\nอา: 9:00–15:00" },
       emailInfo:{ title:"อีเมล", val:"skkjthailand@gmail.com" },
     },
@@ -2656,6 +2806,12 @@ function App() {
   const [basketOpen, setBasketOpen]       = useState(false);
   const [quickFindOpen, setQuickFindOpen] = useState(false);
   const [quickFindBrand, setQuickFindBrand] = useState(null);
+  const [qfReqBrand, setQfReqBrand] = useState(null);
+  const [qfReqModel, setQfReqModel] = useState("");
+  const [qfReqName, setQfReqName] = useState("");
+  const [qfReqPhone, setQfReqPhone] = useState("");
+  const [qfReqSent, setQfReqSent] = useState(false);
+  const [specialRequests, setSpecialRequests] = useState([]);
   const [checkoutData, setCheckoutData]   = useState(null); // { shipping }
   const [catalogSearch, setCatalogSearch] = useState("");
   const [finderQuery, setFinderQuery]     = useState("");
@@ -2811,6 +2967,7 @@ function App() {
   const openProductDetail = (brand, model) => {
     setProductDetail({ brandId:brand.id, modelId:model.id });
     setPage("product");
+    window.history.pushState({ skkjPage:"product", brandId:brand.id, modelId:model.id }, "");
     setTimeout(()=>window.scrollTo({ top:0, behavior:"smooth" }), 0);
     // Feature: track recently viewed (keep last 6, newest first, no duplicates)
     try {
@@ -2830,6 +2987,15 @@ function App() {
     const onScroll = () => setShowBackToTop(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive:true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  useEffect(() => {
+    const onPop = () => {
+      setPage("catalog");
+      setProductDetail(null);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
   // Feature: fetch pending (unapproved) reviews when admin logs in
   useEffect(() => {
@@ -4024,7 +4190,7 @@ function App() {
       sender: {
         name: "SKKJ Autopart",
         phone: previous.sender?.phone || "",
-        address: "86/111 หมู่ที่ 7 แขวงแสมดำ เขตบางขุนเทียน กรุงเทพมหานคร 10150",
+        address: "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150",
       },
       receiver: {
         name: order?.customer || "",
@@ -5263,7 +5429,7 @@ function App() {
               <div class="role">ผู้ส่ง</div>
               <div class="name">SKKJ Autopart</div>
             </div>
-            <div class="line">86/111 หมู่ที่ 7 แขวงแสมดำ<br />เขตบางขุนเทียน กรุงเทพมหานคร 10150</div>
+            <div class="line">36/1 ซอยอนามัยงามเจริญ 33<br />แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150</div>
           </div>
 
           <div class="note">หมายเหตุ: กรุณาตรวจสอบชื่อ เบอร์โทรศัพท์ และที่อยู่ก่อนจัดส่ง</div>
@@ -6374,10 +6540,10 @@ function App() {
               </div>
             </div>
 
-            <section style={{ paddingBottom:80 }}>
+            <section style={{ paddingBottom:80, paddingTop:48 }}>
               <div className="feature-grid v2-feature-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))", gap:18, maxWidth:960, margin:"0 auto 70px" }}>
                 {t.features.map(f=>(
-                  <div className="feature-card v2-feature-card" key={f.title} style={{ background:"#fff", borderRadius:18, padding:"42px 28px 26px", border:"1px solid #ECECEC", minHeight:156 }}>
+                  <div className="feature-card v2-feature-card" key={f.title} style={{ background:"#fff", borderRadius:18, padding:"42px 28px 26px", border:"1px solid #ECECEC", minHeight:156, height:"100%" }}>
                     <div className="feature-card-icon" style={{ fontSize:30, marginBottom:14, lineHeight:1 }}>{f.icon}</div>
                     <h3 className="feature-card-title" style={{ margin:"0 0 9px", fontSize:18, fontWeight:800 }}>{f.title}</h3>
                     <p className="feature-card-desc" style={{ margin:0, color:"#666", fontSize:14, lineHeight:1.7 }}>{f.desc}</p>
@@ -8179,40 +8345,109 @@ function App() {
           <div style={{ padding:"20px 22px 16px", borderBottom:"1px solid #ECECEC", display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
             <div>
               {quickFindBrand && (
-                <button onClick={()=>setQuickFindBrand(null)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:13, fontWeight:800, color:"#9A0018", fontFamily:thF, padding:0, marginBottom:4, display:"block" }}>
+                <button onClick={()=>{
+                  if(quickFindBrand==="__REQUEST__" && qfReqBrand) { setQfReqBrand(null); setQfReqModel(""); }
+                  else { setQuickFindBrand(null); setQfReqBrand(null); setQfReqModel(""); setQfReqSent(false); }
+                }} style={{ background:"none", border:"none", cursor:"pointer", fontSize:13, fontWeight:800, color:"#9A0018", fontFamily:thF, padding:0, marginBottom:4, display:"block" }}>
                   ← {lang==="th"?"กลับ":"Back"}
                 </button>
               )}
               <div style={{ fontSize:17, fontWeight:900, fontFamily:thF }}>
                 {!quickFindBrand
                   ? (lang==="th"?"เลือกยี่ห้อรถ":"Pick your brand")
-                  : (lang==="th"?quickFindBrand.nameTh:quickFindBrand.nameEn)}
+                  : quickFindBrand==="__REQUEST__"
+                    ? (lang==="th"?"แจ้งรุ่นที่ต้องการ":"Request a model")
+                    : (lang==="th"?quickFindBrand.nameTh:quickFindBrand.nameEn)}
               </div>
               {!quickFindBrand && <div style={{ fontSize:12, color:"#999", marginTop:2 }}>{lang==="th"?"Step 1 / 2":"Step 1 / 2"}</div>}
-              {quickFindBrand && <div style={{ fontSize:12, color:"#999", marginTop:2 }}>{lang==="th"?"Step 2 / 2 — เลือกรุ่น":"Step 2 / 2 — pick model"}</div>}
+              {quickFindBrand && quickFindBrand!=="__REQUEST__" && <div style={{ fontSize:12, color:"#999", marginTop:2 }}>{lang==="th"?"Step 2 / 2 — เลือกรุ่น":"Step 2 / 2 — pick model"}</div>}
             </div>
             <button onClick={()=>{ setQuickFindOpen(false); setQuickFindBrand(null); }} style={{ background:"#F5F4F2", border:"none", borderRadius:999, width:32, height:32, cursor:"pointer", fontSize:16, fontWeight:900, color:"#555", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>✕</button>
           </div>
 
           {/* body */}
           <div style={{ overflowY:"auto", flex:1, padding:"18px 22px 22px" }}>
-            {!quickFindBrand ? (
+            {quickFindBrand === "__REQUEST__" ? (()=>{
+              /* ── REQUEST FLOW ── */
+              if (qfReqSent) return (
+                <div style={{ textAlign:"center", padding:"32px 0" }}>
+                  <div style={{ fontSize:40, marginBottom:12 }}>✅</div>
+                  <div style={{ fontSize:18, fontWeight:900, fontFamily:thF, marginBottom:8 }}>{lang==="th"?"รับทราบแล้วครับ":"Got it!"}</div>
+                  <div style={{ fontSize:13, color:"#666", lineHeight:1.6 }}>{lang==="th"?"เราจะโทรกลับหาคุณเร็วๆ นี้":"We will contact you soon."}</div>
+                  <button onClick={()=>{ setQuickFindBrand(null); setQfReqBrand(null); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:20, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"11px 28px", fontSize:14, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
+                    {lang==="th"?"กลับหน้าหลัก":"Back"}
+                  </button>
+                </div>
+              );
+              if (!qfReqBrand) return (
+                /* Pick brand from full list */
+                <div>
+                  <div style={{ fontSize:13, color:"#888", marginBottom:12 }}>{lang==="th"?"เลือกยี่ห้อรถของคุณ":"Pick your car brand"}</div>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:10 }}>
+                    {SPECIAL_REQUEST_BRANDS.map(b=>(
+                      <button key={b.id} onClick={()=>setQfReqBrand(b)} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:"pointer", textAlign:"center", fontFamily:thF, transition:"border-color .15s" }}
+                        onMouseEnter={e=>{ e.currentTarget.style.borderColor="#9A0018"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
+                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:36, marginBottom:6, fontSize:22 }}>
+                          {b.logo.startsWith("image:") ? <BrandLogo logo={b.logo} size={28} place="brandCard" /> : b.logo}
+                        </div>
+                        <div style={{ fontWeight:800, fontSize:12 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+              /* Pick model + fill contact */
+              const isOther = qfReqBrand.id === "sr-other";
+              return (
+                <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                  <div style={{ fontSize:13, color:"#888" }}>{lang==="th"?"เลือกรุ่นที่ต้องการ":"Pick the model"}</div>
+                  {!isOther && (
+                    <div style={{ display:"flex", flexDirection:"column", gap:7, maxHeight:180, overflowY:"auto" }}>
+                      {qfReqBrand.models.map((m,i)=>(
+                        <button key={i} onClick={()=>setQfReqModel(lang==="th"?m.nameTh:m.nameEn)}
+                          style={{ display:"flex", alignItems:"center", justifyContent:"space-between", background:qfReqModel===(lang==="th"?m.nameTh:m.nameEn)?"#FFF0F2":"#FAFAF8", border:"1.5px solid "+(qfReqModel===(lang==="th"?m.nameTh:m.nameEn)?"#9A0018":"#ECECEC"), borderRadius:12, padding:"10px 14px", cursor:"pointer", textAlign:"left", fontFamily:thF }}>
+                          <div style={{ fontWeight:800, fontSize:13 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          <div style={{ fontSize:11, color:"#999" }}>{m.years}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <input value={qfReqModel} onChange={e=>setQfReqModel(e.target.value)} placeholder={lang==="th"?"รุ่นรถ (พิมพ์เพิ่มเติมได้)":"Model name"} style={{ border:"1px solid #DDD", borderRadius:10, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                  <input value={qfReqName} onChange={e=>setQfReqName(e.target.value)} placeholder={lang==="th"?"ชื่อของคุณ":"Your name"} style={{ border:"1px solid #DDD", borderRadius:10, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                  <input value={qfReqPhone} onChange={e=>setQfReqPhone(e.target.value)} placeholder={lang==="th"?"เบอร์โทรกลับ":"Phone number"} type="tel" style={{ border:"1px solid #DDD", borderRadius:10, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                  <button disabled={!qfReqModel||!qfReqPhone} onClick={()=>{
+                    if(!qfReqModel||!qfReqPhone) return;
+                    const req = { id:"REQ-"+Date.now(), brand:lang==="th"?qfReqBrand.nameTh:qfReqBrand.nameEn, model:qfReqModel, name:qfReqName, phone:qfReqPhone, date:new Date().toLocaleDateString("th-TH") };
+                    setSpecialRequests(prev=>[req,...prev]);
+                    setQfReqSent(true);
+                  }} style={{ background:(!qfReqModel||!qfReqPhone)?"#CCC":"#9A0018", color:"#fff", border:"none", borderRadius:12, padding:"13px", fontSize:15, fontWeight:900, cursor:(!qfReqModel||!qfReqPhone)?"not-allowed":"pointer", fontFamily:thF }}>
+                    {lang==="th"?"ส่งคำขอ — เราจะโทรกลับ":"Send Request — We'll call you back"}
+                  </button>
+                </div>
+              );
+            })() : !quickFindBrand ? (
               /* Step 1 — brand grid */
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:10 }}>
-                {brands.map(b => {
-                  const hasModels = (b.models||[]).length > 0;
-                  return (
-                    <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, opacity:hasModels?1:0.4, transition:"border-color .15s" }}
-                      onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A0018"; }}
-                      onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
-                      <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:40, marginBottom:8 }}>
-                        <BrandLogo logo={b.logo} size={32} place="brandCard" />
-                      </div>
-                      <div style={{ fontWeight:800, fontSize:13 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
-                      <div style={{ fontSize:11, color:"#999", marginTop:2 }}>{(b.models||[]).length} {lang==="th"?"รุ่น":"models"}</div>
-                    </button>
-                  );
-                })}
+              <div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:10 }}>
+                  {brands.map(b => {
+                    const hasModels = (b.models||[]).length > 0;
+                    return (
+                      <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, opacity:hasModels?1:0.4, transition:"border-color .15s" }}
+                        onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A0018"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
+                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:40, marginBottom:8 }}>
+                          <BrandLogo logo={b.logo} size={32} place="brandCard" />
+                        </div>
+                        <div style={{ fontWeight:800, fontSize:13 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
+                        <div style={{ fontSize:11, color:"#999", marginTop:2 }}>{(b.models||[]).length} {lang==="th"?"รุ่น":"models"}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(null); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:16, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
+                  {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
+                </button>
               </div>
             ) : (()=>{
               const models = (quickFindBrand.models || []);
