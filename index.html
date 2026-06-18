@@ -2467,8 +2467,9 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
 // role: "disabled" → blocked
 // SECURITY: Real credentials must be set in Supabase only.
 const INIT_ACCOUNTS = [
-  { id:1, email:"owner@skkjautopart.co.th", password:"", name:"SKKJ Owner", role:"owner" },
-  { id:2, email:"admin@skkjautopart.co.th", password:"", name:"Admin",       role:"owner" },
+  { id:1, email:"owner@skkjautopart.co.th",      password:"", name:"SKKJ Owner", role:"owner" },
+  { id:2, email:"admin@skkjautopart.co.th",       password:"", name:"Admin",      role:"owner" },
+  { id:3, email:"thongin50412166@gmail.com",      password:"", name:"Craig",      role:"owner" },
 ];
 
 // ─── CUSTOMER DATABASE ────────────────────────────────────────────────────────
@@ -2728,6 +2729,10 @@ function App() {
   const [adminPw, setAdminPw]             = useState("");
   const [adminEmail, setAdminEmail]       = useState("");
   const [adminAuth, setAdminAuth]         = useState(false);
+  const [adminSetupMode, setAdminSetupMode] = useState(false);
+  const [adminSetupPw, setAdminSetupPw]   = useState("");
+  const [adminSetupPw2, setAdminSetupPw2] = useState("");
+  const [adminSetupMsg, setAdminSetupMsg] = useState("");
   const [currentUser, setCurrentUser]     = useState(null); // staff account
   const [adminError, setAdminError]       = useState("");
   const [accounts, setAccounts]           = useState(INIT_ACCOUNTS);
@@ -4469,6 +4474,17 @@ function App() {
     if (page === "admin") setPage("home");
   }
 
+  function getLocalPw(accountId) {
+    try { return JSON.parse(localStorage.getItem("skkj_v2_staff_pw_v1") || "{}")[accountId] || ""; } catch(e) { return ""; }
+  }
+  function saveLocalPw(accountId, pw) {
+    try {
+      const all = JSON.parse(localStorage.getItem("skkj_v2_staff_pw_v1") || "{}");
+      all[accountId] = pw;
+      localStorage.setItem("skkj_v2_staff_pw_v1", JSON.stringify(all));
+    } catch(e) {}
+  }
+
   function adminLogin(e) {
     if (e && e.preventDefault) e.preventDefault();
     const email = adminEmail.trim().toLowerCase();
@@ -4477,13 +4493,31 @@ function App() {
     const account = accounts.find(a => a.email.toLowerCase() === email);
     if (!account)                  { setAdminError(lang==="th"?"ไม่พบอีเมลนี้ในระบบ":"Email not found"); return; }
     if (account.role==="disabled") { setAdminError(lang==="th"?"บัญชีนี้ถูกระงับการใช้งาน":"This account has been disabled"); return; }
-    if (account.password !== pw)   { setAdminError(lang==="th"?"รหัสผ่านไม่ถูกต้อง":"Incorrect password"); return; }
+    const correctPw = account.password !== "" ? account.password : getLocalPw(account.id);
+    if (!correctPw) { setAdminError(lang==="th"?"ยังไม่ได้ตั้งรหัสผ่าน กรุณาตั้งรหัสผ่านก่อน":"No password set — please set a password first"); return; }
+    if (correctPw !== pw) { setAdminError(lang==="th"?"รหัสผ่านไม่ถูกต้อง":"Incorrect password"); return; }
     setCurrentUser(account);
     setAdminAuth(true);
     authRemember ? rememberLogin("staff", account.email) : forgetLogin();
     setAdminError("");
     setAdminEmail("");
     setAdminPw("");
+  }
+
+  function setupAdminPassword() {
+    const email = adminEmail.trim().toLowerCase();
+    const pw1 = adminSetupPw.trim();
+    const pw2 = adminSetupPw2.trim();
+    if (!email) { setAdminSetupMsg(lang==="th"?"กรอกอีเมลด้านบนก่อน":"Enter your email above first"); return; }
+    const account = accounts.find(a => a.email.toLowerCase() === email);
+    if (!account) { setAdminSetupMsg(lang==="th"?"ไม่พบอีเมลนี้":"Email not found"); return; }
+    if (account.password !== "") { setAdminSetupMsg(lang==="th"?"บัญชีนี้มีรหัสผ่านอยู่แล้ว":"This account already has a password"); return; }
+    if (pw1.length < 6) { setAdminSetupMsg(lang==="th"?"รหัสผ่านต้องมีอย่างน้อย 6 ตัว":"Password must be at least 6 characters"); return; }
+    if (pw1 !== pw2) { setAdminSetupMsg(lang==="th"?"รหัสผ่านไม่ตรงกัน":"Passwords do not match"); return; }
+    saveLocalPw(account.id, pw1);
+    setAdminSetupMsg(lang==="th"?"✅ ตั้งรหัสผ่านสำเร็จ — เข้าสู่ระบบได้เลย":"✅ Password saved — you can log in now");
+    setAdminSetupPw(""); setAdminSetupPw2("");
+    setTimeout(() => { setAdminSetupMode(false); setAdminSetupMsg(""); }, 2000);
   }
 
   function adminLogout() {
@@ -7429,6 +7463,30 @@ function App() {
                     style={{ background:"linear-gradient(135deg,#1A1A1A,#333)", color:"#fff", border:"none", borderRadius:12, padding:14, fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF, marginTop:4 }}>
                     {lang==="th"?"เข้าสู่ระบบ →":"Login →"}
                   </button>
+
+                  <button type="button" onClick={()=>{ setAdminSetupMode(v=>!v); setAdminSetupMsg(""); }}
+                    style={{ background:"none", border:"none", color:"#9A0018", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:thF, textDecoration:"underline", padding:0, textAlign:"center" }}>
+                    {lang==="th"?"ยังไม่มีรหัสผ่าน? ตั้งรหัสผ่านใหม่":"No password yet? Set one now"}
+                  </button>
+
+                  {adminSetupMode && (
+                    <div style={{ background:"#F8F7F4", border:"1px solid #E0DDD8", borderRadius:12, padding:"16px 14px", display:"flex", flexDirection:"column", gap:10 }}>
+                      <div style={{ fontSize:12, fontWeight:800, color:"#1A1A1A", marginBottom:2 }}>{lang==="th"?"ตั้งรหัสผ่านสำหรับบัญชีนี้":"Set a password for this account"}</div>
+                      <div style={{ fontSize:11, color:"#888" }}>{lang==="th"?"กรอกอีเมลด้านบนก่อน แล้วพิมพ์รหัสผ่านที่ต้องการ":"Fill in your email above, then type a new password below"}</div>
+                      <input type="password" value={adminSetupPw} onChange={e=>setAdminSetupPw(e.target.value)}
+                        placeholder={lang==="th"?"รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)":"New password (min 6 chars)"}
+                        style={{ border:"1px solid #DDD", borderRadius:9, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                      <input type="password" value={adminSetupPw2} onChange={e=>setAdminSetupPw2(e.target.value)}
+                        placeholder={lang==="th"?"พิมพ์รหัสผ่านอีกครั้ง":"Confirm password"}
+                        onKeyDown={e=>e.key==="Enter"&&setupAdminPassword()}
+                        style={{ border:"1px solid #DDD", borderRadius:9, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                      {adminSetupMsg && <div style={{ fontSize:12, color: adminSetupMsg.startsWith("✅")?"#16a34a":"#dc2626", fontWeight:700 }}>{adminSetupMsg}</div>}
+                      <button type="button" onClick={setupAdminPassword}
+                        style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:9, padding:"10px", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
+                        {lang==="th"?"บันทึกรหัสผ่าน":"Save Password"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
