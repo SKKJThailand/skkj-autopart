@@ -60,11 +60,11 @@ const INIT_BRANDS = [
     nameTh: "นิสสัน", nameEn: "Nissan",
     logo: "image:assets/nissan-logo.png",
     models: [
-      { id: "nsn-01", nameTh: "เทียน่า J32",                  nameEn: "Teana J32",            sku: "NSN-TNJ-001", years: "2009–2013", price: 4800, stock: 8, productImage:"assets/nissan-teana-j32-top-skkj.png" },
-      { id: "nsn-02", nameTh: "มาร์ช",                        nameEn: "March / Micra",         sku: "NSN-MCH-002", years: "2010–2023", price: 3900, stock: 14, productImage:"assets/nissan-march-top-clean-skkj.png" },
-      { id: "nsn-03", nameTh: "เอ็กซ์เทรล T32",               nameEn: "X-Trail T32",           sku: "NSN-XTT-003", years: "2013–2016", price: 5100, stock: 0  },
-      { id: "nsn-04", nameTh: "นาวาร่า NP300 ขับ 2 / ขับ 4", nameEn: "Navara NP300 2WD/4WD", sku: "NSN-NVR-004", years: "",          price: 5500, stock: 3, productImage:"assets/nissan-navara-np300-back-rotated-skkj.png" },
-      { id: "nsn-tr-01", nameTh: "ลูกหมากคันชัก เทียน่า J32", nameEn: "Tie Rod End Teana J32", sku: "NSN-TRE-101", years: "2009–2013", price: 850, stock: 18, partType:"tie_rod_end" },
+      { id: "nsn-01", nameTh: "เทียน่า J32",                  nameEn: "Teana J32",            sku: "NSN-TNJ-001", years: "2009–2013", price: 4800, stock: 8, productImage:"assets/nissan-teana-j32-top-skkj.png" , compatible: []},
+      { id: "nsn-02", nameTh: "มาร์ช",                        nameEn: "March / Micra",         sku: "NSN-MCH-002", years: "2010–2023", price: 3900, stock: 14, productImage:"assets/nissan-march-top-clean-skkj.png" , compatible: []},
+      { id: "nsn-03", nameTh: "เอ็กซ์เทรล T32",               nameEn: "X-Trail T32",           sku: "NSN-XTT-003", years: "2013–2016", price: 5100, stock: 0  , compatible: []},
+      { id: "nsn-04", nameTh: "นาวาร่า NP300 ขับ 2 / ขับ 4", nameEn: "Navara NP300 2WD/4WD", sku: "NSN-NVR-004", years: "",          price: 5500, stock: 3, productImage:"assets/nissan-navara-np300-back-rotated-skkj.png" , compatible: ["Navara NP300 ขับ 2 (2WD)", "Navara NP300 ขับ 4 (4WD)", "Navara NP300 2.5L ดีเซล"]},
+      { id: "nsn-tr-01", nameTh: "ลูกหมากคันชัก เทียน่า J32", nameEn: "Tie Rod End Teana J32", sku: "NSN-TRE-101", years: "2009–2013", price: 850, stock: 18, partType:"tie_rod_end" , compatible: []},
     ],
   },
   {
@@ -72,21 +72,21 @@ const INIT_BRANDS = [
     nameTh: "ฮอนด้า", nameEn: "Honda",
     logo: "image:assets/honda-logo.png",
     models: [
-      { id: "hnd-01", nameTh: "ซิตี้ / แจ๊ส ปลั๊กแบน", nameEn: "City / Jazz Flat Plug", sku: "HND-CTJ-001", years: "2002–2008", price: 3500, stock: 11, productImage:"assets/honda-city-jazz-2003-flat-side-clean-skkj.png" },
-      { id: "hnd-02", nameTh: "ซีอาร์วี เจน 3",        nameEn: "CR-V Gen 3",      sku: "HND-CRV-002", years: "2007–2011", price: 4600, stock: 6, productImage:"assets/honda-crv-gen3-top-clean-skkj.png" },
-      { id: "hnd-03", nameTh: "แอคคอร์ด G8",           nameEn: "Accord G8",       sku: "HND-ACG-003", years: "2008–2012", price: 4700, stock: 0, productImage:"assets/honda-accord-g8-top-rotated-clean-skkj-v2.png"  },
-      { id: "hnd-04", nameTh: "แจ๊ส GE",               nameEn: "Jazz GE",         sku: "HND-JZG-004", years: "2008–2013", price: 3600, stock: 19 },
-      { id: "hnd-05", nameTh: "บริโอ้",                 nameEn: "Brio",            sku: "HND-BRI-005", years: "2011–2023", price: 3400, stock: 25, productImage:"assets/honda-jazz-brio-civic-top-clean-skkj.png" },
-      { id: "hnd-06", nameTh: "แอคคอร์ด G9",           nameEn: "Accord G9",       sku: "HND-ACG-006", years: "2013–2019", price: 4900, stock: 4, productImage:"assets/honda-accord-g9-top-side-clean-skkj.png"  },
-      { id: "hnd-07", nameTh: "เอชอาร์วี",             nameEn: "HR-V",            sku: "HND-HRV-007", years: "2014–2021", price: 4500, stock: 9, productImage:"assets/honda-hrv-top-clean-skkj.png"  },
-      { id: "hnd-08", nameTh: "แจ๊ส GK",               nameEn: "Jazz GK",         sku: "HND-JZK-008", years: "2014–2018", price: 3700, stock: 7, productImage:"assets/honda-jazz-2014-2018-top-clean-skkj.png"  },
-      { id: "hnd-09", nameTh: "ซิตี้ 1.0 เทอร์โบ",     nameEn: "City 1.0 Turbo",  sku: "HND-CTT-009", years: "",          price: 4200, stock: 5, productImage:"assets/honda-city-1000-side-clean-skkj.png"  },
-      { id: "hnd-10", nameTh: "ซีวิค FC/FK",           nameEn: "Civic FC/FK",     sku: "HND-CFC-010", years: "2016–2021", price: 5200, stock: 3, productImage:"assets/honda-civic-fc-side-clean-skkj.png"  },
-      { id: "hnd-11", nameTh: "ซีอาร์วี เจน 5",        nameEn: "CR-V Gen 5",      sku: "HND-CR5-011", years: "2017–2022", price: 5100, stock: 0, productImage:"assets/honda-crv-gen5-side-clean-skkj.png"  },
-      { id: "hnd-12", nameTh: "ซีวิค FE",              nameEn: "Civic FE",        sku: "HND-CFE-012", years: "2021–2025", price: 5400, stock: 6, productImage:"assets/honda-civic-fe-125kg-side-top-clean-skkj.png" },
-      { id: "hnd-13", nameTh: "ซีวิค FD เครื่อง 2.0", nameEn: "Civic FD 2.0",    sku: "HND-CFD-013", years: "2006–2011", price: 4600, stock: 5, productImage:"assets/honda-civic-fd-20-top-clean-skkj.png" },
-      { id: "hnd-14", nameTh: "ซิตี้ / แจ๊ส ปลั๊กกลม", nameEn: "City / Jazz Round Plug", sku: "HND-CTJ-014", years: "2002–2008", price: 3500, stock: 10, productImage:"assets/honda-city-jazz-2003-round-top-clean-skkj.png" },
-      { id: "hnd-sj-01", nameTh: "ยอยพวงมาลัย ซิตี้ / แจ๊ส", nameEn: "Steering Joint City / Jazz", sku: "HND-SJT-101", years: "2002–2008", price: 1250, stock: 13, partType:"steering_joint" },
+      { id: "hnd-01", nameTh: "ซิตี้ / แจ๊ส ปลั๊กแบน", nameEn: "City / Jazz Flat Plug", sku: "HND-CTJ-001", years: "2002–2008", price: 3500, stock: 11, productImage:"assets/honda-city-jazz-2003-flat-side-clean-skkj.png" , compatible: ["City GD 2002–2008 (ปลั๊กแบน)", "Jazz GD 2002–2008 (ปลั๊กแบน)"]},
+      { id: "hnd-02", nameTh: "ซีอาร์วี เจน 3",        nameEn: "CR-V Gen 3",      sku: "HND-CRV-002", years: "2007–2011", price: 4600, stock: 6, productImage:"assets/honda-crv-gen3-top-clean-skkj.png" , compatible: []},
+      { id: "hnd-03", nameTh: "แอคคอร์ด G8",           nameEn: "Accord G8",       sku: "HND-ACG-003", years: "2008–2012", price: 4700, stock: 0, productImage:"assets/honda-accord-g8-top-rotated-clean-skkj-v2.png"  , compatible: []},
+      { id: "hnd-04", nameTh: "แจ๊ส GE",               nameEn: "Jazz GE",         sku: "HND-JZG-004", years: "2008–2013", price: 3600, stock: 19 , compatible: ["City GM6 2008–2013"]},
+      { id: "hnd-05", nameTh: "บริโอ้",                 nameEn: "Brio",            sku: "HND-BRI-005", years: "2011–2023", price: 3400, stock: 25, productImage:"assets/honda-jazz-brio-civic-top-clean-skkj.png" , compatible: ["Brio Amaze 2011–2023"]},
+      { id: "hnd-06", nameTh: "แอคคอร์ด G9",           nameEn: "Accord G9",       sku: "HND-ACG-006", years: "2013–2019", price: 4900, stock: 4, productImage:"assets/honda-accord-g9-top-side-clean-skkj.png"  , compatible: []},
+      { id: "hnd-07", nameTh: "เอชอาร์วี",             nameEn: "HR-V",            sku: "HND-HRV-007", years: "2014–2021", price: 4500, stock: 9, productImage:"assets/honda-hrv-top-clean-skkj.png"  , compatible: []},
+      { id: "hnd-08", nameTh: "แจ๊ส GK",               nameEn: "Jazz GK",         sku: "HND-JZK-008", years: "2014–2018", price: 3700, stock: 7, productImage:"assets/honda-jazz-2014-2018-top-clean-skkj.png"  , compatible: []},
+      { id: "hnd-09", nameTh: "ซิตี้ 1.0 เทอร์โบ",     nameEn: "City 1.0 Turbo",  sku: "HND-CTT-009", years: "",          price: 4200, stock: 5, productImage:"assets/honda-city-1000-side-clean-skkj.png"  , compatible: []},
+      { id: "hnd-10", nameTh: "ซีวิค FC/FK",           nameEn: "Civic FC/FK",     sku: "HND-CFC-010", years: "2016–2021", price: 5200, stock: 3, productImage:"assets/honda-civic-fc-side-clean-skkj.png"  , compatible: []},
+      { id: "hnd-11", nameTh: "ซีอาร์วี เจน 5",        nameEn: "CR-V Gen 5",      sku: "HND-CR5-011", years: "2017–2022", price: 5100, stock: 0, productImage:"assets/honda-crv-gen5-side-clean-skkj.png"  , compatible: []},
+      { id: "hnd-12", nameTh: "ซีวิค FE",              nameEn: "Civic FE",        sku: "HND-CFE-012", years: "2021–2025", price: 5400, stock: 6, productImage:"assets/honda-civic-fe-125kg-side-top-clean-skkj.png" , compatible: []},
+      { id: "hnd-13", nameTh: "ซีวิค FD เครื่อง 2.0", nameEn: "Civic FD 2.0",    sku: "HND-CFD-013", years: "2006–2011", price: 4600, stock: 5, productImage:"assets/honda-civic-fd-20-top-clean-skkj.png" , compatible: []},
+      { id: "hnd-14", nameTh: "ซิตี้ / แจ๊ส ปลั๊กกลม", nameEn: "City / Jazz Round Plug", sku: "HND-CTJ-014", years: "2002–2008", price: 3500, stock: 10, productImage:"assets/honda-city-jazz-2003-round-top-clean-skkj.png" , compatible: ["City GD 2002–2008 (ปลั๊กกลม)", "Jazz GD 2002–2008 (ปลั๊กกลม)"]},
+      { id: "hnd-sj-01", nameTh: "ยอยพวงมาลัย ซิตี้ / แจ๊ส", nameEn: "Steering Joint City / Jazz", sku: "HND-SJT-101", years: "2002–2008", price: 1250, stock: 13, partType:"steering_joint" , compatible: []},
     ],
   },
   {
@@ -94,15 +94,15 @@ const INIT_BRANDS = [
     nameTh: "อีซูซุ", nameEn: "Isuzu",
     logo: "image:assets/isuzu-logo.png",
     models: [
-      { id: "isz-01", nameTh: "ดีแมกซ์ ขับ 2",                    nameEn: "D-Max 2WD",               sku: "ISZ-DM2-001", years: "2002–2011", price: 4300, stock: 12, productImage:"assets/d-max-2002-2011-2wd-back-rotated-skkj.png" },
-      { id: "isz-02", nameTh: "ดีแมกซ์ ขับ 4",                    nameEn: "D-Max 4WD",               sku: "ISZ-DM4-002", years: "2003–2011", price: 4600, stock: 8, productImage:"assets/d-max-2003-2011-4wd-back-skkj.png" },
-      { id: "isz-03", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ตัวเตี้ย",   nameEn: "D-Max All New 2WD Low",   sku: "ISZ-AN2-003", years: "2012–2019", price: 4800, stock: 5, productImage:"assets/d-max-all-new-2012-2019-2wd-front-rotated-skkj.png" },
-      { id: "isz-04", nameTh: "ดีแมกซ์ ออลนิว ขับ 4 ตัวสูง",     nameEn: "D-Max All New 4WD High",  sku: "ISZ-AN4-004", years: "2012–2019", price: 5200, stock: 0, productImage:"assets/d-max-all-new-2012-2019-4wd-front-rotated-skkj.png" },
-      { id: "isz-05", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ตัวเตี้ย",   nameEn: "D-Max All New 2WD Low",   sku: "ISZ-NW2-005", years: "2020–2025", price: 5500, stock: 4, productImage:"assets/d-max-all-new-2020-2025-2wd-back-rotated-skkj.png" },
-      { id: "isz-06", nameTh: "ดีแมกซ์ ออลนิว ขับ 4 ตัวสูง",     nameEn: "D-Max All New 4WD High",  sku: "ISZ-NW4-006", years: "2020–2025", price: 5800, stock: 2, productImage:"assets/d-max-all-new-2020-2025-4wd-back-rotated-skkj.png"  },
-      { id: "isz-07", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ซ้าย",       nameEn: "D-Max All New 2WD Left",  sku: "ISZ-NW2-L07", years: "2020–2025", price: 5500, stock: 4, driveSide:"left", productImage:"assets/isuzu-dmax-2020-2025-2wd-left-top-clean-skkj.png" },
-      { id: "isz-08", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ซ้าย",       nameEn: "D-Max All New 2WD Left",  sku: "ISZ-AN2-L08", years: "2012–2019", price: 4800, stock: 5, driveSide:"left", productImage:"assets/isuzu-dmax-2012-2019-2wd-left-top-clean-skkj.png" },
-      { id: "isz-boot-01", nameTh: "ยางหุ้มแร็ค ดีแมกซ์",        nameEn: "Steering Rack Boot D-Max", sku: "ISZ-BOT-101", years: "2002–2011", price: 390, stock: 26, partType:"steering_boot" },
+      { id: "isz-01", nameTh: "ดีแมกซ์ ขับ 2",                    nameEn: "D-Max 2WD",               sku: "ISZ-DM2-001", years: "2002–2011", price: 4300, stock: 12, productImage:"assets/d-max-2002-2011-2wd-back-rotated-skkj.png" , compatible: ["Colorado 2WD 2002–2011", "Rodeo Denver 2WD"]},
+      { id: "isz-02", nameTh: "ดีแมกซ์ ขับ 4",                    nameEn: "D-Max 4WD",               sku: "ISZ-DM4-002", years: "2003–2011", price: 4600, stock: 8, productImage:"assets/d-max-2003-2011-4wd-back-skkj.png" , compatible: ["Colorado 4WD 2003–2011"]},
+      { id: "isz-03", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ตัวเตี้ย",   nameEn: "D-Max All New 2WD Low",   sku: "ISZ-AN2-003", years: "2012–2019", price: 4800, stock: 5, productImage:"assets/d-max-all-new-2012-2019-2wd-front-rotated-skkj.png" , compatible: ["Colorado 2WD 2012–2019"]},
+      { id: "isz-04", nameTh: "ดีแมกซ์ ออลนิว ขับ 4 ตัวสูง",     nameEn: "D-Max All New 4WD High",  sku: "ISZ-AN4-004", years: "2012–2019", price: 5200, stock: 0, productImage:"assets/d-max-all-new-2012-2019-4wd-front-rotated-skkj.png" , compatible: ["Colorado 4WD 2012–2019", "MU-X 2013–2019"]},
+      { id: "isz-05", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ตัวเตี้ย",   nameEn: "D-Max All New 2WD Low",   sku: "ISZ-NW2-005", years: "2020–2025", price: 5500, stock: 4, productImage:"assets/d-max-all-new-2020-2025-2wd-back-rotated-skkj.png" , compatible: []},
+      { id: "isz-06", nameTh: "ดีแมกซ์ ออลนิว ขับ 4 ตัวสูง",     nameEn: "D-Max All New 4WD High",  sku: "ISZ-NW4-006", years: "2020–2025", price: 5800, stock: 2, productImage:"assets/d-max-all-new-2020-2025-4wd-back-rotated-skkj.png"  , compatible: ["MU-X 2020–2025 ขับ 4"]},
+      { id: "isz-07", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ซ้าย",       nameEn: "D-Max All New 2WD Left",  sku: "ISZ-NW2-L07", years: "2020–2025", price: 5500, stock: 4, driveSide:"left", productImage:"assets/isuzu-dmax-2020-2025-2wd-left-top-clean-skkj.png" , compatible: []},
+      { id: "isz-08", nameTh: "ดีแมกซ์ ออลนิว ขับ 2 ซ้าย",       nameEn: "D-Max All New 2WD Left",  sku: "ISZ-AN2-L08", years: "2012–2019", price: 4800, stock: 5, driveSide:"left", productImage:"assets/isuzu-dmax-2012-2019-2wd-left-top-clean-skkj.png" , compatible: ["Colorado 2WD ซ้าย 2012–2019"]},
+      { id: "isz-boot-01", nameTh: "ยางหุ้มแร็ค ดีแมกซ์",        nameEn: "Steering Rack Boot D-Max", sku: "ISZ-BOT-101", years: "2002–2011", price: 390, stock: 26, partType:"steering_boot" , compatible: []},
     ],
   },
   {
@@ -110,12 +110,12 @@ const INIT_BRANDS = [
     nameTh: "มาสด้า", nameEn: "Mazda",
     logo: "image:assets/mazda-logo.png",
     models: [
-      { id: "mzd-01", nameTh: "มาสด้า 2",  nameEn: "Mazda 2",  sku: "MZD-M2-001", years: "2007–2014", price: 3800, stock: 10, productImage:"assets/mazda2-side-clean-skkj.png" },
-      { id: "mzd-02", nameTh: "ซีเอ็กซ์-5 KE",             nameEn: "CX-5 KE",                sku: "MZD-CKE-002", years: "2012–2016", price: 5100, stock: 7, productImage:"assets/mazda-cx5-ke-124-top-clean-skkj.png", productImages:["assets/mazda-cx5-ke-124-top-clean-skkj.png","assets/mazda-cx5-ke-235-7kg-top-clean-skkj.png"] },
-      { id: "mzd-03", nameTh: "มาสด้า 3 สกายแอคทีฟ",        nameEn: "Mazda 3 Skyactiv",       sku: "MZD-M3S-003", years: "2014–2019", price: 4600, stock: 0, productImage:"assets/mazda3-sky-148-top-v2-clean-skkj.png" },
-      { id: "mzd-04", nameTh: "มาสด้า 2 สกายแอคทีฟ",        nameEn: "Mazda 2 Skyactiv",       sku: "MZD-M2S-004", years: "2015–2025", price: 4000, stock: 15, productImage:"assets/mazda2-skyactiv-side-clean-skkj.png" },
-      { id: "mzd-05", nameTh: "ซีเอ็กซ์-5 KF",             nameEn: "CX-5 KF",                sku: "MZD-CKF-005", years: "2017–2023", price: 5300, stock: 3, productImage:"assets/mazda-cx5-kf-351-7kg-top-clean-skkj.png" },
-      { id: "mzd-06", nameTh: "ซีเอ็กซ์-3",                nameEn: "CX-3",                   sku: "MZD-CX3-006", years: "2015–2023", price: 4500, stock: 5, productImage:"assets/mazda-cx3-6kg-top-clean-skkj.png" },
+      { id: "mzd-01", nameTh: "มาสด้า 2",  nameEn: "Mazda 2",  sku: "MZD-M2-001", years: "2007–2014", price: 3800, stock: 10, productImage:"assets/mazda2-side-clean-skkj.png" , compatible: []},
+      { id: "mzd-02", nameTh: "ซีเอ็กซ์-5 KE",             nameEn: "CX-5 KE",                sku: "MZD-CKE-002", years: "2012–2016", price: 5100, stock: 7, productImage:"assets/mazda-cx5-ke-124-top-clean-skkj.png", productImages:["assets/mazda-cx5-ke-124-top-clean-skkj.png","assets/mazda-cx5-ke-235-7kg-top-clean-skkj.png"] , compatible: []},
+      { id: "mzd-03", nameTh: "มาสด้า 3 สกายแอคทีฟ",        nameEn: "Mazda 3 Skyactiv",       sku: "MZD-M3S-003", years: "2014–2019", price: 4600, stock: 0, productImage:"assets/mazda3-sky-148-top-v2-clean-skkj.png" , compatible: []},
+      { id: "mzd-04", nameTh: "มาสด้า 2 สกายแอคทีฟ",        nameEn: "Mazda 2 Skyactiv",       sku: "MZD-M2S-004", years: "2015–2025", price: 4000, stock: 15, productImage:"assets/mazda2-skyactiv-side-clean-skkj.png" , compatible: []},
+      { id: "mzd-05", nameTh: "ซีเอ็กซ์-5 KF",             nameEn: "CX-5 KF",                sku: "MZD-CKF-005", years: "2017–2023", price: 5300, stock: 3, productImage:"assets/mazda-cx5-kf-351-7kg-top-clean-skkj.png" , compatible: []},
+      { id: "mzd-06", nameTh: "ซีเอ็กซ์-3",                nameEn: "CX-3",                   sku: "MZD-CX3-006", years: "2015–2023", price: 4500, stock: 5, productImage:"assets/mazda-cx3-6kg-top-clean-skkj.png" , compatible: []},
     ],
   },
   {
@@ -123,15 +123,15 @@ const INIT_BRANDS = [
     nameTh: "มิตซูบิชิ", nameEn: "Mitsubishi",
     logo: "image:assets/mitsubishi-logo.png",
     models: [
-      { id: "mts-01", nameTh: "ไทรทัน ขับ 2 ตัวเตี้ย",                    nameEn: "Triton 2WD Low",           sku: "MTS-TT2-001", years: "2005–2014", price: 4500, stock: 7, productImage:"assets/triton-2005-2014-2wd-top-rotated-skkj-v2.png" },
-      { id: "mts-02", nameTh: "ไทรทัน / ปาเจโร่ ขับ 4 ตัวสูง",            nameEn: "Triton / Pajero 4WD High", sku: "MTS-TP4-002", years: "2005–2014", price: 5000, stock: 5, productImage:"assets/triton-pajero-2005-2014-4wd-top-skkj.png" },
-      { id: "mts-03", nameTh: "มิราจ / แอททราจ",                           nameEn: "Mirage / Attrage",         sku: "MTS-MRA-003", years: "2013–2023", price: 3600, stock: 12, productImage:"assets/attrage-mirage-2013-2023-top-clean-skkj.png" },
-      { id: "mts-04", nameTh: "ไทรทัน / ปาเจโร่ ขับ 4 ตัวสูง",            nameEn: "Triton / Pajero 4WD High", sku: "MTS-TP4-004", years: "2015–2023", price: 5200, stock: 4, productImage:"assets/triton-pajero-2015-2023-4wd-top-clean-skkj.png" },
-      { id: "mts-05", nameTh: "ไทรทัน ออลนิว ขับ 4 ตัวสูง",               nameEn: "Triton All New 4WD High",  sku: "MTS-TAN-005", years: "2016–2024", price: 5600, stock: 0, productImage:"assets/mitsubishi-triton-2024-4wd-top-clean-skkj.png" },
-      { id: "mts-06", nameTh: "ไทรทัน ขับ 2 ตัวเตี้ย",                    nameEn: "Triton 2WD Low",           sku: "MTS-TT2-006", years: "2016–2025", price: 4800, stock: 6, productImage:"assets/triton-2016-2025-2wd-front-rotated-clean-skkj-v2.png", productImages:["assets/triton-2016-2025-2wd-front-rotated-clean-skkj-v2.png","assets/mitsubishi-triton-2024-2wd-side-clean-skkj.png"] },
-      { id: "mts-07", nameTh: "เอ็กซ์แพนเดอร์",                           nameEn: "Xpander",                  sku: "MTS-XPN-007", years: "2019–2025", price: 4700, stock: 9, productImage:"assets/mitsubishi-xpander-top-clean-skkj.png" },
-      { id: "mts-08", nameTh: "ไทรทัน ออลนิว ขับ 2 ซ้าย",                 nameEn: "Triton All New 2WD Left",  sku: "MTS-T25-L08", years: "2025", price: 6500, stock: 4, driveSide:"left", productImage:"assets/mitsubishi-triton-2025-left-top-clean-skkj.png" },
-      { id: "mts-09", nameTh: "ไทรทัน ออลนิว ขับ 4 ซ้าย",                 nameEn: "Triton All New 4WD Left",  sku: "MTS-TAN-L09", years: "2016–2024", price: 5600, stock: 5, driveSide:"left", productImage:"assets/mitsubishi-triton-2016-2024-4wd-left-top-clean-skkj.png" },
+      { id: "mts-01", nameTh: "ไทรทัน ขับ 2 ตัวเตี้ย",                    nameEn: "Triton 2WD Low",           sku: "MTS-TT2-001", years: "2005–2014", price: 4500, stock: 7, productImage:"assets/triton-2005-2014-2wd-top-rotated-skkj-v2.png" , compatible: []},
+      { id: "mts-02", nameTh: "ไทรทัน / ปาเจโร่ ขับ 4 ตัวสูง",            nameEn: "Triton / Pajero 4WD High", sku: "MTS-TP4-002", years: "2005–2014", price: 5000, stock: 5, productImage:"assets/triton-pajero-2005-2014-4wd-top-skkj.png" , compatible: ["Triton 4WD 2005–2014", "Pajero Sport 4WD 2005–2014"]},
+      { id: "mts-03", nameTh: "มิราจ / แอททราจ",                           nameEn: "Mirage / Attrage",         sku: "MTS-MRA-003", years: "2013–2023", price: 3600, stock: 12, productImage:"assets/attrage-mirage-2013-2023-top-clean-skkj.png" , compatible: ["Mirage 2013–2023", "Attrage 2013–2023"]},
+      { id: "mts-04", nameTh: "ไทรทัน / ปาเจโร่ ขับ 4 ตัวสูง",            nameEn: "Triton / Pajero 4WD High", sku: "MTS-TP4-004", years: "2015–2023", price: 5200, stock: 4, productImage:"assets/triton-pajero-2015-2023-4wd-top-clean-skkj.png" , compatible: ["Triton 4WD 2015–2023", "Pajero Sport 4WD 2016–2023"]},
+      { id: "mts-05", nameTh: "ไทรทัน ออลนิว ขับ 4 ตัวสูง",               nameEn: "Triton All New 4WD High",  sku: "MTS-TAN-005", years: "2016–2024", price: 5600, stock: 0, productImage:"assets/mitsubishi-triton-2024-4wd-top-clean-skkj.png" , compatible: []},
+      { id: "mts-06", nameTh: "ไทรทัน ขับ 2 ตัวเตี้ย",                    nameEn: "Triton 2WD Low",           sku: "MTS-TT2-006", years: "2016–2025", price: 4800, stock: 6, productImage:"assets/triton-2016-2025-2wd-front-rotated-clean-skkj-v2.png", productImages:["assets/triton-2016-2025-2wd-front-rotated-clean-skkj-v2.png","assets/mitsubishi-triton-2024-2wd-side-clean-skkj.png"] , compatible: []},
+      { id: "mts-07", nameTh: "เอ็กซ์แพนเดอร์",                           nameEn: "Xpander",                  sku: "MTS-XPN-007", years: "2019–2025", price: 4700, stock: 9, productImage:"assets/mitsubishi-xpander-top-clean-skkj.png" , compatible: ["Xpander Cross 2019–2025"]},
+      { id: "mts-08", nameTh: "ไทรทัน ออลนิว ขับ 2 ซ้าย",                 nameEn: "Triton All New 2WD Left",  sku: "MTS-T25-L08", years: "2025", price: 6500, stock: 4, driveSide:"left", productImage:"assets/mitsubishi-triton-2025-left-top-clean-skkj.png" , compatible: []},
+      { id: "mts-09", nameTh: "ไทรทัน ออลนิว ขับ 4 ซ้าย",                 nameEn: "Triton All New 4WD Left",  sku: "MTS-TAN-L09", years: "2016–2024", price: 5600, stock: 5, driveSide:"left", productImage:"assets/mitsubishi-triton-2016-2024-4wd-left-top-clean-skkj.png" , compatible: []},
     ],
   },
   {
@@ -139,26 +139,26 @@ const INIT_BRANDS = [
     nameTh: "โตโยต้า", nameEn: "Toyota",
     logo: "image:assets/toyota-logo.png",
     models: [
-      { id: "tyt-01", nameTh: "แคมรี่ ACV30",                               nameEn: "Camry ACV30",               sku: "TYT-CA3-001", years: "2002–2006", price: 4200, stock: 5, productImage:"assets/toyota-camry-acv30-bottom-rotated-clean-skkj-v2.png" },
-      { id: "tyt-02", nameTh: "ไฮลักซ์ วีโก้ ขับ 2",                        nameEn: "Hilux Vigo 2WD",            sku: "TYT-HV2-002", years: "2002–2014", price: 4400, stock: 9, productImage:"assets/toyota-vigo-2wd-back-rotated-clean-skkj.png" },
-      { id: "tyt-03", nameTh: "ไฮลักซ์ วีโก้ / ฟอร์จูนเนอร์ ขับ 4 ตัวสูง", nameEn: "Hilux Vigo / Fortuner 4WD", sku: "TYT-HVF-003", years: "2002–2014", price: 5000, stock: 6, productImage:"assets/vigo-4wd-2002-2014-back-rotated-skkj.png" },
-      { id: "tyt-04", nameTh: "คอมมิวเตอร์ หลังคาเตี้ย",                    nameEn: "Commuter Low Roof",         sku: "TYT-CML-004", years: "2005–2014", price: 4600, stock: 3, productImage:"assets/toyota-commuter-low-side-clean-skkj.png" },
-      { id: "tyt-05", nameTh: "คอมมิวเตอร์ หลังคาสูง",                      nameEn: "Commuter High Roof",        sku: "TYT-CMH-005", years: "2005–2014", price: 4800, stock: 4, productImage:"assets/toyota-commuter-high-bottom-rotated-clean-skkj-v2.png" },
-      { id: "tyt-06", nameTh: "แคมรี่ ACV40",                               nameEn: "Camry ACV40",               sku: "TYT-CA4-006", years: "2006–2012", price: 4500, stock: 7, productImage:"assets/toyota-camry-acv40-bottom-rotated-clean-skkj-v2.png" },
-      { id: "tyt-07", nameTh: "วีออส / ยาริส แกนใหญ่",                       nameEn: "Vios / Yaris Big Shaft",    sku: "TYT-VYB-007", years: "2008–2012", price: 3700, stock: 11, productImage:"assets/toyota-vios-big-shaft-top-clean-skkj.png", productImages:["assets/toyota-vios-big-shaft-top-clean-skkj.png","assets/toyota-vios-big-shaft-bottom-rotated-clean-skkj.png"] },
-      { id: "tyt-08", nameTh: "อัลพาร์ด",                                   nameEn: "Alphard",                   sku: "TYT-ALP-008", years: "2008–2015", price: 5500, stock: 2, productImage:"assets/toyota-alphard-m6-top-clean-skkj.png" },
-      { id: "tyt-09", nameTh: "อัลพาร์ด ไฮบริด",                            nameEn: "Alphard Hybrid",            sku: "TYT-ALH-009", years: "2008–2015", price: 5800, stock: 0, productImage:"assets/toyota-alphard-hybrid-top-clean-skkj.png" },
-      { id: "tyt-10", nameTh: "ไฮลักซ์ รีโว่ ขับ 2 ตัวเตี้ย",               nameEn: "Hilux Revo 2WD Low",        sku: "TYT-HR2-010", years: "2015–2025", price: 4900, stock: 8, productImage:"assets/revo-2015-2025-2wd-back-rotated-skkj.png" },
-      { id: "tyt-11", nameTh: "ไฮลักซ์ รีโว่ / ฟอร์จูนเนอร์ ขับ 4 ตัวสูง", nameEn: "Hilux Revo / Fortuner 4WD", sku: "TYT-HRF-011", years: "2015–2025", price: 5300, stock: 5, productImage:"assets/revo-2015-2025-4wd-back-rotated-skkj.png" },
-      { id: "tyt-12", nameTh: "โคโรลล่า ครอส",                              nameEn: "Corolla Cross",             sku: "TYT-CRC-012", years: "2020–2025", price: 5100, stock: 10, productImage:"assets/toyota-corolla-cross-2020-top-clean-skkj.png" },
-      { id: "tyt-13", nameTh: "อัลติส",                                      nameEn: "Altis",                     sku: "TYT-ALT-013", years: "2014–2018", price: 4300, stock: 5, productImage:"assets/toyota-altis-2014-2018-top-rotated-clean-skkj-v2.png" },
-      { id: "tyt-14", nameTh: "วีโก้ ขับ 2 ซ้าย",                            nameEn: "Hilux Vigo 2WD Left",       sku: "TYT-HV2-L14", years: "2002–2014", price: 4400, stock: 6, driveSide:"left", productImage:"assets/toyota-vigo-2wd-left-top-clean-skkj.png" },
-      { id: "tyt-15", nameTh: "วีโก้ / ฟอร์จูนเนอร์ ขับ 4 ซ้าย",            nameEn: "Vigo / Fortuner 4WD Left",  sku: "TYT-HVF-L15", years: "2002–2014", price: 5000, stock: 5, driveSide:"left", productImage:"assets/toyota-vigo-4wd-left-side-clean-skkj.png" },
-      { id: "tyt-16", nameTh: "ยาริส เอทีฟ",                                 nameEn: "Yaris Ativ",                sku: "TYT-ATV-016", years: "2017–2024", price: 4300, stock: 5, productImage:"assets/toyota-ativ-side-clean-skkj.png" },
-      { id: "tyt-17", nameTh: "ซีเอชอาร์",                                    nameEn: "C-HR",                      sku: "TYT-CHR-017", years: "2017–2023", price: 4700, stock: 5, productImage:"assets/toyota-chr-2020-top-clean-skkj.png" },
-      { id: "tyt-18", nameTh: "อัลติส",                                      nameEn: "Altis",                     sku: "TYT-ALT-018", years: "2019–2024", price: 4700, stock: 5, productImage:"assets/toyota-altis-2020-top-clean-skkj.png" },
-      { id: "tyt-19", nameTh: "วีออส / ยาริส แกนเล็ก",                       nameEn: "Vios / Yaris Small Shaft",  sku: "TYT-VYS-019", years: "2008–2012", price: 3700, stock: 8, productImage:"assets/toyota-vios-small-shaft-top-clean-skkj.png" },
-      { id: "tyt-pmp-01", nameTh: "ปั๊มพวงมาลัย ไฮลักซ์ วีโก้",             nameEn: "Power Steering Pump Hilux Vigo", sku: "TYT-PSP-101", years: "2002–2014", price: 2800, stock: 6, partType:"power_steering_pump" },
+      { id: "tyt-01", nameTh: "แคมรี่ ACV30",                               nameEn: "Camry ACV30",               sku: "TYT-CA3-001", years: "2002–2006", price: 4200, stock: 5, productImage:"assets/toyota-camry-acv30-bottom-rotated-clean-skkj-v2.png" , compatible: []},
+      { id: "tyt-02", nameTh: "ไฮลักซ์ วีโก้ ขับ 2",                        nameEn: "Hilux Vigo 2WD",            sku: "TYT-HV2-002", years: "2002–2014", price: 4400, stock: 9, productImage:"assets/toyota-vigo-2wd-back-rotated-clean-skkj.png" , compatible: ["Hilux Vigo SR5 2WD", "Hilux Vigo G 2WD", "Vigo Champ 2WD"]},
+      { id: "tyt-03", nameTh: "ไฮลักซ์ วีโก้ / ฟอร์จูนเนอร์ ขับ 4 ตัวสูง", nameEn: "Hilux Vigo / Fortuner 4WD", sku: "TYT-HVF-003", years: "2002–2014", price: 5000, stock: 6, productImage:"assets/vigo-4wd-2002-2014-back-rotated-skkj.png" , compatible: ["Hilux Vigo 4WD SR5", "Hilux Vigo 4WD G", "Fortuner 4WD 2004–2014"]},
+      { id: "tyt-04", nameTh: "คอมมิวเตอร์ หลังคาเตี้ย",                    nameEn: "Commuter Low Roof",         sku: "TYT-CML-004", years: "2005–2014", price: 4600, stock: 3, productImage:"assets/toyota-commuter-low-side-clean-skkj.png" , compatible: ["HiAce 2005–2014 หลังคาเตี้ย"]},
+      { id: "tyt-05", nameTh: "คอมมิวเตอร์ หลังคาสูง",                      nameEn: "Commuter High Roof",        sku: "TYT-CMH-005", years: "2005–2014", price: 4800, stock: 4, productImage:"assets/toyota-commuter-high-bottom-rotated-clean-skkj-v2.png" , compatible: ["HiAce 2005–2014 หลังคาสูง"]},
+      { id: "tyt-06", nameTh: "แคมรี่ ACV40",                               nameEn: "Camry ACV40",               sku: "TYT-CA4-006", years: "2006–2012", price: 4500, stock: 7, productImage:"assets/toyota-camry-acv40-bottom-rotated-clean-skkj-v2.png" , compatible: []},
+      { id: "tyt-07", nameTh: "วีออส / ยาริส แกนใหญ่",                       nameEn: "Vios / Yaris Big Shaft",    sku: "TYT-VYB-007", years: "2008–2012", price: 3700, stock: 11, productImage:"assets/toyota-vios-big-shaft-top-clean-skkj.png", productImages:["assets/toyota-vios-big-shaft-top-clean-skkj.png","assets/toyota-vios-big-shaft-bottom-rotated-clean-skkj.png"] , compatible: ["Vios NCP93 2008–2012 (แกนใหญ่)", "Yaris NCP91 2008–2012 (แกนใหญ่)"]},
+      { id: "tyt-08", nameTh: "อัลพาร์ด",                                   nameEn: "Alphard",                   sku: "TYT-ALP-008", years: "2008–2015", price: 5500, stock: 2, productImage:"assets/toyota-alphard-m6-top-clean-skkj.png" , compatible: []},
+      { id: "tyt-09", nameTh: "อัลพาร์ด ไฮบริด",                            nameEn: "Alphard Hybrid",            sku: "TYT-ALH-009", years: "2008–2015", price: 5800, stock: 0, productImage:"assets/toyota-alphard-hybrid-top-clean-skkj.png" , compatible: []},
+      { id: "tyt-10", nameTh: "ไฮลักซ์ รีโว่ ขับ 2 ตัวเตี้ย",               nameEn: "Hilux Revo 2WD Low",        sku: "TYT-HR2-010", years: "2015–2025", price: 4900, stock: 8, productImage:"assets/revo-2015-2025-2wd-back-rotated-skkj.png" , compatible: ["Hilux Revo SR5 2WD", "Hilux Revo G 2WD", "Revo Prerunner 2WD"]},
+      { id: "tyt-11", nameTh: "ไฮลักซ์ รีโว่ / ฟอร์จูนเนอร์ ขับ 4 ตัวสูง", nameEn: "Hilux Revo / Fortuner 4WD", sku: "TYT-HRF-011", years: "2015–2025", price: 5300, stock: 5, productImage:"assets/revo-2015-2025-4wd-back-rotated-skkj.png" , compatible: ["Hilux Revo 4WD 2015–2025", "Fortuner 4WD 2015–2025", "Fortuner 2.8 4WD"]},
+      { id: "tyt-12", nameTh: "โคโรลล่า ครอส",                              nameEn: "Corolla Cross",             sku: "TYT-CRC-012", years: "2020–2025", price: 5100, stock: 10, productImage:"assets/toyota-corolla-cross-2020-top-clean-skkj.png" , compatible: []},
+      { id: "tyt-13", nameTh: "อัลติส",                                      nameEn: "Altis",                     sku: "TYT-ALT-013", years: "2014–2018", price: 4300, stock: 5, productImage:"assets/toyota-altis-2014-2018-top-rotated-clean-skkj-v2.png" , compatible: []},
+      { id: "tyt-14", nameTh: "วีโก้ ขับ 2 ซ้าย",                            nameEn: "Hilux Vigo 2WD Left",       sku: "TYT-HV2-L14", years: "2002–2014", price: 4400, stock: 6, driveSide:"left", productImage:"assets/toyota-vigo-2wd-left-top-clean-skkj.png" , compatible: ["Hilux Vigo 2WD ซ้าย (ตลาดส่งออก)"]},
+      { id: "tyt-15", nameTh: "วีโก้ / ฟอร์จูนเนอร์ ขับ 4 ซ้าย",            nameEn: "Vigo / Fortuner 4WD Left",  sku: "TYT-HVF-L15", years: "2002–2014", price: 5000, stock: 5, driveSide:"left", productImage:"assets/toyota-vigo-4wd-left-side-clean-skkj.png" , compatible: ["Hilux Vigo 4WD ซ้าย", "Fortuner 4WD ซ้าย 2004–2014"]},
+      { id: "tyt-16", nameTh: "ยาริส เอทีฟ",                                 nameEn: "Yaris Ativ",                sku: "TYT-ATV-016", years: "2017–2024", price: 4300, stock: 5, productImage:"assets/toyota-ativ-side-clean-skkj.png" , compatible: ["Vios 2017–2024", "Yaris 2017–2024"]},
+      { id: "tyt-17", nameTh: "ซีเอชอาร์",                                    nameEn: "C-HR",                      sku: "TYT-CHR-017", years: "2017–2023", price: 4700, stock: 5, productImage:"assets/toyota-chr-2020-top-clean-skkj.png" , compatible: []},
+      { id: "tyt-18", nameTh: "อัลติส",                                      nameEn: "Altis",                     sku: "TYT-ALT-018", years: "2019–2024", price: 4700, stock: 5, productImage:"assets/toyota-altis-2020-top-clean-skkj.png" , compatible: []},
+      { id: "tyt-19", nameTh: "วีออส / ยาริส แกนเล็ก",                       nameEn: "Vios / Yaris Small Shaft",  sku: "TYT-VYS-019", years: "2008–2012", price: 3700, stock: 8, productImage:"assets/toyota-vios-small-shaft-top-clean-skkj.png" , compatible: ["Vios NCP93 2008–2012 (แกนเล็ก)", "Yaris NCP91 2008–2012 (แกนเล็ก)"]},
+      { id: "tyt-pmp-01", nameTh: "ปั๊มพวงมาลัย ไฮลักซ์ วีโก้",             nameEn: "Power Steering Pump Hilux Vigo", sku: "TYT-PSP-101", years: "2002–2014", price: 2800, stock: 6, partType:"power_steering_pump" , compatible: []},
     ],
   },
   {
@@ -166,8 +166,8 @@ const INIT_BRANDS = [
     nameTh: "ฟอร์ด", nameEn: "Ford",
     logo: "image:assets/ford-logo.png",
     models: [
-      { id: "frd-01", nameTh: "เรนเจอร์ T6 ขับ 2 ตัวเตี้ย",  nameEn: "Ranger T6 2WD Low",  sku: "FRD-RT2-001", years: "",          price: 4900, stock: 7, productImage:"assets/ford-t6-2wd-low-bottom-rotated-clean-skkj-v2.png" },
-      { id: "frd-02", nameTh: "เรนเจอร์ T6 ขับ 4 ตัวสูง",    nameEn: "Ranger T6 4WD High", sku: "FRD-RT4-002", years: "",          price: 5300, stock: 5, productImage:"assets/ford-t6-4wd-top-clean-skkj.png" },
+      { id: "frd-01", nameTh: "เรนเจอร์ T6 ขับ 2 ตัวเตี้ย",  nameEn: "Ranger T6 2WD Low",  sku: "FRD-RT2-001", years: "",          price: 4900, stock: 7, productImage:"assets/ford-t6-2wd-low-bottom-rotated-clean-skkj-v2.png" , compatible: ["Ranger Wildtrak T6 2WD", "BT-50 Pro 2WD 2012–2019", "Everest 2WD 2012–2014"]},
+      { id: "frd-02", nameTh: "เรนเจอร์ T6 ขับ 4 ตัวสูง",    nameEn: "Ranger T6 4WD High", sku: "FRD-RT4-002", years: "",          price: 5300, stock: 5, productImage:"assets/ford-t6-4wd-top-clean-skkj.png" , compatible: ["Ranger Wildtrak T6 4WD", "BT-50 Pro 4WD 2012–2019", "Everest 4WD 2012–2014"]},
     ],
   },
   {
@@ -175,10 +175,10 @@ const INIT_BRANDS = [
     nameTh: "เอ็มจี", nameEn: "MG",
     logo: "image:assets/mg-logo.png",
     models: [
-      { id: "mg-01", nameTh: "จีเอส",    nameEn: "GS",  sku: "MG-GS-001", years: "2013–2024", price: 4600, stock: 8, productImage:"assets/mg-gs-bottom-rotated-clean-skkj-v2.png" },
-      { id: "mg-02", nameTh: "เอ็มจี 5", nameEn: "MG5", sku: "MG-M5-002", years: "2016–2020", price: 4200, stock: 4, productImage:"assets/mg5-2016-2020-top-clean-skkj.png" },
-      { id: "mg-03", nameTh: "แซดเอส",   nameEn: "ZS",  sku: "MG-ZS-003", years: "2017–2025", price: 4800, stock: 6, productImage:"assets/mg-zs-2017-2025-top-clean-skkj.png" },
-      { id: "mg-04", nameTh: "เอชเอส",   nameEn: "HS",  sku: "MG-HS-004", years: "2018–2024", price: 5100, stock: 3, productImage:"assets/mg-hs-2018-2024-top-clean-skkj.png" },
+      { id: "mg-01", nameTh: "จีเอส",    nameEn: "GS",  sku: "MG-GS-001", years: "2013–2024", price: 4600, stock: 8, productImage:"assets/mg-gs-bottom-rotated-clean-skkj-v2.png" , compatible: []},
+      { id: "mg-02", nameTh: "เอ็มจี 5", nameEn: "MG5", sku: "MG-M5-002", years: "2016–2020", price: 4200, stock: 4, productImage:"assets/mg5-2016-2020-top-clean-skkj.png" , compatible: []},
+      { id: "mg-03", nameTh: "แซดเอส",   nameEn: "ZS",  sku: "MG-ZS-003", years: "2017–2025", price: 4800, stock: 6, productImage:"assets/mg-zs-2017-2025-top-clean-skkj.png" , compatible: []},
+      { id: "mg-04", nameTh: "เอชเอส",   nameEn: "HS",  sku: "MG-HS-004", years: "2018–2024", price: 5100, stock: 3, productImage:"assets/mg-hs-2018-2024-top-clean-skkj.png" , compatible: []},
     ],
   },
 ];
@@ -389,7 +389,7 @@ const SHIPPING_OPTIONS = [
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
 const T = {
   en: {
-    nav: { home:"Home", catalog:"Catalog", policy:"FAQ / Policy", contact:"Contact", login:"Login", logout:"Logout" },
+    nav: { home:"Home", catalog:"Catalog", policy:"FAQ / Policy", contact:"Contact", about:"About Us", login:"Login", logout:"Logout" },
     hero: {
       badge:"Steering Rack Specialists",
       h1a:"Precision Steering.", h1b:"Every Make & Model.",
@@ -436,9 +436,9 @@ const T = {
       items:[
         { icon:"↩", title:"Return", body:"Customers have 1 week to return the item, and must send the shipping information and bank account number or QR Code through LINE for the refund transfer." },
         { icon:"🛡", title:"Warranty", body:"Warranty is 6 months or 20,000 km, whichever comes first." },
-        { icon:"฿", title:"Payment", body:"We accept bank transfer, PromptPay, and cash on delivery." },
-        { icon:"▣", title:"Shipping", body:"After the item reaches the shipping company, the shop cannot edit or provide additional information on behalf of the customer. Please contact the shipping company directly yourself. We apologize for the inconvenience." },
-        { icon:"⇄", title:"Exchange", body:"We are ready to exchange the item. If there is a price difference, we will refund the difference or the customer must pay the additional amount." },
+        { icon:"💳", title:"Payment", body:"We accept bank transfer, PromptPay, and cash on delivery." },
+        { icon:"🚚", title:"Shipping", body:"After the item reaches the shipping company, the shop cannot edit or provide additional information on behalf of the customer. Please contact the shipping company directly yourself. We apologize for the inconvenience." },
+        { icon:"🔄", title:"Exchange", body:"We are ready to exchange the item. If there is a price difference, we will refund the difference or the customer must pay the additional amount." },
       ],
       noteTitle:"Need help?",
       note:"Please contact us on LINE before returning or exchanging an item.",
@@ -521,7 +521,7 @@ const T = {
     },
   },
   th: {
-    nav: { home:"หน้าหลัก", catalog:"สินค้า", policy:"คำถาม/นโยบาย", contact:"ติดต่อ", login:"เข้าสู่ระบบ", logout:"ออกจากระบบ" },
+    nav: { home:"หน้าหลัก", catalog:"สินค้า", policy:"คำถาม/นโยบาย", contact:"ติดต่อ", about:"เกี่ยวกับเรา", login:"เข้าสู่ระบบ", logout:"ออกจากระบบ" },
     hero: {
       badge:"ผู้เชี่ยวชาญแร็คพวงมาลัย",
       h1a:"พวงมาลัยแม่นยำ.", h1b:"ทุกยี่ห้อ ทุกรุ่น.",
@@ -568,9 +568,9 @@ const T = {
       items:[
         { icon:"↩", title:"การคืนสินค้า", body:"มีเวลา 1 สัปดาห์ในการส่งคืน และต้องทำการแจ้งข้อมูลจัดส่งและเลขบัญชีโอนเงินหรือ QR Code ให้ในไลน์" },
         { icon:"🛡", title:"การรับประกัน", body:"รับประกัน 6 เดือน หรือ 20,000 กม. แล้วแต่ระยะใดถึงก่อน" },
-        { icon:"฿", title:"การชำระเงิน", body:"รับโอน รับ PromptPay มีจ่ายเงินปลายทาง" },
-        { icon:"▣", title:"การจัดส่ง", body:"เมื่อสินค้าถึงบริษัทขนส่งแล้ว ทางร้านไม่สามารถแก้ไขหรือแจ้งข้อมูลเพิ่มเติมแทนลูกค้าได้ กรุณาติดต่อบริษัทขนส่งโดยตรงด้วยตนเอง ขออภัยในความไม่สะดวก" },
-        { icon:"⇄", title:"การเปลี่ยนสินค้า", body:"เราพร้อมเปลี่ยนให้ แต่ถ้าหากสินค้าราคามีส่วนต่าง เราจะทำการคืนเงินหรือลูกค้าต้องจ่ายเพิ่ม" },
+        { icon:"💳", title:"การชำระเงิน", body:"รับโอน รับ PromptPay มีจ่ายเงินปลายทาง" },
+        { icon:"🚚", title:"การจัดส่ง", body:"เมื่อสินค้าถึงบริษัทขนส่งแล้ว ทางร้านไม่สามารถแก้ไขหรือแจ้งข้อมูลเพิ่มเติมแทนลูกค้าได้ กรุณาติดต่อบริษัทขนส่งโดยตรงด้วยตนเอง ขออภัยในความไม่สะดวก" },
+        { icon:"🔄", title:"การเปลี่ยนสินค้า", body:"เราพร้อมเปลี่ยนให้ แต่ถ้าหากสินค้าราคามีส่วนต่าง เราจะทำการคืนเงินหรือลูกค้าต้องจ่ายเพิ่ม" },
       ],
       noteTitle:"ต้องการความช่วยเหลือ?",
       note:"กรุณาติดต่อทาง LINE ก่อนทำการคืนหรือเปลี่ยนสินค้า",
@@ -804,7 +804,7 @@ function BrandLogo({ logo, size=28, place="default" }) {
     brandCard: { scale: brandCardScale, y: isHonda ? size*0.02 : isIsuzu ? size*0.05 : isMitsubishi ? size*0.02 : 0, box: isHonda ? 1.58 : 1.48 },
     heroBadge: { scale: isHonda ? 1.9 : (isMitsubishi || isToyota) ? 1.15 : 1.03, y: isHonda ? size*0.04 : 0, box: isHonda ? 1.08 : 1.12 },
     heroMain: { scale: isHonda ? 1.55 : (isMitsubishi || isToyota) ? 1.18 : 1.05, y: isHonda ? size*0.04 : 0, box: 1.2 },
-    productPhoto: { scale: isHonda ? 3.2 : isNissan ? 1.6 : isIsuzu ? 1.28 : isMazda ? 1.18 : isMitsubishi ? 1.28 : isToyota ? 1.25 : isFord ? 1.28 : isMg ? 1.45 : 1.04, y: isHonda ? size*0.05 : 0, box: 1.22 },
+    productPhoto: { scale: 1.6, y: isHonda ? size*0.05 : 0, box: 1.22 },
     navFilter: { scale: isHonda ? 1.28 : 1, y: isHonda ? size*0.02 : 0, box: 1.05 },
   }[place] || {};
   const scale = logoUse.scale ?? 1;
@@ -870,7 +870,7 @@ function SmoothSizeCard({ children, className="", style={} }) {
 
 function PromptPayBox({ lang, amount }) {
   return (
-    <div style={{ background:"#F8F7F4", border:"1px solid #ECECEC", borderRadius:14, padding:18, textAlign:"center" }}>
+    <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #ECECEC", borderRadius:14, padding:18, textAlign:"center" }}>
       <div style={{ fontWeight:800, fontSize:16, marginBottom:6 }}>{lang==="th"?"ชำระเงินผ่านพร้อมเพย์":"Pay with PromptPay"}</div>
       <div style={{ color:"#666", fontSize:13, lineHeight:1.6, marginBottom:14 }}>
         {lang==="th"?"สแกน QR พร้อมเพย์ แล้วไปขั้นตอนถัดไปเพื่อแนบสลิป":"Scan the PromptPay QR, then continue to upload the payment slip."}
@@ -971,7 +971,83 @@ function PaymentMethodSelector({ lang, value, onChange, hideCod=false }) {
   );
 }
 
-function DeliveryMethodSelector({ lang, value, onChange }) {
+// ─── RESTOCK ALERT BUTTON ─────────────────────────────────────────────────────
+function RestockAlertButton({ brandId, modelId, lang, isDark, thF }) {
+  const KEY = "skkj_restock_alerts";
+  const alreadySaved = () => { try { return JSON.parse(localStorage.getItem(KEY)||"[]").some(a=>a.brandId===brandId&&a.modelId===modelId); } catch(e){ return false; } };
+  const [subscribed] = useState(alreadySaved);
+  const [open, setOpen] = useState(false);
+  const [contact, setContact] = useState("");
+  const [done, setDone] = useState(false);
+  if (subscribed&&!done) return (<div style={{ marginTop:5, fontSize:11, fontWeight:700, color:"#C8A83E", textAlign:"center", padding:"4px 0" }}>ลงทะเบียนแจ้งเตือนแล้ว ✓</div>);
+  if (done) return (<div style={{ marginTop:5, fontSize:11, fontWeight:700, color:"#C8A83E", textAlign:"center", padding:"4px 0" }}>เราจะแจ้งทันทีเมื่อสินค้ากลับมา ✓</div>);
+  return (
+    <div onClick={e=>e.stopPropagation()}>
+      <button type="button" onClick={()=>setOpen(o=>!o)} style={{ width:"100%", marginTop:5, background:"transparent", color:"#C8A83E", border:"1px solid #C8A83E", borderRadius:6, padding:"8px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>
+        🔔 {lang==="th"?"แจ้งเตือนฉัน":"Notify me"}
+      </button>
+      {open&&(
+        <div style={{ marginTop:6, display:"flex", flexDirection:"column", gap:6 }}>
+          <input type="text" placeholder={lang==="th"?"เบอร์โทร หรือ LINE ID":"Phone or LINE ID"} value={contact} onChange={e=>setContact(e.target.value)}
+            style={{ border:"1px solid #E0DDD8", borderRadius:6, padding:"8px 10px", fontSize:12, fontFamily:thF, background:isDark?"#1A1A1A":"#fff", color:isDark?"#F5F5F5":"#1A1A1A", outline:"none" }} />
+          <button type="button" disabled={!contact.trim()} onClick={()=>{
+            if(!contact.trim()) return;
+            try { const s=JSON.parse(localStorage.getItem(KEY)||"[]"); s.push({brandId,modelId,contact:contact.trim(),date:new Date().toISOString()}); localStorage.setItem(KEY,JSON.stringify(s)); } catch(ex){}
+            setDone(true); setOpen(false);
+          }} style={{ background:"#C8A83E", color:"#fff", border:"none", borderRadius:6, padding:"9px 12px", cursor:contact.trim()?"pointer":"not-allowed", fontSize:12, fontWeight:700, fontFamily:thF, opacity:contact.trim()?1:0.5 }}>
+            {lang==="th"?"ส่ง":"Send"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+// ─── WHOLESALE PRICE TOGGLE ──────────────────────────────────────────────────
+function WholesalePrice({ price, fmt, lang, isDark, thF }) {
+  const [open, setOpen] = useState(false);
+  const wholesale = Math.floor(price * 0.92);
+  return (
+    <div onClick={e=>e.stopPropagation()}>
+      <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
+        <span style={{ fontSize:18, fontWeight:800 }}>{fmt(price)}</span>
+        <button type="button" onClick={()=>setOpen(v=>!v)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:10, fontWeight:600, color:"#aaa", padding:0, fontFamily:thF, lineHeight:1.2 }}>
+          {open?"ราคาช่าง ▴":"ราคาช่าง ▾"}
+        </button>
+      </div>
+      {open&&(
+        <div style={{ marginTop:5 }}>
+          <div style={{ color:"#C8A83E", fontWeight:700, fontSize:13 }}>
+            {"฿"}{wholesale.toLocaleString()} <span style={{ fontWeight:500, fontSize:11 }}>{lang==="th"?"ราคาช่าง (ซื้อ 3 ชิ้นขึ้นไป)":"Trade price (3+ units)"}</span>
+          </div>
+          <div style={{ fontSize:10.5, color:isDark?"#777":"#aaa", marginTop:2, fontFamily:thF }}>
+            {lang==="th"?"ติดต่อทาง LINE เพื่อยืนยันราคาอู่":"Contact via LINE to confirm trade price"}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+// ─── COMPATIBLE CARS SECTION ─────────────────────────────────────────────────
+function CompatibleCars({ items, lang, thF, isDark }) {
+  const [open, setOpen] = useState(false);
+  if (!items || items.length === 0) return null;
+  return (
+    <div onClick={e=>e.stopPropagation()} style={{ marginBottom:6 }}>
+      <button type="button" onClick={()=>setOpen(v=>!v)} style={{ background:"none", border:"none", cursor:"pointer", padding:0, fontSize:11, color:"#999", fontFamily:thF, textAlign:"left", lineHeight:1.4 }}>
+        {lang==="th"?"ใช้ได้กับรุ่นอื่นด้วย":"Also fits"} {open?"▴":"▾"}
+      </button>
+      {open&&(
+        <ul style={{ margin:"5px 0 0", padding:"0 0 0 10px", listStyle:"none", borderLeft:"2px solid #E0DDD8", display:"flex", flexDirection:"column", gap:3 }}>
+          {items.map((item,i)=>(
+            <li key={i} style={{ fontSize:13, color:isDark?"#999":"#888", fontFamily:"Sarabun, "+thF, lineHeight:1.4 }}>{item}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+// ─── INSTALLATION GUIDE MODAL ────────────────────────────────────────────────
+function DeliveryMethodSelector({ lang, value, onChange, isDark=false }) {
   const expressRed = "#9A0018";
   const options = [
     {
@@ -995,20 +1071,20 @@ function DeliveryMethodSelector({ lang, value, onChange }) {
         return (
           <button key={opt.id} type="button" onClick={()=>onChange(opt.id)} style={{
             textAlign:"left",
-            background:active ? opt.accent : "#fff",
-            color:active ? "#fff" : "#1A1A1A",
-            border:`1px solid ${active ? opt.accent : (isExpress ? "rgba(154,0,24,0.35)" : "#E0DDD8")}`,
+            background:active ? opt.accent : (isDark&&!isExpress ? "#2A2A2A" : "#fff"),
+            color:active ? "#fff" : (isExpress ? expressRed : (isDark ? "#F0EFE8" : "#1A1A1A")),
+            border:`${isExpress?"1.5px":"1px"} solid ${active ? opt.accent : (isExpress ? expressRed : (isDark?"#555":"#E0DDD8"))}` ,
             borderRadius:12,
             padding:"12px 13px",
             cursor:"pointer",
             fontFamily:"inherit",
-            boxShadow:active && isExpress ? "0 10px 24px rgba(154,0,24,0.18)" : "none",
+            boxShadow:isExpress ? (active ? "0 6px 22px rgba(154,0,24,0.38)" : "0 0 0 3px rgba(154,0,24,0.10),0 4px 16px rgba(154,0,24,0.20)") : "none",
           }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:5 }}>
               <span style={{ fontSize:13, fontWeight:900 }}>{opt.title}</span>
-              {isExpress && <span style={{ borderRadius:999, padding:"2px 7px", background:active ? "rgba(255,255,255,0.18)" : "rgba(154,0,24,0.08)", color:active ? "#fff" : expressRed, fontSize:10, fontWeight:900 }}>FAST</span>}
+              {isExpress && <span style={{ borderRadius:999, padding:"2px 7px", background:active ? "rgba(255,255,255,0.20)" : "rgba(154,0,24,0.14)", color:active ? "#fff" : expressRed, fontSize:10, fontWeight:900 }}>FAST</span>}
             </div>
-            <div style={{ color:active ? "rgba(255,255,255,0.82)" : "#666", fontSize:11.5, lineHeight:1.45, fontWeight:700 }}>{opt.desc}</div>
+            <div style={{ color:active ? "rgba(255,255,255,0.82)" : (isExpress ? expressRed : (isDark ? "#A0A09A" : "#444")), fontSize:11.5, lineHeight:1.45, fontWeight:700 }}>{opt.desc}</div>
           </button>
         );
       })}
@@ -1041,7 +1117,7 @@ function TermsAgreement({ lang }) {
 
   return (
     <>
-      <label style={{ display:"flex", alignItems:"flex-start", gap:9, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px", fontSize:12, color:"#333", lineHeight:1.6, cursor:"pointer" }}>
+      <label className="terms-chk-label" style={{ display:"flex", alignItems:"flex-start", gap:9, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px", fontSize:12, color:"#333", lineHeight:1.6, cursor:"pointer" }}>
         <input required type="checkbox" style={{ marginTop:3, accentColor:"#1A1A1A", flexShrink:0 }} />
         <span>
           {lang==="th" ? "ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขการสั่งซื้อ การจัดส่ง และการรับประกันสินค้าแล้ว" : "I have read and agreed to the order, shipping, and warranty terms and conditions."}{" "}
@@ -1059,7 +1135,7 @@ function TermsAgreement({ lang }) {
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
               {terms.map((term, index)=>(
-                <div key={term} style={{ display:"flex", gap:10, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px", color:"#333", fontSize:13, lineHeight:1.7 }}>
+                <div key={term} className="terms-item" style={{ display:"flex", gap:10, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px", color:"#333", fontSize:13, lineHeight:1.7 }}>
                   <strong style={{ color:"#1A1A1A", flexShrink:0 }}>{index + 1}.</strong>
                   <span>{term}</span>
                 </div>
@@ -1167,7 +1243,7 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
   const imageTransform = `translate(${fit.x || 0}px, ${fit.y || 0}px) rotate(${fit.rotate || 0}deg)`;
 
   return (
-    <div className="product-photo-box" onClick={()=>onOpenDetail?.()} style={{ height, background:"linear-gradient(135deg,#F8F6EF 0%,#FFFFFF 48%,#F2EFE8 100%)", borderBottom:"1px solid #E8E6E0", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", cursor:onOpenDetail?"pointer":"default" }}>
+    <div className="product-photo-box" onClick={()=>onOpenDetail?.()} style={{ height, background:showImage?"linear-gradient(135deg,#F8F6EF 0%,#FFFFFF 48%,#F2EFE8 100%)":"#1a1a1a", borderBottom:"1px solid #E8E6E0", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", cursor:onOpenDetail?"pointer":"default" }}>
       <div className="product-photo-bg" style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 50% 35%,rgba(255,255,255,0.78),rgba(232,230,224,0.18) 58%,rgba(240,238,232,0.42))" }} />
       <div className="product-photo-shape" style={{ position:"absolute", inset:"0 auto auto 0", width:"46%", height:"42%", background:"#9B0018", clipPath:"polygon(0 0,100% 0,0 100%)", opacity:0.92 }} />
       <div className="product-photo-shape" style={{ position:"absolute", inset:"auto 0 0 auto", width:"48%", height:"38%", background:"#B8942D", clipPath:"polygon(100% 0,100% 100%,0 100%)", opacity:0.92 }} />
@@ -1177,9 +1253,10 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
       {showImage ? (
         <img className="product-main-image" src={slide.src} alt={slide.title} loading="lazy" onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
       ) : (
-        <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:10 }}>
-          <BrandLogo logo={brand.logo} size={54} place="productPhoto" />
-          <div style={{ fontSize:10, color:"#B8B1A5", letterSpacing:0.5 }}>{t.carPhoto}</div>
+        <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:8 }}>
+          <div style={{ fontSize:36, fontWeight:900, color:"rgba(255,255,255,0.20)", fontFamily:"'Kanit', sans-serif", letterSpacing:4 }}>SKKJ</div>
+          
+          <BrandLogo logo={brand.logo} size={36} place="productPhoto" />
         </div>
       )}
       <button type="button" className="slide-arrow" onClick={(e)=>{ e.stopPropagation(); canMove && move(-1); }} style={{ position:"absolute", left:8, top:"50%", transform:"translateY(-50%)", width:34, height:42, border:"none", background:"rgba(255,255,255,0.78)", color:"#1A1A1A", borderRadius:10, cursor:canMove?"pointer":"default", fontSize:26, lineHeight:1, zIndex:3, opacity:canMove?1:0.35 }}>‹</button>
@@ -1589,7 +1666,7 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
           </div>
           <div><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:5 }}>{lang==="th"?"หมายเหตุถึงร้าน":"Note for SKKJ"}</label>
             <textarea name="notes" value={details?.notes || ""} onChange={e=>setDetails(prev=>({...prev, notes:e.target.value}))} placeholder={t.order.notesPh} rows={3} style={{ ...iSLight, resize:"vertical" }} />
-            <div style={{ color:"#dc2626", fontSize:12, fontWeight:800, lineHeight:1.55, marginTop:7 }}>
+            <div style={{ marginTop:8, background:isDark?"#2C2C2E":"#F8F7F4", borderLeft:"3px solid #C4A35A", borderRadius:"0 8px 8px 0", padding:"8px 12px", fontSize:12, color:isDark?"#aaa":"#666", fontWeight:600, lineHeight:1.6 }}>
               การเสียหายของพัสดุเกิดจากบริษัทขนส่งสินค้านั้นทำการโยนพัสดุ และนี่อยู่นอกเหนือการควบคุมของบริษัท
             </div>
           </div>
@@ -1600,8 +1677,8 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
             <input name="paymentSlip" type="file" accept="image/*" disabled style={{ display:"none" }} />
           </div>
           <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:6 }}>
-            <button type="button" onClick={onClose} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{t.order.cancel}</button>
-            <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{lang==="th"?"เลือกจัดส่ง / จ่ายเงิน":"Choose delivery / payment"}</button>
+            <button type="button" onClick={onClose} style={{ flex:1, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{t.order.cancel}</button>
+            <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{lang==="th"?"เลือกจัดส่ง / จ่ายเงิน":"Choose delivery / payment"}</button>
           </div>
         </form>}
 
@@ -1609,7 +1686,7 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
           <div className="checkout-form" style={{ display:"flex", flexDirection:"column", gap:14 }}>
             <div>
               <div style={{ fontSize:13, fontWeight:900, marginBottom:8 }}>{lang==="th"?"เลือกวิธีจัดส่ง":"Choose delivery method"}</div>
-              <DeliveryMethodSelector lang={lang} value={deliveryMethod} onChange={setDeliveryMethod} />
+              <DeliveryMethodSelector lang={lang} value={deliveryMethod} onChange={setDeliveryMethod} isDark={isDark} />
             </div>
             <div>
               <div style={{ fontSize:13, fontWeight:900, marginBottom:8 }}>{lang==="th"?"เลือกวิธีจ่ายเงิน":"Choose payment method"}</div>
@@ -1622,9 +1699,9 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
             <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:4 }}>
               <button type="button" onClick={()=>setStep(1)} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
               {paymentMethod==="cod" ? (
-                <button type="button" onClick={()=>onConfirm({ ...details, deliveryMethod, paymentSlip:"", paymentSlipName:"", paymentMethod, paymentStatus:"cod_pending" })} style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{t.order.confirm}</button>
+                <button type="button" onClick={()=>onConfirm({ ...details, deliveryMethod, paymentSlip:"", paymentSlipName:"", paymentMethod, paymentStatus:"cod_pending" })} style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{t.order.confirm}</button>
               ) : (
-                <button type="button" onClick={()=>setStep(3)} style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{lang==="th"?"แนบสลิป":"Upload slip"}</button>
+                <button type="button" onClick={()=>setStep(3)} style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{lang==="th"?"แนบสลิป":"Upload slip"}</button>
               )}
             </div>
           </div>
@@ -1639,7 +1716,7 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
             </div>
             <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:4 }}>
               <button type="button" onClick={()=>setStep(2)} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
-              <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{t.order.confirm}</button>
+              <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:700, fontFamily:thF }}>{t.order.confirm}</button>
             </div>
           </form>
         )}
@@ -2891,6 +2968,12 @@ function App() {
   const [selectedOrderAddress, setSelectedOrderAddress] = useState("");
   const [singlePaymentMethod, setSinglePaymentMethod] = useState("promptpay");
   const [singleDeliveryMethod, setSingleDeliveryMethod] = useState("standard");
+  const [ppCountdown,    setPpCountdown]    = useState(900);
+  const [copyAcctState,  setCopyAcctState]  = useState(false);
+  const [pendingOrderRef,setPendingOrderRef] = useState("");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [cookieConsented, setCookieConsented] = useState(!!localStorage.getItem("skkj_cookie_consent"));
   const [orderSuccess, setOrderSuccess]   = useState(false);
   const [lastBillOrders, setLastBillOrders] = useState(null);
   const [contactSent, setContactSent]     = useState(false);
@@ -2918,6 +3001,7 @@ function App() {
   const [specialRequests, setSpecialRequests] = useState([]);
   const [checkoutData, setCheckoutData]   = useState(null); // { shipping }
   const [catalogSearch, setCatalogSearch] = useState("");
+  const [catalogPage, setCatalogPage] = useState(1);
   const [finderQuery, setFinderQuery]     = useState("");
   const [finderMessages, setFinderMessages] = useState([
     { role:"bot", lang:"th", text:"สวัสดีครับ พิมพ์รุ่นรถหรือชื่ออะไหล่ เช่น ดีแมค รีโว่ ซีวิค หรือแร็คพวงมาลัย ได้เลย" }
@@ -3022,7 +3106,7 @@ function App() {
     count:orders.filter(o=>o.brand===b.nameTh).length,
   })).filter(b=>b.count>0);
   const maxRev   = Math.max(...brandRevenue.map(b=>b.revenue),1);
-  const navPages = ["home","catalog","policy","contact"];
+  const navPages = ["home","catalog","policy","contact","about"];
   const basketQty= basket.reduce((s,i)=>s+i.quantity,0);
   const isPartTypeVisible = (partId) => !hiddenPartTypes.includes(partId);
   const visiblePartTypes = PART_TYPES.filter(part => isPartTypeVisible(part.id));
@@ -3035,7 +3119,7 @@ function App() {
   const contactBrand = brands.find(b=>b.id===contactBrandId);
   const contactModels = contactBrand?.models.filter(model => isProductVisible(model) && isPartTypeVisible(getModelPartType(model))) || [];
   const detailBrand = productDetail ? brands.find(b=>b.id===productDetail.brandId) : null;
-  const detailModel = detailBrand?.models.find(m=>m.id===productDetail.modelId && isProductVisible(m) && isPartTypeVisible(getModelPartType(m))) || null;
+  const detailModel = detailBrand?.models.find(m=>m.id===productDetail.modelId && isProductVisible(m)) || null;
   const productKey = (brandId, modelId) => `${brandId}:${modelId}`;
   const avgRating = (brandId, modelId) => {
     const ratings = allReviews[`${brandId}__${modelId}`];
@@ -3059,6 +3143,7 @@ function App() {
   });
   const [compareList, setCompareList] = useState([]); // [{brandId, modelId}]
   const [compareOpen, setCompareOpen] = useState(false);
+  const [openPolicy, setOpenPolicy] = useState(null);
   const isComparing = (brandId, modelId) => compareList.some(c => c.brandId===brandId && c.modelId===modelId);
   const toggleCompare = (brand, model) => {
     setCompareList(prev => {
@@ -3413,8 +3498,15 @@ function App() {
     const filteredModels = !q ? partModels : partModels.filter(model => {
       return productMatchesQuery(brand, model, q);
     });
-    return { ...brand, filteredModels };
+    const sortedModels = [...filteredModels].sort((a,b) => (a.stock===0?1:0) - (b.stock===0?1:0));
+    return { ...brand, filteredModels: sortedModels };
   }).filter(brand => brand.filteredModels.length > 0);
+  const ITEMS_PER_PAGE = 20;
+  const allCatalogModels = catalogBrands.flatMap(b=>b.filteredModels.map(m=>({brandId:b.id,m})));
+  const catalogTotalItems = allCatalogModels.length;
+  const catalogTotalPages = Math.max(1,Math.ceil(catalogTotalItems/ITEMS_PER_PAGE));
+  const pagedModelItems = allCatalogModels.slice((catalogPage-1)*ITEMS_PER_PAGE, catalogPage*ITEMS_PER_PAGE);
+  const pagedBrands = catalogBrands.map(b=>({...b,filteredModels:pagedModelItems.filter(x=>x.brandId===b.id).map(x=>x.m)})).filter(b=>b.filteredModels.length>0);
   const lowStockItems = brands.flatMap(brand => brand.models.map(model => ({ ...model, brandName:lang==="th"?brand.nameTh:brand.nameEn }))).filter(model => model.stock <= 15);
   const outStockCount = lowStockItems.filter(model => model.stock === 0).length;
   const lowStockWarningCount = lowStockItems.length;
@@ -4140,6 +4232,10 @@ function App() {
   useEffect(() => {
     if (singleDeliveryMethod==="express_bkk" && singlePaymentMethod==="cod") setSinglePaymentMethod("promptpay");
   }, [singleDeliveryMethod, singlePaymentMethod]);
+  useEffect(()=>{ if(orderStep===2&&orderForm){ setPpCountdown(900); const iv=setInterval(()=>setPpCountdown(p=>p>0?p-1:0),1000); return ()=>clearInterval(iv); } },[orderStep,orderForm]);
+  useEffect(()=>{ if(orderStep===2&&orderForm&&!pendingOrderRef){ const d=new Date().toISOString().slice(0,10).replace(/-/g,""); setPendingOrderRef("SKKJ-"+d+"-"+String(Date.now()).slice(-4)); } if(!orderForm) setPendingOrderRef(""); },[orderStep,orderForm]);
+  useEffect(()=>{ setCatalogPage(1); },[catalogSearch,selectedBrand,selectedPartType]);
+  useEffect(()=>{ const _check=()=>setIsMobile(window.innerWidth<768); window.addEventListener("resize",_check); return ()=>window.removeEventListener("resize",_check); },[]);
 
   useEffect(() => {
     if (page !== "catalog") return;
@@ -4394,6 +4490,7 @@ function App() {
   }
 
   // ── SINGLE-PRODUCT ORDER (existing flow, unchanged) ──
+  function fmtCountdown(s){ const m=Math.floor(s/60); return String(m).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
   function handleOrderDetailsSubmit(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
@@ -4444,6 +4541,11 @@ function App() {
     setTimeout(()=>setOrderSuccess(false), 4500);
   }
 
+  function handleLineConfirm() {
+    const msg=(lang==="th"?"สั่งซื้อ ":"Order ")+pendingOrderRef+" | "+orderForm.brand+" "+orderForm.model+" | "+(lang==="th"?"โทร ":"Tel: ")+(orderDetails?.phone||"");
+    window.open("https://line.me/R/ti/p/@skkjautopart?text="+encodeURIComponent(msg),"_blank","noopener,noreferrer");
+    finalizeSingleOrder({ paymentMethod:"promptpay", paymentStatus:"waiting_review" });
+  }
   // ── BASKET CHECKOUT ──
   function handleCheckoutOpen(shipping) {
     // validate stock
@@ -5610,10 +5712,10 @@ function App() {
         .slide-arrow:hover{transform:translateY(-50%)!important;box-shadow:none!important;transition:none!important}
         .v2-product-card .favorite-heart-btn{min-height:0!important;border-radius:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
         /* ── Dark mode: True Black OLED ───────────────────────────────────── */
-        .skkj-v2[data-dark="1"]{background:#000!important;color:#fff!important}
+        .skkj-v2[data-dark="1"]{background:#1C1C1E!important;color:#fff!important}
         .skkj-v2[data-dark="1"]:before,.skkj-v2[data-dark="1"]:after{opacity:0!important}
         .skkj-v2[data-dark="1"] .site-nav{background:#0A0A0A!important;border-bottom:1px solid #1E1E1E!important;box-shadow:none!important}
-        .skkj-v2[data-dark="1"] .app-main{background:#000!important}
+        .skkj-v2[data-dark="1"] .app-main{background:#1C1C1E!important}
         .skkj-v2[data-dark="1"] footer{background:#000!important;border-top:1px solid #1E1E1E!important}
         .skkj-v2[data-dark="1"] footer div,.skkj-v2[data-dark="1"] footer p,.skkj-v2[data-dark="1"] footer span,.skkj-v2[data-dark="1"] footer a{color:#777!important}
         .skkj-v2[data-dark="1"] h1,.skkj-v2[data-dark="1"] h2,.skkj-v2[data-dark="1"] h3,.skkj-v2[data-dark="1"] h4,.skkj-v2[data-dark="1"] h5,.skkj-v2[data-dark="1"] h6{color:#fff!important}
@@ -5650,6 +5752,23 @@ function App() {
         .skkj-v2[data-dark="1"] [title="เปรียบเทียบ"],.skkj-v2[data-dark="1"] [title="Compare"]{background:#1A1A1A!important;border-color:#2A2A2A!important;color:#888!important}
         .skkj-v2[data-dark="1"] .slide-arrow{background:rgba(20,20,20,0.92)!important;color:#fff!important;border-color:#2A2A2A!important}
         .skkj-v2[data-dark="1"] button[title="ดูรูปใหญ่"],.skkj-v2[data-dark="1"] button[title="View larger"]{background:rgba(20,20,20,0.92)!important;border-color:#2A2A2A!important;color:#aaa!important}
+        .skkj-v2[data-dark="1"] .v2-product-shell{background:#2C2C2E!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .v2-product-gallery{background:#1A1A1A!important;border-right-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .v2-product-details{background:#2C2C2E!important}
+        .skkj-v2[data-dark="1"] .v2-catalog-tools{background:#1A1A1A!important;border-color:#1E1E1E!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .faq-item{background:#1A1A1A!important;border-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .v2-hero-title{background:rgba(28,28,30,.92)!important;border-color:rgba(255,255,255,.12)!important;color:#fff!important}
+        .skkj-v2[data-dark="1"] .detail-info-cell{background:#1E1E1E!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .detail-notice{background:#1A1A1A!important;border-color:#2A2A2A!important;color:#C8A83E!important}
+        .skkj-v2[data-dark="1"] .review-box{background:#1E1E1E!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .review-box > div[style]{background:#1E1E1E!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .skk-breadcrumb .crumb{color:#aaa!important}
+        .skkj-v2[data-dark="1"] .skk-breadcrumb .crumb-current{color:#fff!important}
+        .skkj-v2[data-dark="1"] .v2-result-pill{background:#1E1E1E!important;color:#aaa!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .skk-skel-card{background:#1A1A1A!important}
+        .skkj-v2[data-dark="1"] .skk-skeleton{background:#2A2A2A!important;background-image:linear-gradient(90deg,#2A2A2A 0px,#333 200px,#2A2A2A 400px)!important}
+        .skkj-v2[data-dark="1"] .terms-chk-label{background:#2C2C2E!important;border-color:#1E1E1E!important;color:#ddd!important}
+        .skkj-v2[data-dark="1"] .terms-item{background:#1E1E1E!important;border-color:#2A2A2A!important;color:#ccc!important}
         .skkj-v2{position:relative;isolation:isolate;overflow:hidden;background:#FAFAF8!important}
         .skkj-v2:before{content:"";position:fixed;inset:60px 0 0;z-index:0;pointer-events:none;background:linear-gradient(118deg,rgba(255,255,255,.86) 0 20%,rgba(246,243,236,.72) 20% 39%,transparent 39% 63%,rgba(200,168,62,.08) 63% 63.7%,transparent 63.7% 100%),repeating-linear-gradient(90deg,rgba(17,17,17,.018) 0 1px,transparent 1px 76px),repeating-linear-gradient(0deg,rgba(17,17,17,.012) 0 1px,transparent 1px 76px);opacity:.95}
         .skkj-v2:after{content:"";position:fixed;left:-12%;top:470px;width:124%;height:420px;z-index:0;pointer-events:none;background:linear-gradient(153deg,transparent 0 45%,rgba(200,168,62,.10) 45% 51%,transparent 51% 71%,rgba(154,0,24,.045) 71% 76%,transparent 76% 100%);opacity:.9}
@@ -5675,8 +5794,8 @@ function App() {
         .product-photo-bg,.product-photo-shape,.product-main-image{transition:filter .45s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.22,1,.36,1), opacity .45s cubic-bezier(.22,1,.36,1)}
         .product-photo-box:hover .product-photo-bg,.product-photo-box:hover .product-photo-shape{filter:blur(6px);opacity:.62;transform:scale(1.055)}
         .product-photo-box:hover .product-main-image{transform:scale(1.045);filter:contrast(1.05) saturate(1.05)}
-        .skkj-v2 .feature-card,.skkj-v2 .v2-product-card,.skkj-v2 .admin-dashboard-card,.skkj-v2 .customer-order-card{transition:transform .38s cubic-bezier(.22,1,.36,1), box-shadow .38s cubic-bezier(.22,1,.36,1), border-color .38s cubic-bezier(.22,1,.36,1)}
-        .skkj-v2 .feature-card:hover,.skkj-v2 .v2-product-card:hover,.skkj-v2 .customer-order-card:hover{transform:translateY(-4px);box-shadow:0 20px 45px rgba(17,17,17,.10)!important;border-color:#D8C88E!important}
+        .skkj-v2 .feature-card,.skkj-v2 .v2-product-card,.skkj-v2 .admin-dashboard-card,.skkj-v2 .customer-order-card{transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease}
+        .skkj-v2 .feature-card:hover,.skkj-v2 .v2-product-card:hover,.skkj-v2 .customer-order-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.10)!important;border-color:#D8C88E!important}
         .v2-concept-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--skkj-line);border-radius:999px;padding:8px 13px;font-size:12px;font-weight:900;color:#555;box-shadow:0 10px 26px rgba(17,17,17,.06)}
         .v2-concept-badge strong{color:var(--skkj-red)}
         .v2-catalog-tools{background:linear-gradient(135deg,#fff 0%,#fff 64%,rgba(200,168,62,.13) 64%,rgba(154,0,24,.08) 100%)!important;border:1px solid var(--skkj-line)!important;border-radius:18px!important;box-shadow:0 14px 36px rgba(17,17,17,.05)!important}
@@ -5705,7 +5824,7 @@ function App() {
         .v2-logo-strip [data-logo-place="heroBadge"]{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
         .v2-logo-strip [data-logo-place="heroBadge"] img{width:82%!important;height:72%!important;max-width:88px!important;max-height:38px!important;object-fit:contain!important;transform:none!important;flex-shrink:1!important}
         .v2-logo-strip [data-logo-place="heroBadge"][data-brand="honda"] img{width:135%!important;height:135%!important;max-width:none!important;max-height:none!important}
-        .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:16px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
+        .v2-hero-order{position:absolute;right:18px;bottom:18px;z-index:3;background:#111;color:#fff;border:none;border-radius:6px;padding:13px 17px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 32px rgba(17,17,17,.22)}
         .v2-hero-order:disabled{background:#eee;color:#999;box-shadow:none;cursor:not-allowed}
         .v2-hero-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:46px;border:1px solid rgba(227,222,212,.9);background:rgba(255,255,255,.78);color:#111;border-radius:12px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(17,17,17,.08);transition:none!important}
         .v2-hero-nav:hover{transform:translateY(-50%)!important;box-shadow:0 10px 24px rgba(17,17,17,.08)!important;background:rgba(255,255,255,.95)!important}
@@ -5713,7 +5832,7 @@ function App() {
         .v2-hero-nav.right{right:14px}
         .fitment-control{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E6E1D8;border-radius:22px;padding:10px;box-shadow:0 14px 34px rgba(17,17,17,0.08);margin:0 auto 22px}
         .fitment-divider{width:1px;align-self:stretch;background:#EEE9DF;margin:2px 2px}
-        .v2-feature-grid{max-width:none!important;margin:0 0 64px!important}
+        .v2-feature-grid{max-width:none!important;margin:0 0 32px!important}
         .v2-feature-card{position:relative;overflow:hidden;border-radius:20px!important}
         .v2-feature-card:after{content:"";position:absolute;right:-32px;bottom:-42px;width:120px;height:90px;background:rgba(200,168,62,.15);transform:rotate(-18deg)}
         .v2-brand-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
@@ -5721,7 +5840,7 @@ function App() {
         .v2-brand-note{color:#777;font-size:12px;font-weight:800}
         .v2-brand-grid button{border-radius:18px!important;transition:transform .38s cubic-bezier(.22,1,.36,1),box-shadow .38s cubic-bezier(.22,1,.36,1),border-color .38s cubic-bezier(.22,1,.36,1)!important}
         .v2-brand-grid button:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(17,17,17,.10);border-color:#D8C88E!important}
-        .v2-product-card{border-radius:18px!important;box-shadow:0 14px 34px rgba(17,17,17,.055)!important;overflow:hidden!important;cursor:pointer!important}
+        .v2-product-card{border-radius:18px!important;box-shadow:0 2px 8px rgba(0,0,0,0.06)!important;overflow:hidden!important;cursor:pointer!important}
         .v2-product-card:focus-within{outline:2px solid rgba(200,168,62,.55);outline-offset:3px}
         .v2-product-card .product-photo-box{background:linear-gradient(135deg,#fff 0%,#fff 52%,rgba(200,168,62,.34) 52%,rgba(200,168,62,.34) 67%,rgba(154,0,24,.88) 67%,rgba(154,0,24,.88) 80%,#171717 80%)!important}
         .v2-product-page{animation:v2FloatIn .55s cubic-bezier(.22,1,.36,1)}
@@ -5730,8 +5849,8 @@ function App() {
         .v2-product-gallery .product-photo-box{border-radius:18px!important;background:rgba(255,255,255,.92)!important;border:1px solid rgba(255,255,255,.84)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
         .v2-product-details{background:#fff!important}
         .v2-product-price{color:var(--skkj-red)!important;font-family:Arial,sans-serif!important;letter-spacing:-.04em!important}
-        .v2-buy-button{background:#111!important;color:#fff!important;border:none!important;border-radius:14px!important;box-shadow:0 12px 30px rgba(17,17,17,.18)}
-        .v2-ask-button{background:#fff!important;color:#111!important;border:1px solid var(--skkj-line)!important;border-radius:14px!important}
+        .v2-buy-button{background:#111!important;color:#fff!important;border:none!important;border-radius:6px!important;box-shadow:0 12px 30px rgba(17,17,17,.18)}
+        .v2-ask-button{background:#fff!important;color:#111!important;border:1px solid var(--skkj-line)!important;border-radius:6px!important}
         .v2-red-button{background:var(--skkj-red)!important;color:#fff!important;border-color:var(--skkj-red)!important;animation:v2SoftPulse 2.8s ease-in-out infinite}
         .skkj-v2 .admin-dashboard-card{border-radius:22px!important;border:1px solid var(--skkj-line)!important;box-shadow:0 24px 65px rgba(17,17,17,.09)!important}
         .skkj-v2 .admin-tabs{border-radius:16px!important;background:var(--skkj-soft)!important}
@@ -5788,7 +5907,7 @@ function App() {
           .v2-hero-price strong{font-size:18px!important}
           .v2-hero-fast{top:12px!important;right:12px!important}
           .v2-hero-title{bottom:58px!important;max-width:178px!important;overflow:hidden!important;text-overflow:ellipsis!important}
-          .v2-hero-order{right:12px!important;bottom:12px!important;padding:10px 12px!important;font-size:12px!important;border-radius:13px!important}
+          .v2-hero-order{right:12px!important;bottom:12px!important;padding:10px 12px!important;font-size:12px!important;border-radius:6px!important}
           .v2-hero-nav{width:30px!important;height:38px!important;font-size:22px!important;transform:translateY(-50%)!important;padding:0!important}
           .v2-brand-heading{align-items:flex-start!important;flex-direction:column!important;gap:4px!important}
           .feature-card { min-height: 0 !important; padding: 18px 20px !important; border-radius: 14px !important; }
@@ -5974,7 +6093,7 @@ function App() {
           .v2-catalog-tools { border-radius: 14px !important; padding: 12px !important; margin-bottom: 14px !important; }
           .v2-catalog-tools > div { flex-wrap: wrap !important; }
           .v2-result-pill, .v2-filter-reset { width: 100% !important; justify-content: center !important; box-sizing: border-box !important; }
-          .v2-product-card { border-radius: 14px !important; box-shadow: 0 10px 24px rgba(17,17,17,.055) !important; }
+          .v2-product-card { border-radius: 14px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; }
           .v2-product-card .product-photo-box { height: 136px !important; }
           .v2-product-card .product-main-image { max-height: 118px !important; }
           .v2-product-card > div:last-child { padding: 12px 12px 14px !important; }
@@ -5996,6 +6115,9 @@ function App() {
           .site-brand span:not(.v2-concept-badge)::after { font-size: 17px !important; }
           .site-actions { gap: 5px !important; }
           .skkj-modal-card { padding: 18px !important; }
+        @keyframes skkj-fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        .v2-home-title{animation:skkj-fadein 400ms ease both}
+        .skkj-v2 h2.v2-overline::before{content:"";display:block;width:32px;height:3px;background:#9A0018;margin-bottom:10px;border-radius:2px}
         }
       `}</style>
 
@@ -6053,8 +6175,9 @@ function App() {
               ))}
             </div>
             <button onClick={()=>setIsDark(d=>!d)} title={isDark?"โหมดสว่าง":"โหมดมืด"} style={{ background:isDark?"#1A1A1A":"#F0EEE8", border:"1px solid "+(isDark?"#333":"#E0DDD8"), borderRadius:20, width:36, height:36, cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{isDark?"☀️":"🌙"}</button>
+            {isMobile&&(<button onClick={()=>setMobileNavOpen(o=>!o)} aria-label="menu" style={{ background:"transparent", border:"none", cursor:"pointer", fontSize:22, lineHeight:1, padding:"4px 6px", color:isDark?"#fff":"#1A1A1A", display:"flex", alignItems:"center", justifyContent:"center", width:40, height:40, flexShrink:0 }}>{mobileNavOpen?"✕":"☰"}</button>)}
           </div>
-          <div className="mobile-page-tabs">
+          <div className="mobile-page-tabs" style={{ display:isMobile?"none":undefined }}>
             {navPages.map(p=>(
               <button key={"mobile-"+p} onClick={()=>{ setPage(p); setSelectedBrand(null); }} style={{ background:page===p?"#1A1A1A":"#fff", color:page===p?"#fff":"#555", border:"1px solid "+(page===p?"#1A1A1A":"#E0DDD8"), borderRadius:20, padding:"6px 11px", cursor:"pointer", fontSize:12, fontWeight:page===p?700:500, fontFamily:thF }}>{t.nav[p]}</button>
             ))}
@@ -6065,6 +6188,16 @@ function App() {
           </div>
         </div>
       </nav>
+      {isMobile&&mobileNavOpen&&(
+        <div style={{ position:"fixed", top:60, left:0, right:0, zIndex:200, background:isDark?"#1C1C1E":"#fff", borderBottom:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", boxShadow:"0 8px 24px rgba(0,0,0,0.13)", paddingBottom:8, overflowY:"auto", maxHeight:"calc(100vh - 60px)" }}>
+          {navPages.map(p=>(
+            <button key={p} onClick={()=>{ setPage(p); setSelectedBrand(null); setMobileNavOpen(false); }} style={{ display:"flex", alignItems:"center", width:"100%", minHeight:48, padding:"0 24px", background:"none", border:"none", borderBottom:isDark?"1px solid #1E1E1E":"1px solid #F0EEE8", cursor:"pointer", fontSize:15, fontWeight:page===p?700:500, color:page===p?"#9A0018":isDark?"#F5F5F5":"#1A1A1A", fontFamily:thF, textAlign:"left" }}>{t.nav[p]}</button>
+          ))}
+          <div style={{ padding:"12px 24px 4px", fontSize:12, color:isDark?"#666":"#888", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.5px" }}>{lang==="th"?"ติดต่อเรา":"Contact"}</div>
+          <a href="tel:0871022666" onClick={()=>setMobileNavOpen(false)} style={{ display:"flex", alignItems:"center", minHeight:48, padding:"0 24px", color:isDark?"#F5F5F5":"#1A1A1A", fontSize:15, fontWeight:600, textDecoration:"none", borderBottom:isDark?"1px solid #1E1E1E":"1px solid #F0EEE8", fontFamily:thF }}>📞 087-102-2666</a>
+          <a href="https://line.me/R/ti/p/@skkjautopart" target="_blank" rel="noopener noreferrer" onClick={()=>setMobileNavOpen(false)} style={{ display:"flex", alignItems:"center", justifyContent:"center", minHeight:48, margin:"12px 16px", background:"#06C755", color:"#fff", borderRadius:12, fontSize:15, fontWeight:700, textDecoration:"none", gap:8, fontFamily:thF }}><span style={{ width:22, height:22, background:"#fff", borderRadius:"50%", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:900, color:"#06C755" }}>L</span>{lang==="th"?"ทักหาเราทาง LINE":"Chat us on LINE"}</a>
+        </div>
+      )}
 
       {/* ── BASKET DRAWER ── */}
       <BasketPanel
@@ -6241,9 +6374,19 @@ function App() {
       {/* ── ORDER MODAL (single product, existing flow) ── */}
       {orderForm&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
-          <SmoothSizeCard className="skkj-modal-card" style={{ background:"#fff", borderRadius:16, padding:26, width:"100%", maxWidth:440, maxHeight:"86vh", overflowY:"auto" }}>
-            <h3 style={{ margin:"0 0 4px", fontSize:20, fontWeight:700 }}>{t.order.title}</h3>
-            <p style={{ margin:"0 0 12px", color:"#666", fontSize:14 }}>{orderForm.brand} — {orderForm.model} · {fmt(orderForm.price)}</p>
+          <SmoothSizeCard className="skkj-modal-card" style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, padding:26, width:"100%", maxWidth:440, maxHeight:"86vh", overflowY:"auto" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:4 }}>
+              <h3 style={{ margin:0, fontSize:20, fontWeight:700 }}>{t.order.title}</h3>
+              <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("promptpay"); setSingleDeliveryMethod("standard"); }} style={{ minWidth:44, minHeight:44, display:"flex", alignItems:"center", justifyContent:"center", background:"transparent", border:"1px solid #E0DDD8", borderRadius:10, cursor:"pointer", fontSize:18, color:"#888", fontFamily:thF, flexShrink:0 }}>✕</button>
+            </div>
+            <div style={{ margin:"0 0 8px", display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+            <span style={{ color:"#888", fontSize:13 }}>{orderForm.brand} — {orderForm.model}</span>
+            {(()=>{ const stk=getLiveStock(brands,orderForm.brandId||"",orderForm.modelId||""); return stk>0&&stk<=5?(<span style={{ fontSize:11, fontWeight:900, padding:"2px 8px", borderRadius:999, background:stk===1?"#FEE2E2":"#FFF7ED", color:stk===1?"#9A0018":"#C2410C", border:"1px solid "+(stk===1?"#FECACA":"#FDBA74") }}>{"เหลือ "+stk+" ชิ้น"}</span>):null; })()}
+          </div>
+            <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:10, padding:"10px 14px" }}>
+              <span style={{ fontSize:12, color:"#888", fontWeight:600 }}>{lang==="th"?"ราคา":"Price"}</span>
+              <span style={{ fontSize:22, fontWeight:900, color:isDark?"#F5F5F5":"#1A1A1A", fontFamily:thF }}>{fmt(orderForm.price)}</span>
+            </div>
             <div className="checkout-stepper">
               {[
                 { id:1, th:"ที่อยู่", en:"Address" },
@@ -6268,14 +6411,14 @@ function App() {
               </div>
               <div>
                 <textarea name="notes" value={orderDetails?.notes || ""} onChange={e=>setOrderDetails(prev=>({ ...(prev || {}), notes:e.target.value }))} placeholder={t.order.notesPh} rows={3} style={{ ...iSLight, resize:"vertical" }} />
-                <div style={{ color:"#dc2626", fontSize:12, fontWeight:800, lineHeight:1.55, marginTop:7 }}>
+                <div style={{ marginTop:8, background:isDark?"#2C2C2E":"#F8F7F4", borderLeft:"3px solid #C4A35A", borderRadius:"0 8px 8px 0", padding:"8px 12px", fontSize:12, color:isDark?"#aaa":"#666", fontWeight:600, lineHeight:1.6 }}>
                   การเสียหายของพัสดุเกิดจากบริษัทขนส่งสินค้านั้นทำการโยนพัสดุ และนี่อยู่นอกเหนือการควบคุมของบริษัท
                 </div>
               </div>
               <TermsAgreement lang={lang} />
               <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:8 }}>
-                <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("promptpay"); setSingleDeliveryMethod("standard"); }} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{t.order.cancel}</button>
-                <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{lang==="th"?"เลือกจัดส่ง / จ่ายเงิน":"Choose delivery / payment"}</button>
+                <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("promptpay"); setSingleDeliveryMethod("standard"); }} style={{ flex:1, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{t.order.cancel}</button>
+                <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{lang==="th"?"เลือกจัดส่ง / จ่ายเงิน":"Choose delivery / payment"}</button>
               </div>
             </form>}
 
@@ -6283,39 +6426,54 @@ function App() {
               <div className="checkout-form" style={{ display:"flex", flexDirection:"column", gap:14 }}>
                 <div>
                   <div style={{ fontSize:13, fontWeight:900, marginBottom:8 }}>{lang==="th"?"เลือกวิธีจัดส่ง":"Choose delivery method"}</div>
-                  <DeliveryMethodSelector lang={lang} value={singleDeliveryMethod} onChange={setSingleDeliveryMethod} />
+                  <DeliveryMethodSelector lang={lang} value={singleDeliveryMethod} onChange={setSingleDeliveryMethod} isDark={isDark} />
                 </div>
-                <div>
-                  <div style={{ fontSize:13, fontWeight:900, marginBottom:8 }}>{lang==="th"?"เลือกวิธีจ่ายเงิน":"Choose payment method"}</div>
-                  <PaymentMethodSelector lang={lang} value={singlePaymentMethod} onChange={setSinglePaymentMethod} hideCod={singleDeliveryMethod==="express_bkk"} />
-                  {singleDeliveryMethod==="express_bkk" && <div style={{ marginTop:8, color:"#9A0018", fontSize:12, fontWeight:800, lineHeight:1.5 }}>{lang==="th"?"ส่งด่วนไม่สามารถเลือกเก็บเงินปลายทางได้":"Cash on delivery is not available for express delivery."}</div>}
+                <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #ECECEC", borderRadius:14, padding:18, textAlign:"center" }}>
+                  <div style={{ fontSize:28, fontWeight:900, color:"#9A0018", fontFamily:"'Kanit', sans-serif", marginBottom:14 }}>{fmt(orderForm.price)}</div>
+                  <div style={{ width:190, height:190, margin:"0 auto 14px", background:isDark?"#1A1A1A":"#fff", border:isDark?"2px dashed #444":"2px dashed #CCC", borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", color:"#999" }}>
+                    <div style={{ fontWeight:800, fontSize:16 }}>PromptPay QR</div>
+                    <div style={{ fontSize:11, marginTop:4 }}>{lang==="th"?"รอใส่ QR จริง":"QR placeholder"}</div>
+                  </div>
+                  <div style={{ display:"flex", alignItems:"center", gap:8, background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, padding:"10px 14px", marginBottom:8, textAlign:"left" }}>
+                    <span style={{ flex:1, fontSize:13, fontFamily:"'Courier New', monospace", color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"เลขบัญชี: รอข้อมูล":"Account: Waiting for details"}</span>
+                    <button type="button" onClick={()=>{ if(navigator.clipboard) navigator.clipboard.writeText(lang==="th"?"รอข้อมูล":"Waiting").then(()=>{ setCopyAcctState(true); setTimeout(()=>setCopyAcctState(false),2000); }); }} style={{ background:copyAcctState?"#06C755":"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"6px 12px", fontSize:12, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap", transition:"background 0.2s", fontFamily:thF }}>
+                      {copyAcctState?(lang==="th"?"คัดลอกแล้ว ✓":"Copied ✓"):(lang==="th"?"คัดลอก":"Copy")}
+                    </button>
+                  </div>
+                  <div style={{ fontSize:12, color:"#888", marginBottom:10 }}>{lang==="th"?"QR หมดอายุใน ":"QR expires in "}{fmtCountdown(ppCountdown)}</div>
+                  <div style={{ fontSize:12, color:isDark?"#aaa":"#777", textAlign:"left", background:isDark?"#2A2A2A":"#F0EEE8", borderRadius:8, padding:"8px 12px", lineHeight:1.6 }}>{lang==="th"?"ค่าจัดส่ง: คำนวณตามพื้นที่ — ทีมงานจะแจ้งให้ทราบทาง LINE ก่อนจัดส่ง":"Shipping cost: calculated by area — our team will notify you via LINE before shipping."}</div>
                 </div>
-                {singlePaymentMethod==="bank_transfer" && <BankTransferBox lang={lang} amount={orderForm.price} />}
-                {singlePaymentMethod==="promptpay" && <PromptPayBox lang={lang} amount={orderForm.price} />}
-                {singlePaymentMethod==="cod" && <CashOnDeliveryBox lang={lang} amount={orderForm.price} />}
-                <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:4 }}>
-                  <button type="button" onClick={()=>setOrderStep(1)} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
-                  {singlePaymentMethod==="cod" ? (
-                    <button type="button" onClick={()=>finalizeSingleOrder({ paymentMethod:singlePaymentMethod, paymentStatus:"cod_pending" })} style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{t.order.confirm}</button>
-                  ) : (
-                    <button type="button" onClick={()=>setOrderStep(3)} style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{lang==="th"?"แนบสลิป":"Upload slip"}</button>
-                  )}
+                <div className="checkout-actions" style={{ display:"flex", gap:8, marginTop:4, flexWrap:"wrap" }}>
+                  <button type="button" onClick={()=>setOrderStep(1)} style={{ flex:1, minWidth:80, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
+                  <button type="button" onClick={()=>finalizeSingleOrder({ paymentMethod:"cod", paymentStatus:"cod_pending" })} style={{ flex:1, minWidth:80, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:6, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:13, fontFamily:thF, color:isDark?"#aaa":"#555" }}>{lang==="th"?"จ่ายปลายทาง":"COD"}</button>
+                  <button type="button" onClick={()=>setOrderStep(3)} style={{ flex:2, minWidth:130, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{lang==="th"?"โอนเสร็จแล้ว":"Paid — Next"}</button>
                 </div>
               </div>
             )}
 
             {orderStep===3&&(
-              <form className="checkout-form" onSubmit={submitOrder} style={{ display:"flex", flexDirection:"column", gap:14 }}>
-                <div style={{ background:"#F8F7F4", border:"1px solid #ECECEC", borderRadius:12, padding:14 }}>
-                  <div style={{ fontWeight:800, fontSize:13, marginBottom:6 }}>{lang==="th"?"แนบสลิปโอนเงิน":"Upload payment slip"}</div>
-                  <div style={{ fontSize:12, color:"#666", lineHeight:1.5, marginBottom:10 }}>{singlePaymentMethod==="bank_transfer" ? (lang==="th"?"เลือกรูปสลิปหลังจากโอนเงินผ่านบัญชีธนาคาร":"Choose the slip image after bank transfer.") : (lang==="th"?"เลือกรูปสลิปหลังจากชำระเงินผ่านพร้อมเพย์":"Choose the slip image after paying with PromptPay.")}</div>
-                  <input name="paymentSlip" type="file" accept="image/*" required style={{ fontSize:12, width:"100%" }} />
+              <div className="checkout-form" style={{ display:"flex", flexDirection:"column", gap:14 }}>
+                <button type="button" onClick={()=>handleLineConfirm()} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"#06C755", color:"#fff", borderRadius:6, padding:"14px 18px", fontSize:15, fontWeight:900, border:"none", cursor:"pointer", fontFamily:thF, width:"100%" }}>
+                  <span style={{ width:24, height:24, background:"#fff", borderRadius:12, display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:900, color:"#06C755" }}>L</span>
+                  {lang==="th"?"แจ้งโอนเงินผ่าน LINE":"Confirm payment via LINE"}
+                </button>
+                <form onSubmit={submitOrder} style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                  <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #ECECEC", borderRadius:12, padding:14 }}>
+                    <div style={{ fontWeight:800, fontSize:13, marginBottom:6 }}>{lang==="th"?"แนบสลิปโอนเงิน":"Upload payment slip"}</div>
+                    <input name="paymentSlip" type="file" accept="image/*" style={{ fontSize:12, width:"100%" }} />
+                  </div>
+                  <button type="submit" style={{ padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{lang==="th"?"ส่งสลิปและยืนยัน":"Submit slip & confirm"}</button>
+                </form>
+                <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, padding:"10px 14px" }}>
+                  <div style={{ fontSize:11, color:"#888", fontWeight:600, marginBottom:4 }}>{lang==="th"?"เลขอ้างอิงออเดอร์":"Order reference"}</div>
+                  <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ flex:1, fontSize:13, fontFamily:"'Courier New', monospace", fontWeight:700, color:isDark?"#F5F5F5":"#1A1A1A" }}>{pendingOrderRef||"SKKJ-..."}</span>
+                    <button type="button" onClick={()=>{ if(navigator.clipboard&&pendingOrderRef) navigator.clipboard.writeText(pendingOrderRef).then(()=>{ setCopyAcctState(true); setTimeout(()=>setCopyAcctState(false),2000); }); }} style={{ background:copyAcctState?"#06C755":"#F0EEE8", color:copyAcctState?"#fff":"#555", border:"1px solid #E0DDD8", borderRadius:6, padding:"5px 10px", fontSize:11, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{copyAcctState?"✓":"คัดลอก"}</button>
+                  </div>
                 </div>
-                <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:4 }}>
-                  <button type="button" onClick={()=>setOrderStep(2)} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
-                  <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{t.order.confirm}</button>
-                </div>
-              </form>
+                <div style={{ fontSize:12, color:"#999", textAlign:"center", lineHeight:1.6 }}>{lang==="th"?"ทีมงานจะยืนยันออร์เดอร์ภายใน 30 นาที ในเวลาทำการ":"Our team will confirm your order within 30 minutes during business hours."}</div>
+                <button type="button" onClick={()=>setOrderStep(2)} style={{ padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
+              </div>
             )}
           </SmoothSizeCard>
         </div>
@@ -6324,7 +6482,7 @@ function App() {
       {/* ── EDIT ORDER MODAL ── */}
       {editOrder&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
-          <div className="skkj-modal-card" style={{ background:"#fff", borderRadius:16, padding:32, width:"100%", maxWidth:440, maxHeight:"90vh", overflowY:"auto" }}>
+          <div className="skkj-modal-card" style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, padding:32, width:"100%", maxWidth:440, maxHeight:"90vh", overflowY:"auto" }}>
             <h3 style={{ margin:"0 0 20px", fontSize:18, fontWeight:700 }}>{ta.editTitle} {editOrder.id}</h3>
             <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
               {ta.orderFields.map(([k,l])=>(
@@ -6557,7 +6715,7 @@ function App() {
       {/* ── NEW ORDER MODAL ── */}
       {newOrderModal&&(
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
-          <div className="skkj-modal-card" style={{ background:"#fff", borderRadius:16, padding:32, width:"100%", maxWidth:440, maxHeight:"90vh", overflowY:"auto" }}>
+          <div className="skkj-modal-card" style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, padding:32, width:"100%", maxWidth:440, maxHeight:"90vh", overflowY:"auto" }}>
             <h3 style={{ margin:"0 0 20px", fontSize:18, fontWeight:700 }}>{ta.newOrderTitle}</h3>
             <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
               {ta.orderFields.map(([k,l])=>(
@@ -6626,8 +6784,8 @@ function App() {
                   </div>
                   <p className="v2-home-sub" style={{ fontSize:17, color:"#666", maxWidth:520, margin:"0 auto 36px", lineHeight:1.7 }}>{t.hero.sub}</p>
                   <div className="v2-home-actions" style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
-                    <button className="v2-buy-button" onClick={()=>setPage("catalog")} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:30, padding:"14px 30px", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.hero.browse}</button>
-                    <button className="v2-ask-button" onClick={()=>setPage("contact")} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #ddd", borderRadius:30, padding:"14px 30px", fontSize:15, cursor:"pointer", fontFamily:thF }}>{t.hero.contactUs}</button>
+                    <button className="v2-buy-button" onClick={()=>setPage("catalog")} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.hero.browse}</button>
+                    <button className="v2-ask-button" onClick={()=>setPage("contact")} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #ddd", borderRadius:6, padding:"14px 30px", fontSize:15, cursor:"pointer", fontFamily:thF }}>{t.hero.contactUs}</button>
                   </div>
                 </div>
                 <div className="v2-hero-visual">
@@ -6664,18 +6822,18 @@ function App() {
               </div>
             </section>
             {/* ══ QUICK FIND BUTTON ══ */}
-            <div style={{ background:"#1A1A1A", margin:"0 -9999px", padding:"32px 9999px" }}>
+            <div style={{ background:"#111111", margin:"0 -9999px", padding:"32px 9999px" }}>
               <div style={{ maxWidth:960, margin:"0 auto", textAlign:"center" }}>
-                <button onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:18, padding:"22px 40px", fontSize:22, fontWeight:900, fontFamily:thF, cursor:"pointer", width:"100%", maxWidth:760, letterSpacing:"-0.3px", lineHeight:1.3, boxShadow:"0 8px 32px rgba(154,0,24,0.4)" }}>
+                <button onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:6, padding:"22px 40px", fontSize:22, fontWeight:900, fontFamily:thF, cursor:"pointer", width:"100%", maxWidth:760, letterSpacing:"-0.3px", lineHeight:1.3, boxShadow:"0 8px 32px rgba(154,0,24,0.4)" }}>
                   {lang==="th" ? "รู้ว่าอยากได้อะไร แต่ขี้เกียจหา 👉" : "I know what I want but too lazy to find it 👉"}
                 </button>
-                <div style={{ color:"#777", fontSize:13, marginTop:10 }}>{lang==="th"?"เลือกยี่ห้อ → รุ่น → เสร็จ":"Pick brand → model → done"}</div>
+                <div style={{ color:"#aaa", fontSize:13, marginTop:10 }}>{lang==="th"?"เลือกยี่ห้อ → รุ่น → เสร็จ":"Pick brand → model → done"}</div>
               </div>
             </div>
 
             <section style={{ paddingBottom:80, paddingTop:48 }}>
               <div className="feature-grid v2-feature-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))", gap:18, maxWidth:960, margin:"0 auto 70px" }}>
-                {t.features.map(f=>(
+                {t.features.map((f,fi)=>(
                   <div className="feature-card v2-feature-card" key={f.title} style={{ background:"#fff", borderRadius:18, padding:"42px 28px 26px", border:"1px solid #ECECEC", minHeight:156, height:"100%" }}>
                     <div className="feature-card-icon" style={{ fontSize:30, marginBottom:14, lineHeight:1 }}>{f.icon}</div>
                     <h3 className="feature-card-title" style={{ margin:"0 0 9px", fontSize:18, fontWeight:800 }}>{f.title}</h3>
@@ -6684,7 +6842,7 @@ function App() {
                 ))}
               </div>
               <div className="v2-brand-heading">
-                <h2 style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", marginBottom:18 }}>{t.shopByBrand}</h2>
+                <h2 className="v2-overline" style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", marginBottom:18 }}>{t.shopByBrand}</h2>
                 <div className="v2-brand-note">{lang==="th"?`กำลังดู: ${activePartTypeLabel} · ${getDriveSideLabel(selectedDriveSide, lang)}`:`Showing: ${activePartTypeLabel} · ${getDriveSideLabel(selectedDriveSide, lang)}`}</div>
               </div>
               <div className="v2-brand-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
@@ -6707,6 +6865,63 @@ function App() {
           </div>
         )}
 
+
+        {/* ══ ABOUT ══ */}
+        {page==="about"&&(
+          <div style={{ padding:"56px 0 80px", maxWidth:860, margin:"0 auto" }}>
+            {/* heading */}
+            <h1 style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(32px,6vw,52px)", fontWeight:800, letterSpacing:"-1px", margin:"0 0 14px", color:isDark?"#F5F5F5":"#1A1A1A" }}>เกี่ยวกับ SKKJ Autopart</h1>
+            <p style={{ fontSize:17, color:isDark?"#aaa":"#555", lineHeight:1.75, maxWidth:600, margin:"0 0 40px" }}>ผู้เชี่ยวชาญแร็คพวงมาลัย ก่อตั้งปี 2558 ตั้งอยู่ที่กรุงเทพฯ เราคัดสรรและตรวจสอบคุณภาพแร็คพวงมาลัยทุกชิ้นก่อนจัดส่งถึงมือลูกค้า</p>
+            {/* stat strip */}
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16, marginBottom:48, background:isDark?"#2C2C2E":"#1A1A1A", borderRadius:16, padding:"28px 20px" }}>
+              {[{num:"2558",label:"ก่อตั้งปี"},{num:"66+",label:"รุ่นในสต็อก"},{num:"6 เดือน",label:"รับประกัน"}].map(s=>(
+                <div key={s.num} style={{ textAlign:"center" }}>
+                  <div style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(24px,5vw,38px)", fontWeight:800, color:"#fff", lineHeight:1.1, marginBottom:6 }}>{s.num}</div>
+                  <div style={{ fontSize:12, color:"rgba(255,255,255,0.60)", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.5px" }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            {/* why choose us */}
+            <h2 style={{ fontSize:22, fontWeight:800, margin:"0 0 20px", color:isDark?"#F5F5F5":"#1A1A1A" }}>ทำไมต้องเลือก SKKJ</h2>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:16, marginBottom:48 }}>
+              {[
+                {icon:"✅",title:"ตรวจเช็กก่อนส่งทุกชิ้น",desc:"สินค้าทุกชิ้นผ่านการตรวจสอบคุณภาพก่อนแพ็กส่งให้ลูกค้า"},
+                {icon:"🚚",title:"จัดส่งทั่วประเทศ",desc:"ส่งฟรีผ่านบริษัทขนส่ง ใช้เวลา 2-5 วันทำการ"},
+                {icon:"🛡️",title:"รับประกัน 6 เดือน หรือ 20,000 กม.",desc:"คุ้มครองครอบคลุมทุกความเสียหายจากตัวสินค้า"},
+              ].map(p=>(
+                <div key={p.title} style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E1D2", borderRadius:14, padding:"22px 20px" }}>
+                  <div style={{ fontSize:28, marginBottom:10 }}>{p.icon}</div>
+                  <div style={{ fontWeight:800, fontSize:14, marginBottom:6, color:isDark?"#F5F5F5":"#1A1A1A" }}>{p.title}</div>
+                  <div style={{ fontSize:13, color:isDark?"#999":"#666", lineHeight:1.6 }}>{p.desc}</div>
+                </div>
+              ))}
+            </div>
+            {/* address + hours */}
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:16, marginBottom:40 }}>
+              <div style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:14, padding:"20px 18px", display:"flex", gap:14, alignItems:"flex-start" }}>
+                <span style={{ fontSize:22, flexShrink:0 }}>📍</span>
+                <div>
+                  <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>ที่อยู่ร้าน</div>
+                  <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.7 }}>36/1 ซอยอนามัยงามเจริญ 33{"\n"}แขวงท่าข้าม เขตบางขุนเทียน{"\n"}กรุงเทพฯ 10150</div>
+                </div>
+              </div>
+              <div style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:14, padding:"20px 18px", display:"flex", gap:14, alignItems:"flex-start" }}>
+                <span style={{ fontSize:22, flexShrink:0 }}>🕐</span>
+                <div>
+                  <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>เวลาทำการ</div>
+                  <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.8 }}>จ–ส 8:00–18:00{"\n"}อา 9:00–15:00</div>
+                </div>
+              </div>
+            </div>
+            {/* LINE CTA */}
+            <div style={{ textAlign:"center" }}>
+              <button type="button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:14, padding:"14px 32px", fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:thF, display:"inline-flex", alignItems:"center", gap:10, boxShadow:"0 8px 24px rgba(6,199,85,0.30)" }}>
+                <span style={{ width:26, height:26, background:"#fff", borderRadius:"50%", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:900, color:"#06C755" }}>L</span>
+                ทักหาเราทาง LINE
+              </button>
+            </div>
+          </div>
+        )}
         {/* ══ CATALOG ══ */}
         {page==="catalog"&&(
           <div style={{ padding:"40px 0" }}>
@@ -6724,7 +6939,7 @@ function App() {
               )}
             </nav>
             <div style={{ marginBottom:26, display:"flex", alignItems:"flex-start", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-              <h2 style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", margin:0 }}>
+              <h2 className="v2-overline" style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", margin:0 }}>
                 {selectedBrand ? (lang==="th"?brands.find(b=>b.id===selectedBrand)?.nameTh:brands.find(b=>b.id===selectedBrand)?.nameEn) : t.allBrands}
                 <span style={{ display:"block", fontSize:12, fontWeight:800, color:"#9A0018", marginTop:4 }}>{activePartTypeLabel} · {getDriveSideLabel(selectedDriveSide, lang)}</span>
               </h2>
@@ -6850,7 +7065,14 @@ function App() {
               </div>
             )}
 
-            {catalogBrands.map(brand=>(
+            {catalogTotalItems>0&&(
+              <div style={{ fontSize:12, color:"#888", marginBottom:10, textAlign:"right" }}>
+                {lang==="th"
+                  ? `แสดง ${(catalogPage-1)*ITEMS_PER_PAGE+1}–${Math.min(catalogPage*ITEMS_PER_PAGE,catalogTotalItems)} จาก ${catalogTotalItems} รายการ`
+                  : `Showing ${(catalogPage-1)*ITEMS_PER_PAGE+1}–${Math.min(catalogPage*ITEMS_PER_PAGE,catalogTotalItems)} of ${catalogTotalItems} items`}
+              </div>
+            )}
+            {pagedBrands.map(brand=>(
               <div key={brand.id} style={{ marginBottom:48 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:16 }}>
                   <BrandLogo logo={brand.logo} size={24} place="navFilter" />
@@ -6872,18 +7094,19 @@ function App() {
                     const isFav = isFavoriteProduct(brand.id, model.id);
                     const favKey = productKey(brand.id, model.id);
                     return (
-                      <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 10px 24px rgba(26,26,26,0.035)", position:"relative" }}>
+                      <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 2px 8px rgba(0,0,0,0.06)", position:"relative", opacity:model.stock===0?0.5:1, display:"flex", flexDirection:"column" }}>
                         <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} onMagnify={setLightboxImage} onOpenDetail={()=>openProductDetail(brand, model)} />
-                        <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"4px 8px", fontSize:11, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
-                          <span style={{ fontSize:12 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
+                        <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"12px 14px", minWidth:44, minHeight:44, boxSizing:"border-box", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
+                          <span style={{ fontSize:13 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
                           {lang==="th"?"เทียบ":"Compare"}
                         </button>
-                        <div style={{ padding:"14px 16px 16px" }}>
+                        <div style={{ padding:"14px 16px 16px", display:"flex", flexDirection:"column", flex:1 }}>
                           <div style={{ cursor:"pointer", borderRadius:10, padding:"2px 0 6px" }}>
                             <h4 style={{ margin:"0 0 2px", fontSize:15, fontWeight:800, color:"#111" }}>{brandName} {modelName}</h4>
                             {model.years && <p style={{ margin:"0 0 2px", color:"#8B7A5B", fontSize:12, fontWeight:700 }}>{model.years}</p>}
-                            <p style={{ margin:"0 0 6px", color:"#BBB", fontSize:11, fontFamily:"monospace" }}>{model.sku}</p>
+                            <p style={{ margin:"0 0 6px", color:"#999", fontSize:11, fontFamily:"'Courier New', monospace" }}>{model.sku}</p>
                           </div>
+                          <CompatibleCars items={model.compatible} lang={lang} thF={thF} isDark={isDark} />
                           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, marginBottom:8 }}>
                             <div style={{ display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
                               <span style={{ display:"inline-flex", alignItems:"center", background:"#FFF7ED", color:"#9A0018", border:"1px solid #F3D7B5", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
@@ -6907,8 +7130,8 @@ function App() {
                               {isFav ? "♥" : "♡"}
                             </button>
                           </div>
-                          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10 }}>
-                            <span style={{ fontSize:18, fontWeight:800 }}>{fmt(model.price)}</span>
+                          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:10, marginTop:"auto" }}>
+                            <WholesalePrice price={model.price} fmt={fmt} lang={lang} isDark={isDark} thF={thF} />
                             <div style={{ display:"flex", gap:6 }}>
                               {/* OPEN PRODUCT IN NEW TAB */}
                               <a
@@ -6918,27 +7141,34 @@ function App() {
                                 onMouseDown={(e)=>{ e.stopPropagation(); }}
                                 onClick={(e)=>{ e.stopPropagation(); }}
                                 title={lang==="th"?"เปิดสินค้าในแท็บใหม่":"Open product in new tab"}
-                                style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:10, width:34, minWidth:34, height:32, display:"inline-flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, textDecoration:"none", whiteSpace:"nowrap" }}>
+                                style={{ background:isDark?"#2C2C2E":"#fff", color:isDark?"#eee":"#1A1A1A", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, width:34, minWidth:34, height:32, display:"inline-flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, textDecoration:"none", whiteSpace:"nowrap" }}>
                                 ↗
                               </a>
                               {/* ADD TO BASKET */}
                               <button
                                 disabled={model.stock===0}
                                 onClick={(e)=>{ e.stopPropagation(); model.stock>0&&addToBasket(brand,model); }}
-                                style={{ background:model.stock===0?"#eee":inBasket?"#f0f0ff":"#F0EEE8", color:model.stock===0?"#aaa":inBasket?"#4f46e5":"#444", border:`1px solid ${model.stock===0?"#eee":inBasket?"#6366f1":"#E0DDD8"}`, borderRadius:10, padding:"7px 10px", cursor:model.stock===0?"not-allowed":"pointer", fontSize:11, fontWeight:600, fontFamily:thF, whiteSpace:"nowrap" }}>
+                                style={{ background:model.stock===0?(isDark?"#2C2C2E":"#eee"):inBasket?(isDark?"#312e81":"#f0f0ff"):(isDark?"#2C2C2E":"#F0EEE8"), color:model.stock===0?(isDark?"#666":"#aaa"):inBasket?(isDark?"#a5b4fc":"#4f46e5"):(isDark?"#eee":"#444"), border:`1px solid ${model.stock===0?(isDark?"#2C2C2E":"#eee"):inBasket?"#6366f1":(isDark?"#2A2A2A":"#E0DDD8")}`, borderRadius:10, padding:"7px 10px", cursor:model.stock===0?"not-allowed":"pointer", fontSize:11, fontWeight:600, fontFamily:thF, whiteSpace:"nowrap" }}>
                                 {model.stock===0?"–":"🛒"}
                               </button>
                               {/* ORDER NOW */}
                               <button
                                 onClick={(e)=>{ e.stopPropagation(); askAboutProduct(brand, model); }}
-                                style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #E0DDD8", borderRadius:10, padding:"7px 12px", cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:thF, whiteSpace:"nowrap" }}>
+                                style={{ background:isDark?"#2C2C2E":"#fff", color:isDark?"#eee":"#1A1A1A", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, padding:"7px 12px", cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:thF, whiteSpace:"nowrap" }}>
                                 {lang==="th"?"ถามรุ่นนี้":"Ask"}
                               </button>
                             </div>
                           </div>
-                          <button className={model.stock===0?"":"v2-buy-button"} disabled={model.stock===0} onClick={(e)=>{ e.stopPropagation(); model.stock>0&&setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:model.stock===0?"#eee":"#1A1A1A", color:model.stock===0?"#aaa":"#fff", border:"none", borderRadius:10, padding:"12px 12px", cursor:model.stock===0?"not-allowed":"pointer", fontSize:13, fontWeight:800, fontFamily:thF }}>
-                            {model.stock===0 ? t.outOfStock : t.orderNow}
-                          </button>
+                          {model.stock===0 ? (
+                            <div style={{ marginTop:10 }}>
+                              <div style={{ background:isDark?"#2C2C2E":"#eee", color:"#aaa", borderRadius:6, padding:"12px", fontSize:13, fontWeight:800, fontFamily:thF, textAlign:"center" }}>{t.outOfStock}</div>
+                              <RestockAlertButton brandId={brand.id} modelId={model.id} lang={lang} isDark={isDark} thF={thF} />
+                            </div>
+                          ) : (
+                            <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"12px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF }}>
+                              {t.orderNow}
+                            </button>
+                          )}
                         </div>
                       </div>
                     );
@@ -6949,6 +7179,19 @@ function App() {
           </div>
         )}
 
+            {catalogTotalPages>1&&page==="catalog"&&(
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginTop:32, flexWrap:"wrap", paddingBottom:8 }}>
+                <button disabled={catalogPage===1} onClick={()=>{ setCatalogPage(p=>p-1); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ padding:"8px 16px", borderRadius:9, border:"1px solid #E0DDD8", background:catalogPage===1?"#F8F7F4":"#fff", color:catalogPage===1?"#ccc":"#1A1A1A", cursor:catalogPage===1?"not-allowed":"pointer", fontSize:13, fontWeight:700, fontFamily:thF }}>
+                  {"← "}{lang==="th"?"ก่อนหน้า":"Previous"}
+                </button>
+                {Array.from({length:catalogTotalPages},(_,i)=>i+1).map(n=>(
+                  <button key={n} onClick={()=>{ setCatalogPage(n); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ width:36, height:36, borderRadius:9, border:"1px solid "+(n===catalogPage?"#1A1A1A":"#E0DDD8"), background:n===catalogPage?"#1A1A1A":"#fff", color:n===catalogPage?"#FAFAF8":"#555", cursor:"pointer", fontSize:13, fontWeight:n===catalogPage?800:500, fontFamily:thF }}>{n}</button>
+                ))}
+                <button disabled={catalogPage===catalogTotalPages} onClick={()=>{ setCatalogPage(p=>p+1); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ padding:"8px 16px", borderRadius:9, border:"1px solid #E0DDD8", background:catalogPage===catalogTotalPages?"#F8F7F4":"#fff", color:catalogPage===catalogTotalPages?"#ccc":"#1A1A1A", cursor:catalogPage===catalogTotalPages?"not-allowed":"pointer", fontSize:13, fontWeight:700, fontFamily:thF }}>
+                  {lang==="th"?"ถัดไป":"Next"}{" →"}
+                </button>
+              </div>
+            )}
         {/* ══ RECENTLY VIEWED (catalog page bottom) ══ */}
         {page==="catalog" && recentlyViewed.length > 0 && (() => {
           const items = recentlyViewed
@@ -7020,6 +7263,7 @@ function App() {
                   <div style={{ color:"#777", fontSize:14, lineHeight:1.7 }}>
                     {lang==="th"?"รหัสสินค้า":"SKU"}: <strong>{detailModel.sku}</strong>{detailModel.years ? <> · {lang==="th"?"ปี":"Year"} {detailModel.years}</> : null}
                   </div>
+                  <div style={{ marginTop:8 }}><CompatibleCars items={detailModel.compatible} lang={lang} thF={thF} isDark={isDark} /></div>
                 </div>
 
                 <div>
@@ -7041,14 +7285,14 @@ function App() {
                     [lang==="th"?"จัดส่ง":"Shipping", lang==="th"?"ฟรี · 2–5 วัน":"Free · 2–5 days"],
                     [lang==="th"?"ประเภท":"Type", getPartTypeLabel(getModelPartType(detailModel), lang)],
                   ].map(([label,value])=>(
-                    <div key={label} style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px" }}>
+                    <div key={label} className="detail-info-cell" style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px" }}>
                       <div style={{ color:"#999", fontSize:11, fontWeight:800, marginBottom:4 }}>{label}</div>
                       <div style={{ color:"#1A1A1A", fontSize:13, fontWeight:800 }}>{value}</div>
                     </div>
                   ))}
                 </div>
 
-                <div style={{ background:"#FFFDF5", border:"1px solid #E8D9A8", borderRadius:14, padding:"14px 16px", color:"#5F4819", fontSize:13, lineHeight:1.7 }}>
+                <div className="detail-notice" style={{ background:"#FFFDF5", border:"1px solid #E8D9A8", borderRadius:14, padding:"14px 16px", color:"#5F4819", fontSize:13, lineHeight:1.7 }}>
                   {lang==="th"?"กรุณาตรวจสอบรุ่นรถและปีรถก่อนสั่งซื้อ หากไม่แน่ใจสามารถกดถามร้านได้ทันที":"Please check the car model and year before ordering. If unsure, ask the shop first."}
                 </div>
 
@@ -7074,7 +7318,7 @@ function App() {
             </div>
 
             {/* ══ REVIEWS ══ */}
-            <div style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
+            <div className="review-box" style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
               <div style={{ fontSize:16, fontWeight:800, color:"#1A1A1A", marginBottom:14 }}>{lang==="th"?"รีวิวจากผู้ซื้อ":"Customer Reviews"}</div>
               {(()=>{
                 const rList = allReviews[`${detailBrand.id}__${detailModel.id}`];
@@ -7131,7 +7375,7 @@ function App() {
                 .slice(0, 4);
               if (related.length === 0) return null;
               return (
-                <div style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
+                <div className="review-box" style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
                   <h3 style={{ margin:"0 0 4px", fontSize:18, fontWeight:900 }}>{lang==="th"?`สินค้า ${detailBrand.nameTh} รุ่นอื่น`:`More from ${detailBrand.nameEn}`}</h3>
                   <p style={{ margin:"0 0 16px", color:"#777", fontSize:13 }}>{lang==="th"?"แร็คพวงมาลัยรุ่นอื่นในยี่ห้อเดียวกัน":"Other steering racks from the same brand"}</p>
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
@@ -7154,23 +7398,44 @@ function App() {
           </div>
         )}
 
+        {page==="product"&&productDetail&&(!detailBrand||!detailModel)&&(
+          <div style={{ padding:"38px 0 60px" }}>
+            <div className="skk-skeleton" style={{ width:180, height:16, marginBottom:20, borderRadius:8 }} />
+            <div style={{ background:isDark?"#2C2C2E":"#fff", border:"1px solid #E8E1D2", borderRadius:16, overflow:"hidden", display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:0, boxShadow:"0 18px 50px rgba(26,26,26,0.08)" }}>
+              <div style={{ padding:22, background:isDark?"#1A1A1A":"#F8F7F4" }}>
+                <div className="skk-skeleton" style={{ height:380, borderRadius:14 }} />
+              </div>
+              <div style={{ padding:28, display:"flex", flexDirection:"column", gap:16 }}>
+                <div className="skk-skeleton" style={{ width:"55%", height:12 }} />
+                <div className="skk-skeleton" style={{ width:"88%", height:30 }} />
+                <div className="skk-skeleton" style={{ width:"38%", height:26 }} />
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+                  {[0,1,2,3].map(i=><div key={i} className="skk-skeleton" style={{ height:56, borderRadius:12 }} />)}
+                </div>
+                <div className="skk-skeleton" style={{ height:48, borderRadius:12 }} />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ══ POLICY / FAQ ══ */}
         {page==="policy"&&(
           <div style={{ padding:"56px 0", maxWidth:860, margin:"0 auto" }}>
             <h2 style={{ fontSize:32, fontWeight:800, letterSpacing:"-1px", margin:"0 0 8px" }}>{t.policy.h2}</h2>
             <p style={{ color:"#666", fontSize:15, margin:"0 0 28px", lineHeight:1.7 }}>{t.policy.sub}</p>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))", gap:14 }}>
-              {t.policy.items.map(item=>(
-                <div key={item.title} style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, padding:"18px 18px 20px" }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
-                    <span style={{ width:32, height:32, borderRadius:10, background:"#F0EEE8", border:"1px solid #E0DDD8", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:"#1A1A1A", flexShrink:0 }}>{item.icon}</span>
-                    <h3 style={{ margin:0, fontSize:15, fontWeight:800 }}>{item.title}</h3>
-                  </div>
-                  <p style={{ margin:0, color:"#555", fontSize:13, lineHeight:1.8 }}>{item.body}</p>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {t.policy.items.map((item,idx)=>{ const isOpen=openPolicy===idx; return (
+                <div key={item.title} className="faq-item" style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, overflow:"hidden" }}>
+                  <button type="button" onClick={()=>setOpenPolicy(isOpen?null:idx)} style={{ width:"100%", display:"flex", alignItems:"center", gap:12, padding:"16px 18px", background:"none", border:"none", cursor:"pointer", textAlign:"left", fontFamily:thF, minHeight:56 }}>
+                    <span style={{ width:34, height:34, borderRadius:10, background:"#F0EEE8", border:"1px solid #E0DDD8", display:"flex", alignItems:"center", justifyContent:"center", fontSize:17, flexShrink:0 }}>{item.icon}</span>
+                    <span style={{ flex:1, fontSize:15, fontWeight:800, color:"#111", textAlign:"left" }}>{item.title}</span>
+                    <span style={{ fontSize:20, color:"#888", flexShrink:0, lineHeight:1, transform:isOpen?"rotate(45deg)":"rotate(0deg)", display:"inline-block", transition:"transform 0.2s" }}>+</span>
+                  </button>
+                  <div style={{ overflow:"hidden", maxHeight:isOpen?"400px":"0px", transition:"max-height 0.3s ease" }}><div style={{ padding:"2px 18px 18px 64px", fontSize:13, color:"#555", lineHeight:1.8, borderTop:"1px solid #F0EEE8" }}>{item.body}</div></div>
                 </div>
-              ))}
+              );})}
             </div>
-            <div style={{ marginTop:16, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:14, padding:"16px 18px", display:"flex", justifyContent:"space-between", alignItems:"center", gap:14, flexWrap:"wrap" }}>
+            <div className="faq-item" style={{ marginTop:16, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:14, padding:"16px 18px", display:"flex", justifyContent:"space-between", alignItems:"center", gap:14, flexWrap:"wrap" }}>
               <div>
                 <div style={{ fontSize:14, fontWeight:800, marginBottom:4 }}>{t.policy.noteTitle}</div>
                 <div style={{ fontSize:13, color:"#666", lineHeight:1.6 }}>{t.policy.note}</div>
@@ -7218,7 +7483,7 @@ function App() {
                     </div>
                     <div><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:6 }}>{t.contact.message}</label>
                       <textarea required rows={5} value={contactMessage} onChange={e=>setContactMessage(e.target.value)} placeholder={t.contact.messagePh} style={{ ...iSLight, resize:"vertical" }} /></div>
-                    <button type="submit" style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:14, fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.contact.send}</button>
+                    <button type="submit" style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:14, fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.contact.send}</button>
                   </form>
                 )}
               </div>
@@ -8306,6 +8571,20 @@ function App() {
             )}
           </div>
         )}
+
+        {/* ══ 404 ══ */}
+        {!["home","catalog","policy","contact","about","admin","product"].includes(page)&&(
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"calc(100vh - 260px)", padding:"60px 20px", textAlign:"center" }}>
+            <div style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(80px,18vw,140px)", fontWeight:900, lineHeight:1, color:isDark?"#F5F5F5":"#1A1A1A", letterSpacing:"-4px", marginBottom:4, userSelect:"none" }}>404</div>
+            <div style={{ width:48, height:4, background:"#9A0018", borderRadius:2, margin:"0 0 20px" }} />
+            <h2 style={{ fontSize:22, fontWeight:800, margin:"0 0 8px", color:isDark?"#F5F5F5":"#1A1A1A" }}>ไม่พบหน้าที่คุณต้องการ</h2>
+            <p style={{ fontSize:14, color:isDark?"#666":"#999", margin:"0 0 36px", lineHeight:1.6 }}>หน้านี้อาจถูกย้ายหรือไม่มีอยู่แล้ว</p>
+            <div style={{ display:"flex", gap:12, flexWrap:"wrap", justifyContent:"center" }}>
+              <button type="button" onClick={()=>{ setPage("home"); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"13px 28px", fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF }}>กลับหน้าหลัก</button>
+              <button type="button" onClick={()=>{ setPage("catalog"); setSelectedBrand(null); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ background:"transparent", color:isDark?"#F5F5F5":"#1A1A1A", border:isDark?"1px solid #555":"1px solid #1A1A1A", borderRadius:12, padding:"13px 28px", fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF }}>ดูสินค้าทั้งหมด</button>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* ── FOOTER ── */}
@@ -8321,13 +8600,22 @@ function App() {
           </div>
           <div style={{ fontSize:13, lineHeight:2 }}>
             <div style={{ color:"#fff", fontWeight:600, marginBottom:8 }}>{t.footer.contactTitle}</div>
-            <div>02-123-4567</div><div>skkjthailand@gmail.com</div><div>Bangkok, Thailand</div>
+            <div>087-102-2666</div><div>skkjthailand@gmail.com</div><div>Bangkok, Thailand</div>
             <div style={{ marginTop:10, color:"#fff", fontWeight:600 }}>LINE</div>
             <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:86, height:86, objectFit:"cover", borderRadius:8, background:"#fff", padding:4, marginTop:4 }} />
           </div>
         </div>
         <div style={{ maxWidth:1200, margin:"20px auto 0", borderTop:"1px solid #333", paddingTop:20, fontSize:12, textAlign:"center" }}>{t.footer.copyright}</div>
       </footer>
+      {!cookieConsented && (
+        <div style={{ position:"fixed", bottom:0, left:0, right:0, zIndex:10000, background:isDark?"#1C1C1E":"#fff", borderTop:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", boxShadow:"0 -4px 20px rgba(0,0,0,0.12)", padding:"14px 20px", display:"flex", flexWrap:"wrap", alignItems:"center", gap:12, fontFamily:thF }}>
+          <span style={{ flex:1, minWidth:200, fontSize:13, color:isDark?"#ccc":"#333", lineHeight:1.5 }}>เว็บไซต์นี้ใช้คุกกี้เพื่อพัฒนาประสบการณ์การใช้งาน และปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)</span>
+          <div style={{ display:"flex", gap:8, flexShrink:0 }}>
+            <button type="button" onClick={()=>{ setCookieConsented(true); localStorage.setItem("skkj_cookie_consent","true"); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:9, padding:"9px 18px", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>ยอมรับ</button>
+            <button type="button" onClick={()=>{ setCookieConsented(true); localStorage.setItem("skkj_cookie_consent","true"); }} style={{ background:"transparent", color:isDark?"#bbb":"#555", border:isDark?"1px solid #444":"1px solid #CCC", borderRadius:9, padding:"9px 18px", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>ปฏิเสธ</button>
+          </div>
+        </div>
+      )}
       {showBackToTop && (
         <button className="back-to-top-btn" onClick={()=>window.scrollTo({ top:0, behavior:"smooth" })} title={lang==="th"?"กลับด้านบน":"Back to top"} aria-label="Back to top">
           ↑
