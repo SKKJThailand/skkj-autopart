@@ -3019,6 +3019,7 @@ function App() {
   const [reviewFormComment, setReviewFormComment] = useState("");
   const [reviewFormSubmitting, setReviewFormSubmitting] = useState(false);
   const [reviewFormDone, setReviewFormDone] = useState(false);
+  const [reviewToken, setReviewToken] = useState("");
   const [promoDiscount, setPromoDiscount] = useState(() => {
     try {
       const p = new URLSearchParams(window.location.search);
@@ -8362,6 +8363,10 @@ function App() {
                       </div>
                       {pendingReviews.length > 0 && <span style={{ background:"#f97316", color:"#fff", borderRadius:20, padding:"3px 10px", fontSize:12, fontWeight:800 }}>{pendingReviews.length}</span>}
                     </div>
+                    <div style={{ padding:"10px 16px", borderBottom:"1px solid #ECECEC", display:"flex", alignItems:"center", gap:10, background:isDark?"#1C1C1E":"#FAFAF8" }}>
+                      <span style={{ fontSize:12, color:isDark?"#AAA":"#666", whiteSpace:"nowrap", fontFamily:thF }}>Admin Token</span>
+                      <input type="password" value={reviewToken} onChange={e=>setReviewToken(e.target.value)} placeholder={lang==="th"?"ใส่ token เพื่อใช้งาน...":"Enter token to use approve/delete..."} style={{ flex:1, fontFamily:thF, fontSize:12, padding:"6px 10px", border:`1px solid ${isDark?"#3A3A3C":"#E0DDD8"}`, borderRadius:8, outline:"none", background:isDark?"#2C2C2E":"#fff", color:isDark?"#F0EFE8":"#1A1A1A" }} />
+                    </div>
                     {pendingReviews.length === 0 ? (
                       <div style={{ padding:"32px 20px", textAlign:"center", color:"#AAA", fontSize:13 }}>{lang==="th"?"ไม่มีรีวิวรอการอนุมัติ":"No pending reviews"}</div>
                     ) : (
@@ -8381,10 +8386,11 @@ function App() {
                               </div>
                               <div style={{ display:"flex", gap:8, flexShrink:0 }}>
                                 <button onClick={async()=>{
-                                  await fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?id=eq.${r.id}`, {
-                                    method:"PATCH",
-                                    headers:{ apikey:cfg.supabaseKey, Authorization:`Bearer ${cfg.supabaseKey}`, "Content-Type":"application/json", Prefer:"return=minimal" },
-                                    body:JSON.stringify({ approved:true })
+                                  if (!reviewToken) { alert(lang==="th"?"กรุณาใส่ Admin Token ก่อน":"Enter Admin Token first"); return; }
+                                  await fetch(`${cfg.supabaseUrl}/functions/v1/moderate-review`, {
+                                    method:"POST",
+                                    headers:{ Authorization:`Bearer ${cfg.supabaseKey}`, "Content-Type":"application/json", "x-skkj-token":reviewToken },
+                                    body:JSON.stringify({ action:"approve", reviewId:r.id })
                                   }).catch(()=>{});
                                   const key=`${r.brand_id}__${r.model_id}`;
                                   setAllReviews(prev=>({...prev,[key]:[...(prev[key]||[]),r.rating]}));
@@ -8393,9 +8399,11 @@ function App() {
                                   {lang==="th"?"อนุมัติ":"Approve"}
                                 </button>
                                 <button onClick={async()=>{
-                                  await fetch(`${cfg.supabaseUrl}/rest/v1/skkj_reviews?id=eq.${r.id}`, {
-                                    method:"DELETE",
-                                    headers:{ apikey:cfg.supabaseKey, Authorization:`Bearer ${cfg.supabaseKey}` }
+                                  if (!reviewToken) { alert(lang==="th"?"กรุณาใส่ Admin Token ก่อน":"Enter Admin Token first"); return; }
+                                  await fetch(`${cfg.supabaseUrl}/functions/v1/moderate-review`, {
+                                    method:"POST",
+                                    headers:{ Authorization:`Bearer ${cfg.supabaseKey}`, "Content-Type":"application/json", "x-skkj-token":reviewToken },
+                                    body:JSON.stringify({ action:"delete", reviewId:r.id })
                                   }).catch(()=>{});
                                   setPendingReviews(prev=>prev.filter(x=>x.id!==r.id));
                                 }} style={{ background:"#FEE2E2", color:"#9A0018", border:"1px solid #FECACA", borderRadius:8, padding:"7px 13px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>
