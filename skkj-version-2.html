@@ -8946,3 +8946,23 @@ function App() {
                     );
                   })}
                   <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(quickFindBrand); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:8, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer",
+ fontFamily:thF }}>
+                    {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
+                  </button>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+    )}
+
+    </div>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ErrorBoundary><App /></ErrorBoundary>);
+  </script>
+</body>
+</html>
