@@ -45,6 +45,7 @@
   <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <style>
     html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
     #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
@@ -1726,125 +1727,110 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
 }
 
 // ─── ACCOUNTS PANEL (owner only) ─────────────────────────────────────────────
-function AccountsPanel({ accounts, setAccounts, currentUser, lang, onLog }) {
-  const [newEmail, setNewEmail]     = useState("");
-  const [newPw, setNewPw]           = useState("");
-  const [newName, setNewName]       = useState("");
-  const [newRole, setNewRole]       = useState("admin");
-  const [formError, setFormError]   = useState("");
-  const [showAdd, setShowAdd]       = useState(false);
+function AccountsPanel({ currentUser, lang, onLog }) {
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [busyId, setBusyId]     = useState(null);
   const thF = lang==="th" ? "'Sarabun','Helvetica Neue',Arial,sans-serif" : "'Helvetica Neue',Arial,sans-serif";
 
   const ROLE_COLORS = {
-    owner:    { bg:"rgba(217,119,6,0.15)",   text:"#f59e0b", label: lang==="th"?"เจ้าของ":"Owner"   },
-    admin:    { bg:"#fff",  text:"#1A1A1A", label: lang==="th"?"แอดมิน":"Admin"   },
-    disabled: { bg:"rgba(239,68,68,0.12)",   text:"#ef4444", label: lang==="th"?"ระงับ":"Disabled" },
+    owner:    { bg:"rgba(217,119,6,0.15)", text:"#f59e0b", label: lang==="th"?"เจ้าของ":"Owner"    },
+    admin:    { bg:"#fff",                 text:"#1A1A1A", label: lang==="th"?"แอดมิน":"Admin"     },
+    customer: { bg:"rgba(239,68,68,0.12)", text:"#ef4444", label: lang==="th"?"ยังไม่ได้รับสิทธิ์":"No access yet" },
   };
 
-  function addAccount() {
-    setFormError("");
-    if (!newEmail.trim() || !newPw.trim() || !newName.trim()) { setFormError(lang==="th"?"กรุณากรอกข้อมูลให้ครบ":"Please fill in all fields"); return; }
-    if (accounts.find(a => a.email.toLowerCase()===newEmail.trim().toLowerCase())) { setFormError(lang==="th"?"อีเมลนี้มีในระบบแล้ว":"Email already exists"); return; }
-    setAccounts(prev => [...prev, { id: Date.now(), email: newEmail.trim(), password: newPw.trim(), name: newName.trim(), role: newRole }]);
-    onLog?.("account_add", `Added ${newName.trim()} (${newEmail.trim()}) as ${newRole}`);
-    setNewEmail(""); setNewPw(""); setNewName(""); setNewRole("admin"); setShowAdd(false);
+  async function loadProfiles() {
+    if (!skkjAuthClient) { setLoadError(lang==="th"?"ระบบขัดข้อง":"System unavailable"); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await skkjAuthClient.from("profiles").select("id, role, display_name, created_at").order("created_at", { ascending:true });
+    if (error) setLoadError(error.message);
+    else { setProfiles(data || []); setLoadError(""); }
+    setLoading(false);
   }
 
-  function changeRole(id, role) {
-    // cannot change own role or demote another owner if you are owner (safety)
-    if (id === currentUser.id) return;
-    const account = accounts.find(a => a.id === id);
-    setAccounts(prev => prev.map(a => a.id===id ? { ...a, role } : a));
-    onLog?.("account_role", `Changed ${account?.email || "account"} role to ${role}`);
+  useEffect(() => { loadProfiles(); }, []);
+
+  async function changeRole(id, role) {
+    if (id === currentUser.id) return; // cannot change own role
+    setBusyId(id);
+    const { error } = await skkjAuthClient.from("profiles").update({ role }).eq("id", id);
+    setBusyId(null);
+    if (error) { setLoadError(error.message); return; }
+    const target = profiles.find(p => p.id === id);
+    setProfiles(prev => prev.map(p => p.id===id ? { ...p, role } : p));
+    onLog?.("account_role", `Changed ${target?.display_name || id} role to ${role}`);
   }
 
-  function removeAccount(id) {
+  async function revokeAccess(id) {
     if (id === currentUser.id) return; // cannot remove yourself
-    const account = accounts.find(a => a.id === id);
-    setAccounts(prev => prev.filter(a => a.id !== id));
-    onLog?.("account_remove", `Removed ${account?.email || "account"}`);
+    await changeRole(id, "customer");
+    onLog?.("account_remove", `Revoked access for ${profiles.find(p=>p.id===id)?.display_name || id}`);
   }
 
   return (
     <div>
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:18 }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:18, flexWrap:"wrap", gap:10 }}>
         <div>
           <h3 style={{ margin:"0 0 3px", fontSize:16, fontWeight:700, color:"#1A1A1A" }}>{lang==="th"?"จัดการบัญชีผู้ใช้":"Account Management"}</h3>
-          <p style={{ margin:0, color:"#777", fontSize:13 }}>{lang==="th"?"เพิ่ม ลบ หรือเปลี่ยนสิทธิ์ผู้ใช้":"Add, remove or change user permissions"}</p>
+          <p style={{ margin:0, color:"#777", fontSize:13 }}>{lang==="th"?"พนักงาน/เจ้าของสมัครเองที่หน้าเข้าสู่ระบบ คุณกำหนดสิทธิ์ที่นี่":"Staff/owners register themselves on the login page — you assign their access here"}</p>
         </div>
-        <button onClick={()=>setShowAdd(s=>!s)} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #fff", borderRadius:10, padding:"9px 16px", cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:thF }}>
-          {showAdd ? "×" : (lang==="th"?"+ เพิ่มผู้ใช้":"+ Add User")}
-        </button>
+        <span style={{ background:"#F0EEE8", color:"#1A1A1A", borderRadius:20, padding:"4px 12px", fontSize:12, fontWeight:700, fontFamily:"monospace" }}>
+          {profiles.length} / {SKKJ_STAFF_ACCOUNT_LIMIT} {lang==="th"?"คนสมัครแล้ว":"registered"}
+        </span>
       </div>
 
-      {/* Add user form */}
-      {showAdd && (
-        <div style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:13, padding:18, marginBottom:16 }}>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:12, marginBottom:12 }}>
-            {[
-              [lang==="th"?"ชื่อ":"Name", newName, setNewName, "text", lang==="th"?"ชื่อผู้ใช้":"Display name"],
-              [lang==="th"?"อีเมล":"Email", newEmail, setNewEmail, "email", "email@example.com"],
-              [lang==="th"?"รหัสผ่าน":"Password", newPw, setNewPw, "password", "••••••••"],
-            ].map(([label, val, setter, type, ph])=>(
-              <div key={label}>
-                <label style={{ fontSize:11, color:"#777", display:"block", marginBottom:5 }}>{label}</label>
-                <input type={type} value={val} onChange={e=>setter(e.target.value)} placeholder={ph} style={{ ...iSDark, fontSize:13 }} />
-              </div>
-            ))}
-            <div>
-              <label style={{ fontSize:11, color:"#777", display:"block", marginBottom:5 }}>{lang==="th"?"สิทธิ์":"Role"}</label>
-              <select value={newRole} onChange={e=>setNewRole(e.target.value)} style={{ ...iSDark, cursor:"pointer" }}>
-                <option value="admin">{lang==="th"?"แอดมิน":"Admin"}</option>
-                <option value="owner">{lang==="th"?"เจ้าของ":"Owner"}</option>
-              </select>
-            </div>
-          </div>
-          {formError && <p style={{ color:"#ef4444", fontSize:12, margin:"0 0 10px" }}>⚠ {formError}</p>}
-          <button onClick={addAccount} style={{ background:"linear-gradient(135deg,#166534,#15803d)", color:"#fff", border:"none", borderRadius:9, padding:"9px 18px", cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:thF }}>
-            {lang==="th"?"บันทึก":"Save Account"}
-          </button>
-        </div>
+      {loadError && (
+        <div style={{ background:"#FFF5F5", border:"1px solid #FECACA", borderRadius:9, padding:"10px 14px", fontSize:13, color:"#dc2626", marginBottom:14 }}>⚠ {loadError}</div>
       )}
 
-      {/* Accounts list */}
-      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-        {accounts.map(acc => {
-          const rc = ROLE_COLORS[acc.role] || ROLE_COLORS.disabled;
-          const isSelf = acc.id === currentUser.id;
-          return (
-            <div key={acc.id} style={{ background:"#FAFAF8", border:`1px solid ${isSelf?"#1A1A1A":"#ECECEC"}`, borderRadius:13, padding:"13px 16px", display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
-              {/* Avatar */}
-              <div style={{ width:38, height:38, borderRadius:"50%", background:"#1A1A1A", display:"flex", alignItems:"center", justifyContent:"center", fontSize:15, fontWeight:700, color:"#fff", flexShrink:0 }}>
-                {acc.name.charAt(0).toUpperCase()}
-              </div>
-              {/* Info */}
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-                  <span style={{ fontWeight:700, fontSize:14, color:"#1A1A1A" }}>{acc.name}</span>
-                  {isSelf && <span style={{ fontSize:10, color:"#1A1A1A", background:"#fff", borderRadius:20, padding:"2px 8px", fontWeight:600 }}>{lang==="th"?"คุณ":"You"}</span>}
-                  <span style={{ background:rc.bg, color:rc.text, borderRadius:20, padding:"2px 9px", fontSize:10, fontWeight:700, letterSpacing:0.3 }}>{rc.label}</span>
+      {loading ? (
+        <p style={{ color:"#999", fontSize:13 }}>{lang==="th"?"กำลังโหลด...":"Loading..."}</p>
+      ) : profiles.length === 0 ? (
+        <p style={{ color:"#999", fontSize:13 }}>{lang==="th"?"ยังไม่มีใครสมัครสมาชิก":"Nobody has registered yet"}</p>
+      ) : (
+        <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+          {profiles.map(acc => {
+            const rc = ROLE_COLORS[acc.role] || ROLE_COLORS.customer;
+            const isSelf = acc.id === currentUser.id;
+            const label = acc.display_name || acc.id;
+            return (
+              <div key={acc.id} style={{ background:"#FAFAF8", border:`1px solid ${isSelf?"#1A1A1A":"#ECECEC"}`, borderRadius:13, padding:"13px 16px", display:"flex", alignItems:"center", gap:14, flexWrap:"wrap" }}>
+                {/* Avatar */}
+                <div style={{ width:38, height:38, borderRadius:"50%", background:"#1A1A1A", display:"flex", alignItems:"center", justifyContent:"center", fontSize:15, fontWeight:700, color:"#fff", flexShrink:0 }}>
+                  {label.charAt(0).toUpperCase()}
                 </div>
-                <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{acc.email}</div>
-              </div>
-              {/* Role changer — can't edit self */}
-              {!isSelf && (
-                <div style={{ display:"flex", gap:6, alignItems:"center", flexShrink:0 }}>
-                  <select value={acc.role} onChange={e=>changeRole(acc.id,e.target.value)}
-                    style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:8, padding:"6px 10px", fontSize:12, cursor:"pointer", outline:"none" }}>
-                    <option value="owner">{lang==="th"?"เจ้าของ":"Owner"}</option>
-                    <option value="admin">{lang==="th"?"แอดมิน":"Admin"}</option>
-                    <option value="disabled">{lang==="th"?"ระงับ":"Disabled"}</option>
-                  </select>
-                  <button onClick={()=>removeAccount(acc.id)}
-                    style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.2)", color:"#ef4444", borderRadius:8, padding:"6px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>
-                    {lang==="th"?"ลบ":"Remove"}
-                  </button>
+                {/* Info */}
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+                    <span style={{ fontWeight:700, fontSize:14, color:"#1A1A1A" }}>{label}</span>
+                    {isSelf && <span style={{ fontSize:10, color:"#1A1A1A", background:"#fff", borderRadius:20, padding:"2px 8px", fontWeight:600 }}>{lang==="th"?"คุณ":"You"}</span>}
+                    <span style={{ background:rc.bg, color:rc.text, borderRadius:20, padding:"2px 9px", fontSize:10, fontWeight:700, letterSpacing:0.3 }}>{rc.label}</span>
+                  </div>
+                  <div style={{ fontSize:11, color:"#aaa", marginTop:2 }}>{lang==="th"?"สมัครเมื่อ":"Registered"} {new Date(acc.created_at).toLocaleDateString(lang==="th"?"th-TH":"en-US")}</div>
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                {/* Role changer — can't edit self */}
+                {!isSelf && (
+                  <div style={{ display:"flex", gap:6, alignItems:"center", flexShrink:0 }}>
+                    <select value={acc.role} disabled={busyId===acc.id} onChange={e=>changeRole(acc.id,e.target.value)}
+                      style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:8, padding:"6px 10px", fontSize:12, cursor:"pointer", outline:"none" }}>
+                      <option value="owner">{lang==="th"?"เจ้าของ":"Owner"}</option>
+                      <option value="admin">{lang==="th"?"แอดมิน":"Admin"}</option>
+                      <option value="customer">{lang==="th"?"ยังไม่ได้รับสิทธิ์":"No access"}</option>
+                    </select>
+                    {acc.role !== "customer" && (
+                      <button onClick={()=>revokeAccess(acc.id)} disabled={busyId===acc.id}
+                        style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.2)", color:"#ef4444", borderRadius:8, padding:"6px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>
+                        {lang==="th"?"ระงับสิทธิ์":"Revoke access"}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <p style={{ marginTop:16, fontSize:11, color:"#1e293b", textAlign:"center", fontFamily:"monospace" }}>
         {lang==="th"?"เฉพาะเจ้าของเท่านั้นที่สามารถจัดการบัญชีได้ · คุณไม่สามารถแก้ไขบัญชีตัวเองได้":"Only owners can manage accounts · You cannot edit your own account"}
@@ -2723,6 +2709,15 @@ const SKKJ_DATABASE_CONFIG = {
   supabaseTable: "skkj_site_state",
   supabaseRecordId: "main",
 };
+
+// Real Supabase Auth client — used only for staff/owner login + registration.
+// This is separate from the raw-fetch state sync above; Auth needs the
+// supabase-js library so sessions, tokens, and refresh are handled correctly.
+const skkjAuthClient = (typeof window.supabase !== "undefined" && SKKJ_DATABASE_CONFIG.supabaseUrl && SKKJ_DATABASE_CONFIG.supabaseKey)
+  ? window.supabase.createClient(SKKJ_DATABASE_CONFIG.supabaseUrl, SKKJ_DATABASE_CONFIG.supabaseKey)
+  : null;
+
+const SKKJ_STAFF_ACCOUNT_LIMIT = 10;
 
 function readDatabaseConfig() {
   const url = new URL(window.location.href);
@@ -4029,17 +4024,30 @@ function App() {
     return () => clearTimeout(timer);
   }, [page, heroSimilarProducts.length, heroSlideIndex]);
 
+  // Real staff/owner session restore: checks an actual Supabase Auth session,
+  // never trusts a browser flag. Runs once on mount.
+  useEffect(() => {
+    if (!skkjAuthClient) return;
+    (async () => {
+      const { data } = await skkjAuthClient.auth.getSession();
+      const session = data?.session;
+      if (!session?.user) return;
+      const { data: profile } = await skkjAuthClient
+        .from("profiles")
+        .select("id, role, display_name")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      if (profile && (profile.role === "admin" || profile.role === "owner")) {
+        setCurrentUser({ id: profile.id, email: session.user.email, name: profile.display_name || session.user.email, role: profile.role });
+        setAdminAuth(true);
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("skkj_v2_remember_login_v1") || "null");
       if (!saved?.type || !saved?.email) return;
-      if (saved.type === "staff" && !currentUser) {
-        const account = accounts.find(a => a.email.toLowerCase() === String(saved.email).toLowerCase() && a.role !== "disabled");
-        if (account) {
-          setCurrentUser(account);
-          setAdminAuth(true);
-        }
-      }
       if (saved.type === "customer" && !currentCustomer) {
         const savedLogin = String(saved.email || "").toLowerCase();
         const savedPhone = String(saved.email || "").replace(/\D/g, "");
@@ -4598,12 +4606,15 @@ function App() {
     setTimeout(()=>setOrderSuccess(false), 4500);
   }
 
-  // ── UNIFIED LOGIN: tries staff first, then customer ──
+  // ── ONE LOGIN, AUTO-DETECTED ── Same login box for everyone. Tries the real
+  // staff/owner account first (Supabase Auth); if that's not a match, falls
+  // back to a regular customer login. Nothing in the UI hints at which one
+  // someone is — that's intentional, no separate "admin" door to attack.
   function normalizePhone(value) {
     return String(value || "").replace(/\D/g, "");
   }
 
-  function handleLogin() {
+  async function handleLogin() {
     setAuthError("");
     const loginId = authEmail.trim();
     const email = loginId.toLowerCase();
@@ -4611,18 +4622,25 @@ function App() {
     const pw = authPw.trim();
     if (!loginId || !pw) { setAuthError(t.auth.fillAll); return; }
 
-    // Check staff accounts first
-    const staffAccount = accounts.find(a => a.email.toLowerCase() === email);
-    if (staffAccount) {
-      if (staffAccount.role === "disabled") { setAuthError(t.auth.disabled); return; }
-      if (staffAccount.password !== pw)     { setAuthError(t.auth.wrongCredentials); return; }
-      setCurrentUser(staffAccount);
-      setAdminAuth(true);
-      authRemember ? rememberLogin("staff", staffAccount.email) : forgetLogin();
-      setLoginOpen(false);
-      resetAuthForm();
-      setPage("admin");
-      return;
+    // Try staff/owner first, silently — looks like email so only attempt
+    // it when the input looks like one. Wrong guesses fall straight through
+    // to the customer check below with no different error shown.
+    if (email.includes("@") && skkjAuthClient) {
+      const { data, error } = await skkjAuthClient.auth.signInWithPassword({ email, password: pw });
+      if (!error && data?.user) {
+        const { data: profile } = await skkjAuthClient.from("profiles").select("id, role, display_name").eq("id", data.user.id).maybeSingle();
+        if (profile && (profile.role === "admin" || profile.role === "owner")) {
+          setCurrentUser({ id: profile.id, email: data.user.email, name: profile.display_name || data.user.email, role: profile.role });
+          setAdminAuth(true);
+          setLoginOpen(false);
+          resetAuthForm();
+          setPage("admin");
+          return;
+        }
+        // Authenticated but no staff role assigned yet — not an error the
+        // customer flow should ever surface, so sign out and fall through.
+        await skkjAuthClient.auth.signOut();
+      }
     }
 
     // Check customer accounts by email or phone number
@@ -4685,54 +4703,63 @@ function App() {
     if (page === "admin") setPage("home");
   }
 
-  function getLocalPw(accountId) {
-    try { return JSON.parse(localStorage.getItem("skkj_v2_staff_pw_v1") || "{}")[accountId] || ""; } catch(e) { return ""; }
-  }
-  function saveLocalPw(accountId, pw) {
-    try {
-      const all = JSON.parse(localStorage.getItem("skkj_v2_staff_pw_v1") || "{}");
-      all[accountId] = pw;
-      localStorage.setItem("skkj_v2_staff_pw_v1", JSON.stringify(all));
-    } catch(e) {}
-  }
-
-  function adminLogin(e) {
+  async function adminLogin(e) {
     if (e && e.preventDefault) e.preventDefault();
     const email = adminEmail.trim().toLowerCase();
     const pw    = adminPw.trim();
     if (!email || !pw) { setAdminError(lang==="th"?"กรุณากรอกอีเมลและรหัสผ่าน":"Please enter email and password"); return; }
-    const account = accounts.find(a => a.email.toLowerCase() === email);
-    if (!account)                  { setAdminError(lang==="th"?"ไม่พบอีเมลนี้ในระบบ":"Email not found"); return; }
-    if (account.role==="disabled") { setAdminError(lang==="th"?"บัญชีนี้ถูกระงับการใช้งาน":"This account has been disabled"); return; }
-    const correctPw = account.password !== "" ? account.password : getLocalPw(account.id);
-    if (!correctPw) { setAdminError(lang==="th"?"ยังไม่ได้ตั้งรหัสผ่าน กรุณาตั้งรหัสผ่านก่อน":"No password set — please set a password first"); return; }
-    if (correctPw !== pw) { setAdminError(lang==="th"?"รหัสผ่านไม่ถูกต้อง":"Incorrect password"); return; }
-    setCurrentUser(account);
+    if (!skkjAuthClient) { setAdminError(lang==="th"?"ระบบเข้าสู่ระบบขัดข้อง กรุณารีเฟรชหน้า":"Login system unavailable — please refresh"); return; }
+    setAdminError("");
+    const { data, error } = await skkjAuthClient.auth.signInWithPassword({ email, password: pw });
+    if (error || !data?.user) {
+      setAdminError(lang==="th"?"อีเมลหรือรหัสผ่านไม่ถูกต้อง":"Incorrect email or password");
+      return;
+    }
+    const { data: profile, error: profileError } = await skkjAuthClient
+      .from("profiles")
+      .select("id, role, display_name")
+      .eq("id", data.user.id)
+      .maybeSingle();
+    if (profileError || !profile) {
+      setAdminError(lang==="th"?"ไม่พบโปรไฟล์ผู้ใช้":"Account profile not found");
+      await skkjAuthClient.auth.signOut();
+      return;
+    }
+    if (profile.role !== "admin" && profile.role !== "owner") {
+      setAdminError(lang==="th"?"บัญชีนี้ยังไม่ได้รับสิทธิ์ — กรุณาให้เจ้าของร้านกำหนดสิทธิ์ก่อน":"This account hasn't been given access yet — ask the owner to assign your role first");
+      await skkjAuthClient.auth.signOut();
+      return;
+    }
+    setCurrentUser({ id: profile.id, email: data.user.email, name: profile.display_name || data.user.email, role: profile.role });
     setAdminAuth(true);
-    authRemember ? rememberLogin("staff", account.email) : forgetLogin();
     setAdminError("");
     setAdminEmail("");
     setAdminPw("");
   }
 
-  function setupAdminPassword() {
+  async function registerStaffAccount() {
     const email = adminEmail.trim().toLowerCase();
     const pw1 = adminSetupPw.trim();
     const pw2 = adminSetupPw2.trim();
     if (!email) { setAdminSetupMsg(lang==="th"?"กรอกอีเมลด้านบนก่อน":"Enter your email above first"); return; }
-    const account = accounts.find(a => a.email.toLowerCase() === email);
-    if (!account) { setAdminSetupMsg(lang==="th"?"ไม่พบอีเมลนี้":"Email not found"); return; }
-    if (account.password !== "") { setAdminSetupMsg(lang==="th"?"บัญชีนี้มีรหัสผ่านอยู่แล้ว":"This account already has a password"); return; }
     if (pw1.length < 6) { setAdminSetupMsg(lang==="th"?"รหัสผ่านต้องมีอย่างน้อย 6 ตัว":"Password must be at least 6 characters"); return; }
     if (pw1 !== pw2) { setAdminSetupMsg(lang==="th"?"รหัสผ่านไม่ตรงกัน":"Passwords do not match"); return; }
-    saveLocalPw(account.id, pw1);
-    setAdminSetupMsg(lang==="th"?"✅ ตั้งรหัสผ่านสำเร็จ — เข้าสู่ระบบได้เลย":"✅ Password saved — you can log in now");
+    if (!skkjAuthClient) { setAdminSetupMsg(lang==="th"?"ระบบสมัครขัดข้อง กรุณารีเฟรชหน้า":"Registration system unavailable — please refresh"); return; }
+    const { error } = await skkjAuthClient.auth.signUp({ email, password: pw1 });
+    if (error) {
+      const limitHit = (error.message || "").includes("SKKJ_ACCOUNT_LIMIT_REACHED");
+      setAdminSetupMsg(limitHit
+        ? (lang==="th"?`สมัครไม่ได้ — มีบัญชีครบ ${SKKJ_STAFF_ACCOUNT_LIMIT} คนแล้ว`:`Can't register — already at the ${SKKJ_STAFF_ACCOUNT_LIMIT}-account limit`)
+        : (lang==="th"?"สมัครไม่สำเร็จ: "+error.message:"Registration failed: "+error.message));
+      return;
+    }
+    setAdminSetupMsg(lang==="th"?"✅ สมัครสำเร็จ — รอให้เจ้าของร้านกำหนดสิทธิ์ จากนั้นเข้าสู่ระบบได้เลย":"✅ Registered — wait for the owner to assign your role, then log in");
     setAdminSetupPw(""); setAdminSetupPw2("");
-    setTimeout(() => { setAdminSetupMode(false); setAdminSetupMsg(""); }, 2000);
+    setTimeout(() => { setAdminSetupMode(false); setAdminSetupMsg(""); }, 3000);
   }
 
-  function adminLogout() {
-    forgetLogin();
+  async function adminLogout() {
+    if (skkjAuthClient) { try { await skkjAuthClient.auth.signOut(); } catch(e) {} }
     setAdminAuth(false);
     setCurrentUser(null);
     setAdminPw("");
@@ -6155,6 +6182,8 @@ function App() {
                 {t.nav.login}
               </button>
             )}
+            {/* Only ever visible to someone already signed in as staff/owner —
+                a logged-out visitor never sees any "admin" button at all. */}
             {currentUser && (
               <button className="desktop-admin-btn" onClick={()=>setPage("admin")} style={{ position:"relative", background:"#fff", border:"1px solid #E0DDD8", borderRadius:20, padding:"6px 14px", cursor:"pointer", display:"flex", alignItems:"center", gap:6, fontSize:13, fontWeight:600, color:"#1A1A1A", fontFamily:thF }}>
                 <span>⚙️</span>
@@ -6375,6 +6404,36 @@ function App() {
                   {authMode==="login" ? t.auth.signUp : t.auth.signIn}
                 </button>
               </div>
+
+              {/* Tiny, unadvertised staff/owner registration — same modal,
+                  no separate "admin" door anywhere else on the site. */}
+              {authMode==="register" && (
+                <div style={{ textAlign:"center" }}>
+                  <button type="button" onClick={()=>setAdminSetupMode(v=>!v)} style={{ background:"none", border:"none", color:"#bbb", fontSize:11, cursor:"pointer", fontFamily:thF, textDecoration:"underline" }}>
+                    {lang==="th"?"ทำงานที่ SKKJ? สมัครบัญชีพนักงาน":"Work at SKKJ? Register a staff account"}
+                  </button>
+                  {adminSetupMode && (
+                    <div style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"14px", marginTop:10, display:"flex", flexDirection:"column", gap:9, textAlign:"left" }}>
+                      <input type="email" value={adminEmail} onChange={e=>setAdminEmail(e.target.value)}
+                        placeholder={lang==="th"?"อีเมล":"Email"}
+                        style={{ border:"1px solid #DDD", borderRadius:9, padding:"9px 11px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                      <input type="password" value={adminSetupPw} onChange={e=>setAdminSetupPw(e.target.value)}
+                        placeholder={lang==="th"?"รหัสผ่าน (อย่างน้อย 6 ตัว)":"Password (min 6 chars)"}
+                        style={{ border:"1px solid #DDD", borderRadius:9, padding:"9px 11px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                      <input type="password" value={adminSetupPw2} onChange={e=>setAdminSetupPw2(e.target.value)}
+                        placeholder={lang==="th"?"พิมพ์รหัสผ่านอีกครั้ง":"Confirm password"}
+                        onKeyDown={e=>e.key==="Enter"&&registerStaffAccount()}
+                        style={{ border:"1px solid #DDD", borderRadius:9, padding:"9px 11px", fontSize:13, fontFamily:thF, outline:"none" }} />
+                      {adminSetupMsg && <div style={{ fontSize:12, color: adminSetupMsg.startsWith("✅")?"#16a34a":"#dc2626", fontWeight:700 }}>{adminSetupMsg}</div>}
+                      <button type="button" onClick={registerStaffAccount}
+                        style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:9, padding:"9px", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
+                        {lang==="th"?"สมัครสมาชิก":"Register"}
+                      </button>
+                      <div style={{ fontSize:10.5, color:"#999" }}>{lang==="th"?"หลังสมัคร เจ้าของร้านต้องกำหนดสิทธิ์ให้คุณก่อนใช้งานได้":"After registering, the owner must assign your access before you can use it"}</div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -7222,14 +7281,14 @@ function App() {
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
                 {items.map(({ brand, model }) => (
-                  <div key={`${brand.id}__${model.id}`} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(brand, model); } }} style={{ border:"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
-                    <div style={{ height:90, background:"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+                  <div key={`${brand.id}__${model.id}`} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(brand, model); } }} style={{ border:isDark?"1px solid #2A2A2A":"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:isDark?"#2C2C2E":"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                    <div style={{ height:90, background:isDark?"#1A1A1A":"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
                       <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} height={90} onMagnify={()=>{}} onOpenDetail={()=>openProductDetail(brand, model)} />
                     </div>
                     <div style={{ padding:"8px 10px 10px" }}>
-                      <div style={{ fontSize:11, color:"#999", fontWeight:700, textTransform:"uppercase" }}>{lang==="th"?brand.nameTh:brand.nameEn}</div>
-                      <div style={{ fontSize:12, fontWeight:900, color:"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?model.nameTh:model.nameEn}</div>
-                      <div style={{ fontSize:12, fontWeight:900, color:"#9A0018", marginTop:3 }}>{fmt(model.price)}</div>
+                      <div style={{ fontSize:11, color:isDark?"#999":"#999", fontWeight:700, textTransform:"uppercase" }}>{lang==="th"?brand.nameTh:brand.nameEn}</div>
+                      <div style={{ fontSize:12, fontWeight:900, color:isDark?"#F5F5F5":"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?model.nameTh:model.nameEn}</div>
+                      <div style={{ fontSize:12, fontWeight:900, color:isDark?"#E0566B":"#9A0018", marginTop:3 }}>{fmt(model.price)}</div>
                     </div>
                   </div>
                 ))}
@@ -7392,14 +7451,14 @@ function App() {
                   <p style={{ margin:"0 0 16px", color:"#777", fontSize:13 }}>{lang==="th"?"แร็คพวงมาลัยรุ่นอื่นในยี่ห้อเดียวกัน":"Other steering racks from the same brand"}</p>
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))", gap:12 }}>
                     {related.map(m => (
-                      <div key={m.id} onClick={()=>openProductDetail(detailBrand, m)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(detailBrand, m); } }} style={{ border:"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
-                        <div style={{ height:90, background:"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+                      <div key={m.id} onClick={()=>openProductDetail(detailBrand, m)} role="button" tabIndex={0} onKeyDown={e=>{ if(e.key==="Enter"){ openProductDetail(detailBrand, m); } }} style={{ border:isDark?"1px solid #2A2A2A":"1px solid #ECECEC", borderRadius:12, overflow:"hidden", cursor:"pointer", background:isDark?"#2C2C2E":"#fff", transition:"box-shadow .15s" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                        <div style={{ height:90, background:isDark?"#1A1A1A":"#F8F7F4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
                           <ProductPhotoBox brand={detailBrand} model={m} lang={lang} t={t} height={90} onMagnify={()=>{}} onOpenDetail={()=>openProductDetail(detailBrand, m)} />
                         </div>
                         <div style={{ padding:"8px 10px 10px" }}>
-                          <div style={{ fontSize:12, fontWeight:900, color:"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
-                          <div style={{ fontSize:12, fontWeight:900, color:"#9A0018", marginTop:3 }}>{fmt(m.price)}</div>
-                          <div style={{ fontSize:10.5, color:m.stock===0?"#E24B4A":"#888", marginTop:2 }}>{m.stock===0?t.outOfStock:`${m.stock} ${t.inStock}`}</div>
+                          <div style={{ fontSize:12, fontWeight:900, color:isDark?"#F5F5F5":"#1A1A1A", lineHeight:1.3, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          <div style={{ fontSize:12, fontWeight:900, color:isDark?"#E0566B":"#9A0018", marginTop:3 }}>{fmt(m.price)}</div>
+                          <div style={{ fontSize:10.5, color:m.stock===0?"#E24B4A":(isDark?"#999":"#888"), marginTop:2 }}>{m.stock===0?t.outOfStock:`${m.stock} ${t.inStock}`}</div>
                         </div>
                       </div>
                     ))}
@@ -7842,24 +7901,24 @@ function App() {
 
                   <button type="button" onClick={()=>{ setAdminSetupMode(v=>!v); setAdminSetupMsg(""); }}
                     style={{ background:"none", border:"none", color:"#9A0018", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:thF, textDecoration:"underline", padding:0, textAlign:"center" }}>
-                    {lang==="th"?"ยังไม่มีรหัสผ่าน? ตั้งรหัสผ่านใหม่":"No password yet? Set one now"}
+                    {lang==="th"?"ยังไม่มีบัญชี? สมัครสมาชิก":"No account yet? Register"}
                   </button>
 
                   {adminSetupMode && (
                     <div style={{ background:"#F8F7F4", border:"1px solid #E0DDD8", borderRadius:12, padding:"16px 14px", display:"flex", flexDirection:"column", gap:10 }}>
-                      <div style={{ fontSize:12, fontWeight:800, color:"#1A1A1A", marginBottom:2 }}>{lang==="th"?"ตั้งรหัสผ่านสำหรับบัญชีนี้":"Set a password for this account"}</div>
-                      <div style={{ fontSize:11, color:"#888" }}>{lang==="th"?"กรอกอีเมลด้านบนก่อน แล้วพิมพ์รหัสผ่านที่ต้องการ":"Fill in your email above, then type a new password below"}</div>
+                      <div style={{ fontSize:12, fontWeight:800, color:"#1A1A1A", marginBottom:2 }}>{lang==="th"?"สมัครบัญชีพนักงาน/เจ้าของ":"Register a staff/owner account"}</div>
+                      <div style={{ fontSize:11, color:"#888" }}>{lang==="th"?"กรอกอีเมลด้านบนก่อน แล้วตั้งรหัสผ่านใหม่ จากนั้นรอเจ้าของร้านกำหนดสิทธิ์ให้คุณ":"Fill in your email above, set a new password, then wait for the owner to assign your access"}</div>
                       <input type="password" value={adminSetupPw} onChange={e=>setAdminSetupPw(e.target.value)}
                         placeholder={lang==="th"?"รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)":"New password (min 6 chars)"}
                         style={{ border:"1px solid #DDD", borderRadius:9, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
                       <input type="password" value={adminSetupPw2} onChange={e=>setAdminSetupPw2(e.target.value)}
                         placeholder={lang==="th"?"พิมพ์รหัสผ่านอีกครั้ง":"Confirm password"}
-                        onKeyDown={e=>e.key==="Enter"&&setupAdminPassword()}
+                        onKeyDown={e=>e.key==="Enter"&&registerStaffAccount()}
                         style={{ border:"1px solid #DDD", borderRadius:9, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none" }} />
                       {adminSetupMsg && <div style={{ fontSize:12, color: adminSetupMsg.startsWith("✅")?"#16a34a":"#dc2626", fontWeight:700 }}>{adminSetupMsg}</div>}
-                      <button type="button" onClick={setupAdminPassword}
+                      <button type="button" onClick={registerStaffAccount}
                         style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:9, padding:"10px", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
-                        {lang==="th"?"บันทึกรหัสผ่าน":"Save Password"}
+                        {lang==="th"?"สมัครสมาชิก":"Register"}
                       </button>
                     </div>
                   )}
@@ -8579,8 +8638,6 @@ function App() {
                 {/* ── ACCOUNTS TAB — owner only ── */}
                 {adminTab==="accounts" && currentUser?.role==="owner" && (
                   <AccountsPanel
-                    accounts={accounts}
-                    setAccounts={setAccounts}
                     currentUser={currentUser}
                     lang={lang}
                     onLog={logActivity}
