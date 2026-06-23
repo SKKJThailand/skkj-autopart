@@ -496,6 +496,11 @@ const T = {
       quickLinks:"Quick Links", contactTitle:"Contact",
       copyright:"© 2025 SKKJ Autopart. All rights reserved.",
     },
+    cookie:{
+      text:"This site uses cookies to improve your experience and comply with Thailand's PDPA data protection law.",
+      accept:"Accept",
+      decline:"Decline",
+    },
     finder:{
       title:"Product finder",
       subtitle:"Type a car model, part name, or common spelling. I will find the closest SKKJ products.",
@@ -627,6 +632,11 @@ const T = {
       tagline:"ผู้เชี่ยวชาญแร็คพวงมาลัยที่น่าเชื่อถือ\nในกรุงเทพฯ ตั้งแต่ปี 2558",
       quickLinks:"ลิงก์ด่วน", contactTitle:"ติดต่อ",
       copyright:"© 2568 SKKJ Autopart สงวนลิขสิทธิ์ทั้งหมด",
+    },
+    cookie:{
+      text:"เว็บไซต์นี้ใช้คุกกี้เพื่อพัฒนาประสบการณ์การใช้งาน และปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)",
+      accept:"ยอมรับ",
+      decline:"ปฏิเสธ",
     },
     finder:{
       title:"ตัวช่วยหาอะไหล่",
@@ -2976,7 +2986,17 @@ function App() {
   const [pendingOrderRef,setPendingOrderRef] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [cookieConsented, setCookieConsented] = useState(!!localStorage.getItem("skkj_cookie_consent"));
+  const [cookieConsented, setCookieConsented] = useState(() => {
+    const v2 = localStorage.getItem("skkj_cookie_consent_v2");
+    if (v2 === "accepted") return true;
+    if (v2 === "declined") return false;
+    // Migrate old accepted consent so returning visitors don't see the banner again
+    if (localStorage.getItem("skkj_cookie_consent") === "true") {
+      localStorage.setItem("skkj_cookie_consent_v2", "accepted");
+      return true;
+    }
+    return null; // null = pending — no choice yet, no tracking
+  });
   const [orderSuccess, setOrderSuccess]   = useState(false);
   const [lastBillOrders, setLastBillOrders] = useState(null);
   const [contactSent, setContactSent]     = useState(false);
@@ -4193,6 +4213,7 @@ function App() {
   }
 
   function trackAnalytics(type, data = {}) {
+    if (cookieConsented !== true) return; // no tracking until user accepts
     const event = {
       id: Date.now() + Math.random(),
       type,
@@ -8726,12 +8747,12 @@ function App() {
         </div>
         <div style={{ maxWidth:1200, margin:"20px auto 0", borderTop:"1px solid #333", paddingTop:20, fontSize:12, textAlign:"center" }}>{t.footer.copyright}</div>
       </footer>
-      {!cookieConsented && (
+      {cookieConsented === null && (
         <div style={{ position:"fixed", bottom:0, left:0, right:0, zIndex:10000, background:isDark?"#1C1C1E":"#fff", borderTop:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", boxShadow:"0 -4px 20px rgba(0,0,0,0.12)", padding:"14px 20px", display:"flex", flexWrap:"wrap", alignItems:"center", gap:12, fontFamily:thF }}>
-          <span style={{ flex:1, minWidth:200, fontSize:13, color:isDark?"#ccc":"#333", lineHeight:1.5 }}>เว็บไซต์นี้ใช้คุกกี้เพื่อพัฒนาประสบการณ์การใช้งาน และปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)</span>
+          <span style={{ flex:1, minWidth:200, fontSize:13, color:isDark?"#ccc":"#333", lineHeight:1.5 }}>{t.cookie.text}</span>
           <div style={{ display:"flex", gap:8, flexShrink:0 }}>
-            <button type="button" onClick={()=>{ setCookieConsented(true); localStorage.setItem("skkj_cookie_consent","true"); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:9, padding:"9px 18px", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>ยอมรับ</button>
-            <button type="button" onClick={()=>{ setCookieConsented(true); localStorage.setItem("skkj_cookie_consent","true"); }} style={{ background:"transparent", color:isDark?"#bbb":"#555", border:isDark?"1px solid #444":"1px solid #CCC", borderRadius:9, padding:"9px 18px", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>ปฏิเสธ</button>
+            <button type="button" onClick={()=>{ setCookieConsented(true); localStorage.setItem("skkj_cookie_consent_v2","accepted"); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:9, padding:"9px 18px", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{t.cookie.accept}</button>
+            <button type="button" onClick={()=>{ setCookieConsented(false); localStorage.setItem("skkj_cookie_consent_v2","declined"); try { localStorage.removeItem("skkj_v2_visitor_id"); } catch(e) {} }} style={{ background:"transparent", color:isDark?"#bbb":"#555", border:isDark?"1px solid #444":"1px solid #CCC", borderRadius:9, padding:"9px 18px", fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{t.cookie.decline}</button>
           </div>
         </div>
       )}
@@ -9033,12 +9054,4 @@ function App() {
                     const inStock = (m.stock||0) > 0;
                     return (
                       <button key={m.id} onClick={()=>{ openProductDetail(quickFindBrand, m); setQuickFindOpen(false); setQuickFindBrand(null); }}
-                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"14px 16px", cursor:"pointer", textAlign:"left", fontFamily:thF, transition:"border-color .15s" }}
-                        onMouseEnter={e=>{ e.currentTarget.style.borderColor="#9A0018"; }}
-                        onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
-                        <div>
-                          <div style={{ fontWeight:800, fontSize:14 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
-                          <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{m.years||""} · {fmt(m.price)}</div>
-                        </div>
-                        <div style={{ flexShrink:0, background:inStock?"#DCFCE7":"#FEE2E2", color:inStock?"#16A34A":"#9A0018", borderRadius:999, padding:"4px 10px", fontSize:11, fontWeight:800 }}>
-                          {inStock ? (lang==="th"?`มี ${m.stock}`:`${m.stock} left`) : (lang==="th"?"ห
+                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:
