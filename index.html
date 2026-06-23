@@ -2863,9 +2863,9 @@ function makeDatabaseState({ brands, orders, customers, accounts, hiddenPartType
     customers: safeCustomers,
     accounts: safeAccounts,
     hiddenPartTypes,
-    activityLog,
-    analytics,
-    syncEvents: Array.isArray(syncEvents) ? syncEvents.slice(0, 500) : [],
+    activityLog: Array.isArray(activityLog) ? activityLog.slice(0, 50) : activityLog,
+    analytics:   Array.isArray(analytics)   ? analytics.slice(0, 50)   : analytics,
+    syncEvents:  Array.isArray(syncEvents)  ? syncEvents.slice(0, 20)  : [],
   };
 }
 
@@ -3042,6 +3042,8 @@ function App() {
   const [qrError, setQrError]             = useState("");
   const dbLoadedRef                       = useRef(false);
   const dbSaveTimerRef                    = useRef(null);
+  const dbFailCountRef                    = useRef(0);
+  const dbCircuitUntilRef                 = useRef(0);
   const businessSyncErrorsRef             = useRef(new Set());
   const [dbStatus, setDbStatus]           = useState(() => ({
     enabled: dbConfigRef.current.enabled,
@@ -3710,8 +3712,10 @@ function App() {
     setDbStatus(prev => ({ ...prev, saving:true, error:"" }));
     const state = makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents });
     dbSaveTimerRef.current = setTimeout(() => {
+      if (Date.now() < dbCircuitUntilRef.current) return;
       skkjDatabaseRequest(config, "/api/state", { method:"PUT", body:{ state } })
         .then(() => {
+          dbFailCountRef.current = 0;
           setDbStatus(prev => ({
             ...prev,
             loading:false,
@@ -3722,6 +3726,11 @@ function App() {
           }));
         })
         .catch(error => {
+          dbFailCountRef.current += 1;
+          if (dbFailCountRef.current >= 3) {
+            dbCircuitUntilRef.current = Date.now() + 60000;
+            dbFailCountRef.current = 0;
+          }
           setDbStatus(prev => ({
             ...prev,
             loading:false,
@@ -3796,9 +3805,11 @@ function App() {
       reason,
       at: new Date().toISOString(),
     };
+    if (Date.now() < dbCircuitUntilRef.current) return;
     setDbStatus(prev => ({ ...prev, saving:true, error:"" }));
     skkjDatabaseRequest(config, "/api/state", { method:"PUT", body:{ state } })
       .then(() => {
+        dbFailCountRef.current = 0;
         setDbStatus(prev => ({
           ...prev,
           loading:false,
@@ -3809,6 +3820,11 @@ function App() {
         }));
       })
       .catch(error => {
+        dbFailCountRef.current += 1;
+        if (dbFailCountRef.current >= 3) {
+          dbCircuitUntilRef.current = Date.now() + 60000;
+          dbFailCountRef.current = 0;
+        }
         setDbStatus(prev => ({
           ...prev,
           loading:false,
@@ -4193,7 +4209,6 @@ function App() {
     setAnalytics(prev => {
       const next = [event, ...prev].slice(0, 800);
       try { localStorage.setItem("skkj_v2_analytics_v1", JSON.stringify(next)); } catch (error) {}
-      queueImmediateOnlineSave("analytics_recorded", { analytics: next });
       return next;
     });
   }
@@ -9033,24 +9048,4 @@ function App() {
                       </button>
                     );
                   })}
-                  <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(quickFindBrand); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:8, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer",
- fontFamily:thF }}>
-                    {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
-                  </button>
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-      </div>
-    )}
-
-    </div>
-  );
-}
-
-
-ReactDOM.createRoot(document.getElementById('root')).render(<ErrorBoundary><App /></ErrorBoundary>);
-  </script>
-</body>
-</html>
+                  <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(quickFindBrand); set
