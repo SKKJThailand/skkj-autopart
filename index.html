@@ -988,7 +988,7 @@ function RestockAlertButton({ brandId, modelId, lang, isDark, thF }) {
             style={{ border:"1px solid #E0DDD8", borderRadius:6, padding:"8px 10px", fontSize:12, fontFamily:thF, background:isDark?"#1A1A1A":"#fff", color:isDark?"#F5F5F5":"#1A1A1A", outline:"none" }} />
           <button type="button" disabled={!contact.trim()} onClick={()=>{
             if(!contact.trim()) return;
-            try { const s=JSON.parse(localStorage.getItem(KEY)||"[]"); s.push({brandId,modelId,contact:contact.trim(),date:new Date().toISOString()}); localStorage.setItem(KEY,JSON.stringify(s)); } catch(ex){}
+            try { const s=JSON.parse(localStorage.getItem(KEY)||"[]"); s.push({brandId,modelId,date:new Date().toISOString()}); localStorage.setItem(KEY,JSON.stringify(s)); } catch(ex){}
             setDone(true); setOpen(false);
           }} style={{ background:"#C8A83E", color:"#fff", border:"none", borderRadius:6, padding:"9px 12px", cursor:contact.trim()?"pointer":"not-allowed", fontSize:12, fontWeight:700, fontFamily:thF, opacity:contact.trim()?1:0.5 }}>
             {lang==="th"?"ส่ง":"Send"}
@@ -3086,6 +3086,7 @@ function App() {
       return amt > 0 ? amt : 0;
     } catch(_) { return 0; }
   });
+  const [adminPromoAmt, setAdminPromoAmt] = useState(() => { try { return parseInt(localStorage.getItem("skkj_admin_promo_amt") || "100", 10) || 100; } catch(e) { return 100; } });
   const [qrPromptPayId, setQrPromptPayId] = useState(() => { try { return localStorage.getItem("skkj_promptpay_id") || ""; } catch(e) { return ""; } });
   const [qrAmount, setQrAmount]           = useState("");
   const [qrDataUrl, setQrDataUrl]         = useState("");
@@ -4255,8 +4256,6 @@ function App() {
       type,
       date: new Date().toISOString(),
       customerId: currentCustomer?.id || "",
-      customerName: currentCustomer?.name || "",
-      customerPhone: currentCustomer?.phone || "",
       visitor: currentCustomer?.id || getVisitorId(),
       page,
       ...data,
@@ -8356,7 +8355,7 @@ function App() {
                 </div>
 
                 <div className="admin-tabs" style={{ display:"flex", gap:2, background:"#F0EEE8", borderRadius:11, padding:4, marginBottom:20, width:"fit-content", border:"1px solid #E0DDD8", flexWrap:"wrap" }}>
-                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["reviews", lang==="th"?"รีวิว":"Reviews"], ["qr", lang==="th"?"QR ชำระเงิน":"QR Pay"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
+                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["reviews", lang==="th"?"รีวิว":"Reviews"], ["qr", lang==="th"?"ลิงก์ส่วนลด":"Discount Links"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
                     <button key={tv} onClick={()=>setAdminTab(tv)} style={{ background:adminTab===tv?"#1A1A1A":"transparent", border:"none", borderRadius:8, padding:"8px 16px", cursor:"pointer", fontSize:13, fontWeight:adminTab===tv?700:400, color:adminTab===tv?"#fff":"#555", fontFamily:thF, boxShadow:"none", display:"flex", alignItems:"center", gap:7 }}>
                       <span>{tl}</span>
                       {tv==="orders" && newOrderCount > 0 && <span style={{ background:"#ef4444", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{newOrderCount}</span>}
@@ -8851,118 +8850,41 @@ function App() {
                   </div>
                 )}
 
-                {/* ── QR PAY TAB ── */}
+                {/* ── DISCOUNT LINKS TAB ── */}
                 {adminTab==="qr" && (
                   <div style={{ background:"#fff", borderRadius:13, border:"1px solid #ECECEC", padding:28, maxWidth:480 }}>
-                    <div style={{ fontSize:16, fontWeight:900, color:"#1A1A1A", marginBottom:6 }}>{lang==="th"?"สร้าง QR PromptPay":"PromptPay QR Generator"}</div>
-                    <div style={{ fontSize:13, color:"#888", marginBottom:24 }}>{lang==="th"?"พิมพ์จำนวนเงิน → กด สร้าง QR → ดาวน์โหลดหรือแชร์ไป LINE":"Enter amount → Generate → Download or share to LINE"}</div>
-
-                    {/* ── DISCOUNT LINKS TOOL ── */}
-                    <div style={{ borderTop:"1px solid #ECECEC", paddingTop:20, marginBottom:24 }}>
-                      <div style={{ fontSize:14, fontWeight:800, color:"#1A1A1A", marginBottom:4 }}>{lang==="th"?"ลิงก์ส่วนลดสินค้า":"Product Discount Links"}</div>
-                      <div style={{ fontSize:12, color:"#888", marginBottom:14 }}>{lang==="th"?"ลูกค้าคลิกลิงก์นี้ → เห็นราคาตัดเหลือ 100 บาท → สั่งซื้อในราคาลด":"Customer clicks this link → sees price crossed out -฿100 → orders at discounted price"}</div>
-                      <div style={{ display:"flex", flexDirection:"column", gap:8, maxHeight:320, overflowY:"auto" }}>
-                        {brands.flatMap(b => (b.models||[]).filter(m=>!m.hidden).map(m => {
-                          const promoUrl = `${window.location.origin}${window.location.pathname}?promo=100#product=${encodeURIComponent(b.id)}/${encodeURIComponent(m.id)}`;
-                          const name = `${lang==="th"?b.nameTh:b.nameEn} ${lang==="th"?m.nameTh:m.nameEn}`;
-                          return (
-                            <div key={`${b.id}_${m.id}`} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:10, padding:"10px 13px" }}>
-                              <div>
-                                <div style={{ fontSize:13, fontWeight:700, color:"#1A1A1A" }}>{name}</div>
-                                <div style={{ fontSize:11, color:"#888" }}>{fmt(m.price)} → <span style={{ color:"#16A34A", fontWeight:800 }}>{fmt(m.price - 100)}</span></div>
-                              </div>
-                              <button onClick={()=>{ navigator.clipboard.writeText(promoUrl).catch(()=>{}); addBToast(lang==="th"?"คัดลอกลิงก์แล้ว":"Link copied!", "success"); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:8, padding:"7px 12px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF, whiteSpace:"nowrap" }}>
-                                🔗 {lang==="th"?"คัดลอก":"Copy"}
-                              </button>
+                    <div style={{ fontSize:16, fontWeight:900, color:"#1A1A1A", marginBottom:6 }}>{lang==="th"?"ลิงก์ส่วนลดสินค้า":"Product Discount Links"}</div>
+                    <div style={{ fontSize:13, color:"#888", marginBottom:16 }}>{lang==="th"?"ลูกค้าคลิกลิงก์นี้ → เห็นราคาลด → สั่งซื้อในราคาลด":"Customer clicks this link → sees discounted price → orders at discount"}</div>
+                    <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:16, background:"#F8F7F4", border:"1px solid #E0DDD8", borderRadius:10, padding:"10px 14px" }}>
+                      <label style={{ fontSize:13, fontWeight:800, color:"#555", whiteSpace:"nowrap" }}>{lang==="th"?"ส่วนลด (บาท)":"Discount (฿)"}</label>
+                      <input
+                        type="number" min="0" step="1"
+                        value={adminPromoAmt}
+                        onChange={e=>{ const v=parseInt(e.target.value||"0",10)||0; setAdminPromoAmt(v); try{ localStorage.setItem("skkj_admin_promo_amt", String(v)); }catch(_){} }}
+                        style={{ width:100, background:"#fff", border:"1px solid #D6D1C8", borderRadius:8, padding:"8px 10px", fontSize:16, fontWeight:800, fontFamily:thF, outline:"none", textAlign:"center" }}
+                      />
+                      <span style={{ fontSize:12, color:"#888" }}>{lang==="th"?"ลิงก์ด้านล่างจะอัปเดตอัตโนมัติ":"Links below update automatically"}</span>
+                    </div>
+                    <div style={{ display:"flex", flexDirection:"column", gap:8, maxHeight:420, overflowY:"auto" }}>
+                      {brands.flatMap(b => (b.models||[]).filter(m=>!m.hidden).map(m => {
+                        const disc = Math.min(adminPromoAmt, m.price);
+                        const promoUrl = `${window.location.origin}${window.location.pathname}?promo=${adminPromoAmt}#product=${encodeURIComponent(b.id)}/${encodeURIComponent(m.id)}`;
+                        const name = `${lang==="th"?b.nameTh:b.nameEn} ${lang==="th"?m.nameTh:m.nameEn}`;
+                        return (
+                          <div key={`${b.id}_${m.id}`} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:10, padding:"10px 13px" }}>
+                            <div>
+                              <div style={{ fontSize:13, fontWeight:700, color:"#1A1A1A" }}>{name}</div>
+                              <div style={{ fontSize:11, color:"#888" }}>{fmt(m.price)} → <span style={{ color:"#16A34A", fontWeight:800 }}>{fmt(m.price - disc)}</span>{disc>0&&<span style={{ color:"#9A0018", fontWeight:700, marginLeft:4 }}>(-{fmt(disc)})</span>}</div>
                             </div>
-                          );
-                        }))}
-                      </div>
-                    </div>
-
-                    <div style={{ marginBottom:14 }}>
-                      <label style={{ display:"block", fontSize:12, fontWeight:800, color:"#555", marginBottom:6 }}>{lang==="th"?"เบอร์ PromptPay หรือเลขบัตรประชาชน":"PromptPay phone or national ID"}</label>
-                      <input
-                        value={qrPromptPayId}
-                        onChange={e=>{ setQrPromptPayId(e.target.value); setQrDataUrl(""); setQrError(""); try{ localStorage.setItem("skkj_promptpay_id", e.target.value); }catch(_){} }}
-                        placeholder={lang==="th"?"เช่น 0812345678 หรือ 1234567890123":"e.g. 0812345678 or 1234567890123"}
-                        style={{ width:"100%", boxSizing:"border-box", background:"#FAFAF8", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 13px", fontSize:16, fontFamily:thF, outline:"none" }}
-                      />
-                      <div style={{ fontSize:11, color:"#AAA", marginTop:4 }}>{lang==="th"?"บันทึกอัตโนมัติ ไม่ต้องพิมพ์ซ้ำ":"Saved automatically — no need to retype"}</div>
-                    </div>
-
-                    <div style={{ marginBottom:20 }}>
-                      <label style={{ display:"block", fontSize:12, fontWeight:800, color:"#555", marginBottom:6 }}>{lang==="th"?"จำนวนเงิน (บาท)":"Amount (THB)"}</label>
-                      <input
-                        type="number"
-                        min="1"
-                        step="1"
-                        value={qrAmount}
-                        onChange={e=>{ setQrAmount(e.target.value); setQrDataUrl(""); setQrError(""); }}
-                        placeholder={lang==="th"?"เช่น 3500":"e.g. 3500"}
-                        style={{ width:"100%", boxSizing:"border-box", background:"#FAFAF8", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 13px", fontSize:20, fontWeight:800, fontFamily:thF, outline:"none" }}
-                      />
-                    </div>
-
-                    <button
-                      disabled={!qrPromptPayId || !qrAmount || qrGenerating}
-                      onClick={async()=>{
-                        setQrError("");
-                        setQrDataUrl("");
-                        setQrGenerating(true);
-                        try {
-                          const payload = buildPromptPayPayload(qrPromptPayId, parseFloat(qrAmount));
-                          const url = await new Promise((resolve, reject) => {
-                            window.QRCode.toDataURL(payload, { width:400, margin:2, color:{ dark:"#000000", light:"#ffffff" } }, (err, u) => err ? reject(err) : resolve(u));
-                          });
-                          setQrDataUrl(url);
-                        } catch(e) {
-                          setQrError(lang==="th"?"เกิดข้อผิดพลาด กรุณาตรวจสอบเบอร์ PromptPay":"Error — check your PromptPay ID");
-                        }
-                        setQrGenerating(false);
-                      }}
-                      style={{ width:"100%", background:(!qrPromptPayId||!qrAmount||qrGenerating)?"#eee":"#1A1A1A", color:(!qrPromptPayId||!qrAmount||qrGenerating)?"#aaa":"#fff", border:"none", borderRadius:12, padding:"14px", fontSize:15, fontWeight:900, fontFamily:thF, cursor:(!qrPromptPayId||!qrAmount||qrGenerating)?"not-allowed":"pointer", marginBottom:20 }}
-                    >
-                      {qrGenerating ? (lang==="th"?"กำลังสร้าง...":"Generating...") : (lang==="th"?`สร้าง QR ฿${Number(qrAmount||0).toLocaleString("th-TH")}`:`Generate QR ฿${Number(qrAmount||0).toLocaleString()}`)}
-                    </button>
-
-                    {qrError && <div style={{ color:"#9A0018", fontSize:13, fontWeight:700, marginBottom:16 }}>{qrError}</div>}
-
-                    {qrDataUrl && (
-                      <div style={{ textAlign:"center" }}>
-                        <div style={{ display:"inline-block", background:"#fff", border:"2px solid #1A1A1A", borderRadius:16, padding:16, marginBottom:16 }}>
-                          <img src={qrDataUrl} alt="PromptPay QR" style={{ width:220, height:220, display:"block" }} />
-                          <div style={{ marginTop:10, fontSize:13, fontWeight:800, color:"#1A1A1A" }}>PromptPay · ฿{Number(qrAmount).toLocaleString("th-TH")}</div>
-                        </div>
-                        <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-                          <a
-                            href={qrDataUrl}
-                            download={`promptpay-${qrAmount}-baht.png`}
-                            style={{ background:"#1A1A1A", color:"#fff", borderRadius:10, padding:"11px 20px", fontSize:13, fontWeight:800, fontFamily:thF, textDecoration:"none", display:"inline-flex", alignItems:"center", gap:7 }}
-                          >
-                            ↓ {lang==="th"?"ดาวน์โหลด PNG":"Download PNG"}
-                          </a>
-                          {typeof navigator !== "undefined" && navigator.share && (
-                            <button
-                              onClick={async()=>{
-                                try {
-                                  const res = await fetch(qrDataUrl);
-                                  const blob = await res.blob();
-                                  const file = new File([blob], `promptpay-${qrAmount}baht.png`, { type:"image/png" });
-                                  await navigator.share({ files:[file], title:`PromptPay QR ฿${qrAmount}` });
-                                } catch(_){}
-                              }}
-                              style={{ background:"#16A34A", color:"#fff", border:"none", borderRadius:10, padding:"11px 20px", fontSize:13, fontWeight:800, fontFamily:thF, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7 }}
-                            >
-                              ↑ {lang==="th"?"แชร์ไป LINE":"Share to LINE"}
+                            <button onClick={()=>{ navigator.clipboard.writeText(promoUrl).catch(()=>{}); addBToast(lang==="th"?"คัดลอกลิงก์แล้ว":"Link copied!", "success"); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:8, padding:"7px 12px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF, whiteSpace:"nowrap" }}>
+                              🔗 {lang==="th"?"คัดลอก":"Copy"}
                             </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
+                          </div>
+                        );
+                      }))}
+                    </div>
                   </div>
                 )}
-
                 {/* ── ACCOUNTS TAB — owner only ── */}
                 {adminTab==="accounts" && currentUser?.role==="owner" && (
                   <AccountsPanel
@@ -9323,30 +9245,4 @@ function App() {
                         onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
                         <div>
                           <div style={{ fontWeight:800, fontSize:14 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
-                          <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{m.years||""} · {fmt(m.price)}</div>
-                        </div>
-                        <div style={{ flexShrink:0, background:inStock?"#DCFCE7":"#FEE2E2", color:inStock?"#16A34A":"#9A0018", borderRadius:999, padding:"4px 10px", fontSize:11, fontWeight:800 }}>
-                          {inStock ? (lang==="th"?`มี ${m.stock}`:`${m.stock} left`) : (lang==="th"?"หมดสต็อก":"Out")}
-                        </div>
-                      </button>
-                    );
-                  })}
-                  <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(quickFindBrand); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:8, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
-                    {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
-                  </button>
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-      </div>
-    )}
-    </div>
-  );
-}
-
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
-</body>
-</html>
+                          <div style={{ fontSize:12, color:"#
