@@ -2912,6 +2912,10 @@ function App() {
   const [adminSetupMode, setAdminSetupMode] = useState(false);
   const [adminSetupPw, setAdminSetupPw]   = useState("");
   const [adminSetupPw2, setAdminSetupPw2] = useState("");
+  const [showChangePw, setShowChangePw]       = useState(false);
+  const [changePwNew, setChangePwNew]         = useState("");
+  const [changePwConfirm, setChangePwConfirm] = useState("");
+  const [changePwMsg, setChangePwMsg]         = useState("");
   const [adminSetupMsg, setAdminSetupMsg] = useState("");
   const [currentUser, setCurrentUser]     = useState(null); // staff account
   const [adminError, setAdminError]       = useState("");
@@ -4764,6 +4768,19 @@ function App() {
     setCurrentUser(null);
     setAdminPw("");
     setAdminEmail("");
+  }
+
+  async function changePassword() {
+    const pw1 = changePwNew.trim();
+    const pw2 = changePwConfirm.trim();
+    if (pw1.length < 6) { setChangePwMsg(lang==="th"?"รหัสต้องมีอย่างน้อย 6 ตัวอักษร":"Password must be at least 6 characters"); return; }
+    if (pw1 !== pw2) { setChangePwMsg(lang==="th"?"รหัสไม่ตรงกัน":"Passwords don't match"); return; }
+    if (!skkjAuthClient) { setChangePwMsg("No connection"); return; }
+    const { error } = await skkjAuthClient.auth.updateUser({ password: pw1 });
+    if (error) { setChangePwMsg("Error: " + error.message); return; }
+    setChangePwMsg(lang==="th"?"✅ เปลี่ยนรหัสผ่านสำเร็จ":"✅ Password changed");
+    setChangePwNew(""); setChangePwConfirm("");
+    setTimeout(() => { setShowChangePw(false); setChangePwMsg(""); }, 2500);
   }
 
   function resetAuthForm() {
@@ -7942,9 +7959,22 @@ function App() {
                   </div>
                   <div style={{ display:"flex", gap:10 }}>
                     <button onClick={()=>setNewOrderModal(true)} style={{ background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", borderRadius:10, padding:"9px 16px", cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:thF, boxShadow:"none" }}>{ta.newOrder}</button>
+                    <button onClick={()=>{ setShowChangePw(v=>!v); setChangePwMsg(""); }} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:10, padding:"9px 14px", cursor:"pointer", fontSize:13, fontFamily:thF }}>{lang==="th"?"🔑 เปลี่ยนรหัส":"🔑 Password"}</button>
                     <button onClick={adminLogout} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:10, padding:"9px 14px", cursor:"pointer", fontSize:13, fontFamily:thF }}>{ta.logout}</button>
                   </div>
                 </div>
+                {showChangePw && (
+                  <div style={{ background:"#FAFAF8", border:"1px solid #E0DDD8", borderRadius:12, padding:"16px 18px", marginBottom:18, maxWidth:360 }}>
+                    <div style={{ fontSize:13, fontWeight:700, color:"#1A1A1A", marginBottom:12 }}>{lang==="th"?"เปลี่ยนรหัสผ่าน":"Change Password"}</div>
+                    <input type="password" placeholder={lang==="th"?"รหัสใหม่":"New password"} value={changePwNew} onChange={e=>setChangePwNew(e.target.value)} style={{ width:"100%", padding:"9px 12px", borderRadius:8, border:"1px solid #DDD", fontSize:13, marginBottom:8, boxSizing:"border-box", fontFamily:thF }} />
+                    <input type="password" placeholder={lang==="th"?"ยืนยันรหัสใหม่":"Confirm new password"} value={changePwConfirm} onChange={e=>setChangePwConfirm(e.target.value)} style={{ width:"100%", padding:"9px 12px", borderRadius:8, border:"1px solid #DDD", fontSize:13, marginBottom:10, boxSizing:"border-box", fontFamily:thF }} />
+                    {changePwMsg && <div style={{ fontSize:12, color: changePwMsg.startsWith("✅")?"#166534":"#B91C1C", marginBottom:8 }}>{changePwMsg}</div>}
+                    <div style={{ display:"flex", gap:8 }}>
+                      <button onClick={changePassword} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:8, padding:"8px 16px", cursor:"pointer", fontSize:13, fontFamily:thF, fontWeight:600 }}>{lang==="th"?"บันทึก":"Save"}</button>
+                      <button onClick={()=>{ setShowChangePw(false); setChangePwNew(""); setChangePwConfirm(""); setChangePwMsg(""); }} style={{ background:"#F0EEE8", color:"#555", border:"1px solid #E0DDD8", borderRadius:8, padding:"8px 14px", cursor:"pointer", fontSize:13, fontFamily:thF }}>{lang==="th"?"ยกเลิก":"Cancel"}</button>
+                    </div>
+                  </div>
+                )}
 
                 {/* KPI cards */}
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:11, marginBottom:22 }}>
