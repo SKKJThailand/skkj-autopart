@@ -2831,41 +2831,30 @@ const stableTextId = (prefix, value) => `${prefix}_${String(value || "unknown").
 
 function normalizeDatabaseState(state) {
   if (!state || typeof state !== "object") return {};
+  // Only restore non-PII fields from the public cloud state.
+  // customers/accounts/analytics/activityLog are never in the public blob.
   return {
     brands: Array.isArray(state.brands) ? state.brands : null,
     orders: Array.isArray(state.orders) ? state.orders : null,
-    customers: Array.isArray(state.customers) ? state.customers : null,
-    accounts: Array.isArray(state.accounts) ? state.accounts : null,
     hiddenPartTypes: Array.isArray(state.hiddenPartTypes) ? state.hiddenPartTypes : null,
-    activityLog: Array.isArray(state.activityLog) ? state.activityLog : null,
-    analytics: Array.isArray(state.analytics) ? state.analytics : null,
     syncEvents: Array.isArray(state.syncEvents) ? state.syncEvents : null,
     updatedAt: state.updatedAt || null,
   };
 }
 
-function makeDatabaseState({ brands, orders, customers, accounts, hiddenPartTypes, activityLog, analytics, syncEvents }) {
-  // Security: never write plaintext passwords into the synced backup state.
-  // This state gets stored in a database row that the public site can read,
-  // so password fields must be stripped before it leaves the browser.
-  const safeCustomers = Array.isArray(customers)
-    ? customers.map(({ password, ...rest }) => rest)
-    : customers;
-  const safeAccounts = Array.isArray(accounts)
-    ? accounts.map(({ password, ...rest }) => rest)
-    : accounts;
+function makeDatabaseState({ brands, orders, hiddenPartTypes, syncEvents }) {
+  // Security: skkj_site_state is publicly readable via the Supabase anon key.
+  // NEVER include customers, accounts, analytics, or activityLog here —
+  // those contain real PII and must never be written to the public state blob.
+  // They are handled separately in authenticated-only business tables.
   return {
     version: 2,
     savedFrom: "skkj-version-2",
     updatedAt: new Date().toISOString(),
     brands,
     orders,
-    customers: safeCustomers,
-    accounts: safeAccounts,
     hiddenPartTypes,
-    activityLog: Array.isArray(activityLog) ? activityLog.slice(0, 50) : activityLog,
-    analytics:   Array.isArray(analytics)   ? analytics.slice(0, 50)   : analytics,
-    syncEvents:  Array.isArray(syncEvents)  ? syncEvents.slice(0, 20)  : [],
+    syncEvents: Array.isArray(syncEvents) ? syncEvents.slice(0, 20) : [],
   };
 }
 
@@ -2939,7 +2928,7 @@ function App() {
   });
   const [syncEvents, setSyncEvents]       = useState(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem("skkj_v2_sync_events_v1") || "[]");
+      const saved = JSON.parse(localStorage.getItem("skkj_v2_sync_events_v2") || "[]");
       return Array.isArray(saved) ? saved : [];
     } catch (error) {
       return [];
@@ -2950,7 +2939,12 @@ function App() {
   // ── CUSTOMER AUTH ──
   const [customers, setCustomers]         = useState(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem("skkj_v2_customers_v1") || "null");
+      // v2: clear the old v1 key which may hold all-customers PII from cloud sync.
+      // v2 is only written when admin is authenticated (see localStorage effect below).
+      localStorage.removeItem("skkj_v2_customers_v1");
+      localStorage.removeItem("skkj_v2_analytics_v1");
+      localStorage.removeItem("skkj_v2_sync_events_v1");
+      const saved = JSON.parse(localStorage.getItem("skkj_v2_customers_v2") || "null");
       return Array.isArray(saved) ? saved : INIT_CUSTOMERS;
     } catch (error) {
       return INIT_CUSTOMERS;
@@ -3666,12 +3660,10 @@ function App() {
         const next = normalizeDatabaseState(data.state || data);
         if (next.brands) setBrands(next.brands);
         if (next.orders) setOrders(next.orders);
-        if (next.customers) setCustomers(next.customers);
-        if (next.accounts) setAccounts(next.accounts);
         if (next.hiddenPartTypes) setHiddenPartTypes(next.hiddenPartTypes);
-        if (next.activityLog) setActivityLog(next.activityLog);
-        if (next.analytics) setAnalytics(next.analytics);
         if (next.syncEvents) setSyncEvents(next.syncEvents);
+        // customers/accounts/analytics/activityLog are NOT restored from the cloud blob —
+        // they are PII and must only be loaded via authenticated admin calls.
         setDbStatus(prev => ({
           ...prev,
           loading:false,
@@ -4019,12 +4011,17 @@ function App() {
   }, [hiddenPartTypes, selectedPartType]);
 
   useEffect(() => {
-    try { localStorage.setItem("skkj_v2_customers_v1", JSON.stringify(customers)); } catch (error) {}
-  }, [customers]);
+    // Only persist customers locally when an admin/owner is logged in.
+    // Public visitors must not accumulate customer PII in their browser storage.
+    if (!adminAuth) return;
+    try { localStorage.setItem("skkj_v2_customers_v2", JSON.stringify(customers)); } catch (error) {}
+  }, [customers, adminAuth]);
 
   useEffect(() => {
-    try { localStorage.setItem("skkj_v2_sync_events_v1", JSON.stringify(syncEvents)); } catch (error) {}
-  }, [syncEvents]);
+    // syncEvents contain admin email/role — admin sessions only.
+    if (!adminAuth) return;
+    try { localStorage.setItem("skkj_v2_sync_events_v2", JSON.stringify(syncEvents)); } catch (error) {}
+  }, [syncEvents, adminAuth]);
 
   useEffect(() => {
     try { localStorage.setItem("skkj_v2_google_sheet_config_v1", JSON.stringify(googleSheetConfig)); } catch (error) {}

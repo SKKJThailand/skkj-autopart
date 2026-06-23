@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>SKKJ Autopart</title>
+  <script>
+    // GitHub Pages SPA fallback.
+    // Redirect any deep-link back to the app root so the app can handle routing.
+    var seg = window.location.pathname.replace('/skkj-autopart', '') || '/';
+    var query = window.location.search;
+    var hash = window.location.hash;
+    window.location.replace(
+      '/skkj-autopart/' +
+      (query ? query + '&p=' + encodeURIComponent(seg) : '?p=' + encodeURIComponent(seg)) +
+      hash
+    );
+  </script>
+</head>
+<body></body>
+</html>
