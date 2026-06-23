@@ -1264,11 +1264,23 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
       </div>
       {showImage ? (
         <img className="product-main-image" src={slide.src} alt={slide.title} loading="lazy" onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
-      ) : (
+      ) : slides.some(s => s.type === "image") ? (
+        /* Photo exists but failed to load — show brand logo fallback */
         <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:8 }}>
           <div style={{ fontSize:36, fontWeight:900, color:"rgba(255,255,255,0.20)", fontFamily:"'Kanit', sans-serif", letterSpacing:4 }}>SKKJ</div>
-          
           <BrandLogo logo={brand.logo} size={36} place="productPhoto" />
+        </div>
+      ) : (
+        /* No photo uploaded yet — clear "coming soon" state */
+        <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:8 }}>
+          <svg width="58" height="32" viewBox="0 0 58 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="2" y="13" width="54" height="7" rx="3.5" fill="rgba(255,255,255,0.22)" />
+            <circle cx="10" cy="16.5" r="6" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" />
+            <circle cx="48" cy="16.5" r="6" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" />
+          </svg>
+          <div style={{ fontSize:10, color:"rgba(255,255,255,0.50)", fontFamily:"'Kanit', sans-serif", letterSpacing:0.3 }}>
+            {lang==="th" ? "กำลังเพิ่มรูปภาพ" : "Photo coming soon"}
+          </div>
         </div>
       )}
       <button type="button" className="slide-arrow" onClick={(e)=>{ e.stopPropagation(); canMove && move(-1); }} style={{ position:"absolute", left:8, top:"50%", transform:"translateY(-50%)", width:34, height:42, border:"none", background:"rgba(255,255,255,0.78)", color:"#1A1A1A", borderRadius:10, cursor:canMove?"pointer":"default", fontSize:26, lineHeight:1, zIndex:3, opacity:canMove?1:0.35 }}>‹</button>
@@ -2285,6 +2297,26 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
         ))}
       </div>
 
+      {/* ── Missing photo warning — only shows when visible in-stock SKUs have no photo ── */}
+      {visibleNoPhotoProducts.filter(p => p.stock > 0).length > 0 && (
+        <div style={{ background:"#FEF9EC", border:"1px solid #FCD34D", borderRadius:12, padding:"12px 16px", marginBottom:18, display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
+          <span style={{ fontSize:20, flexShrink:0 }}>📷</span>
+          <div style={{ flex:1, minWidth:160 }}>
+            <div style={{ fontWeight:900, fontSize:13, color:"#92400E" }}>
+              {lang==="th"
+                ? `${visibleNoPhotoProducts.filter(p => p.stock > 0).length} รายการที่มีสต็อกยังไม่มีรูปภาพ`
+                : `${visibleNoPhotoProducts.filter(p => p.stock > 0).length} in-stock product${visibleNoPhotoProducts.filter(p => p.stock > 0).length > 1 ? "s" : ""} missing a photo`}
+            </div>
+            <div style={{ fontSize:12, color:"#92400E", opacity:0.75, marginTop:2 }}>
+              {lang==="th" ? "ลูกค้าจะเห็นรูป placeholder แทนรูปสินค้าจริง" : "Customers see a placeholder instead of a real product photo"}
+            </div>
+          </div>
+          <button onClick={()=>setFilter("no_photo")} style={{ background:"#92400E", color:"#fff", border:"none", borderRadius:9, padding:"8px 13px", cursor:"pointer", fontSize:12, fontWeight:900, fontFamily:thF, flexShrink:0 }}>
+            {lang==="th" ? "ดูรายการ" : "View all"}
+          </button>
+        </div>
+      )}
+
       <div style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, padding:14, marginBottom:18, display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, flexWrap:"wrap" }}>
         <div>
           <div style={{ fontSize:14, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"จัดการสินค้า":"Product manager"}</div>
@@ -2544,6 +2576,11 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
                       {p.hidden && (
                         <span style={{ background:"#FFF7ED", color:"#9A0018", borderRadius:20, padding:"3px 9px", fontSize:10, fontWeight:900, border:"1px solid #F3D7B5" }}>
                           {lang==="th"?"ซ่อนอยู่":"Hidden"}
+                        </span>
+                      )}
+                      {!productHasPhoto(p) && (
+                        <span title={lang==="th"?"ยังไม่มีรูปภาพ":"No photo uploaded"} style={{ background:"#FEF9EC", color:"#92400E", borderRadius:20, padding:"3px 9px", fontSize:10, fontWeight:900, border:"1px solid #FCD34D" }}>
+                          📷
                         </span>
                       )}
                       <span style={{ background:ss.bg, color:ss.color, borderRadius:20, padding:"3px 10px", fontSize:10, fontWeight:700, border:`1px solid ${ss.color}30` }}>
@@ -9019,39 +9056,4 @@ function App() {
                     const hasModels = (b.models||[]).length > 0;
                     return (
                       <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, opacity:hasModels?1:0.4, transition:"border-color .15s" }}
-                        onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A0018"; }}
-                        onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
-                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:40, marginBottom:8 }}>
-                          <BrandLogo logo={b.logo} size={32} place="brandCard" />
-                        </div>
-                        <div style={{ fontWeight:800, fontSize:13 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
-                        <div style={{ fontSize:11, color:"#999", marginTop:2 }}>{(b.models||[]).length} {lang==="th"?"รุ่น":"models"}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-                <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(null); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:16, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
-                  {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
-                </button>
-              </div>
-            ) : (()=>{
-              const models = (quickFindBrand.models || []);
-              if (models.length === 0) return (
-                /* Sorry screen */
-                <div style={{ textAlign:"center", padding:"20px 0" }}>
-                  <img src="assets/sorry.gif" alt="sorry" style={{ width:200, borderRadius:12, marginBottom:16 }} />
-                  <div style={{ fontSize:18, fontWeight:900, marginBottom:6 }}>{lang==="th"?"เราไม่มีสิ่งที่คุณต้องการ":"We don't have what you want"}</div>
-                  <div style={{ fontSize:13, color:"#888", marginBottom:18 }}>{lang==="th"?"ขออภัย ยังไม่มีสินค้าสำหรับยี่ห้อนี้":"Sorry, no parts available for this brand yet"}</div>
-                  <button onClick={()=>setQuickFindBrand(null)} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"11px 24px", fontSize:14, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
-                    {lang==="th"?"ลองยี่ห้ออื่น":"Try another brand"}
-                  </button>
-                </div>
-              );
-              return (
-                /* Step 2 — model list */
-                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {models.map(m => {
-                    const inStock = (m.stock||0) > 0;
-                    return (
-                      <button key={m.id} onClick={()=>{ openProductDetail(quickFindBrand, m); setQuickFindOpen(false); setQuickFindBrand(null); }}
-                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:
+                        onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A
