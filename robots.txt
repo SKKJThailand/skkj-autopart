@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://skkjthailand.github.io/skkj-autopart/sitemap.xml
