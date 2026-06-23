@@ -438,7 +438,7 @@ const T = {
       items:[
         { icon:"↩", title:"Return", body:"Customers have 1 week to return the item, and must send the shipping information and bank account number or QR Code through LINE for the refund transfer." },
         { icon:"🛡", title:"Warranty", body:"Warranty is 6 months or 20,000 km, whichever comes first." },
-        { icon:"💳", title:"Payment", body:"We accept bank transfer, PromptPay, and cash on delivery." },
+        { icon:"💳", title:"Payment", body:"We accept bank transfer and cash on delivery." },
         { icon:"🚚", title:"Shipping", body:"After the item reaches the shipping company, the shop cannot edit or provide additional information on behalf of the customer. Please contact the shipping company directly yourself. We apologize for the inconvenience." },
         { icon:"🔄", title:"Exchange", body:"We are ready to exchange the item. If there is a price difference, we will refund the difference or the customer must pay the additional amount." },
       ],
@@ -575,7 +575,7 @@ const T = {
       items:[
         { icon:"↩", title:"การคืนสินค้า", body:"มีเวลา 1 สัปดาห์ในการส่งคืน และต้องทำการแจ้งข้อมูลจัดส่งและเลขบัญชีโอนเงินหรือ QR Code ให้ในไลน์" },
         { icon:"🛡", title:"การรับประกัน", body:"รับประกัน 6 เดือน หรือ 20,000 กม. แล้วแต่ระยะใดถึงก่อน" },
-        { icon:"💳", title:"การชำระเงิน", body:"รับโอน รับ PromptPay มีจ่ายเงินปลายทาง" },
+        { icon:"💳", title:"การชำระเงิน", body:"รับโอนเงิน มีจ่ายเงินปลายทาง" },
         { icon:"🚚", title:"การจัดส่ง", body:"เมื่อสินค้าถึงบริษัทขนส่งแล้ว ทางร้านไม่สามารถแก้ไขหรือแจ้งข้อมูลเพิ่มเติมแทนลูกค้าได้ กรุณาติดต่อบริษัทขนส่งโดยตรงด้วยตนเอง ขออภัยในความไม่สะดวก" },
         { icon:"🔄", title:"การเปลี่ยนสินค้า", body:"เราพร้อมเปลี่ยนให้ แต่ถ้าหากสินค้าราคามีส่วนต่าง เราจะทำการคืนเงินหรือลูกค้าต้องจ่ายเพิ่ม" },
       ],
@@ -880,21 +880,6 @@ function SmoothSizeCard({ children, className="", style={} }) {
   );
 }
 
-function PromptPayBox({ lang, amount }) {
-  return (
-    <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #ECECEC", borderRadius:14, padding:18, textAlign:"center" }}>
-      <div style={{ fontWeight:800, fontSize:16, marginBottom:6 }}>{lang==="th"?"ชำระเงินผ่านพร้อมเพย์":"Pay with PromptPay"}</div>
-      <div style={{ color:"#666", fontSize:13, lineHeight:1.6, marginBottom:14 }}>
-        {lang==="th"?"สแกน QR พร้อมเพย์ แล้วไปขั้นตอนถัดไปเพื่อแนบสลิป":"Scan the PromptPay QR, then continue to upload the payment slip."}
-      </div>
-      <div style={{ width:190, height:190, margin:"0 auto 12px", background:"#fff", border:"2px dashed #BBB", borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", color:"#777" }}>
-        <div style={{ fontWeight:800, fontSize:18 }}>PromptPay QR</div>
-        <div style={{ fontSize:12, marginTop:6 }}>{lang==="th"?"รอใส่ QR จริง":"QR placeholder"}</div>
-      </div>
-      <div style={{ fontWeight:900, fontSize:22 }}>{fmt(amount)}</div>
-    </div>
-  );
-}
 
 function BankTransferBox({ lang, amount }) {
   return (
@@ -932,7 +917,6 @@ function CashOnDeliveryBox({ lang, amount }) {
 function PaymentMethodSelector({ lang, value, onChange, hideCod=false }) {
   const options = [
     { id:"bank_transfer", th:"โอนเงิน", en:"Bank transfer" },
-    { id:"promptpay", th:"PromptPay", en:"PromptPay" },
     { id:"cod", th:"จ่ายปลายทาง", en:"Cash on delivery" },
   ];
   return (
@@ -1553,10 +1537,10 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
     const parts = [addrHouse, addrSoi ? "ซอย"+addrSoi : "", addrRoad ? "ถนน"+addrRoad : "", addrTambon, addrDistrict, addrProvince, addrPostcode].filter(Boolean);
     return parts.join(" ");
   }
-  const [paymentMethod, setPaymentMethod] = useState("promptpay");
+  const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
   const [deliveryMethod, setDeliveryMethod] = useState("standard");
   useEffect(() => {
-    if (deliveryMethod==="express_bkk" && paymentMethod==="cod") setPaymentMethod("promptpay");
+    if (deliveryMethod==="express_bkk" && paymentMethod==="cod") setPaymentMethod("bank_transfer");
   }, [deliveryMethod, paymentMethod]);
 
   function handleDetailsSubmit(e) {
@@ -1723,7 +1707,6 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
               {deliveryMethod==="express_bkk" && <div style={{ marginTop:8, color:"#9A0018", fontSize:12, fontWeight:800, lineHeight:1.5 }}>{lang==="th"?"ส่งด่วนไม่สามารถเลือกเก็บเงินปลายทางได้":"Cash on delivery is not available for express delivery."}</div>}
             </div>
             {paymentMethod==="bank_transfer" && <BankTransferBox lang={lang} amount={total} />}
-            {paymentMethod==="promptpay" && <PromptPayBox lang={lang} amount={total} />}
             {paymentMethod==="cod" && <CashOnDeliveryBox lang={lang} amount={total} />}
             <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:4 }}>
               <button type="button" onClick={()=>setStep(1)} style={{ flex:1, padding:12, border:"1px solid #ddd", borderRadius:10, background:"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
@@ -1740,7 +1723,7 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
           <form className="checkout-form" onSubmit={handleSlipSubmit} style={{ display:"flex", flexDirection:"column", gap:14 }}>
             <div style={{ background:"#F8F7F4", border:"1px solid #ECECEC", borderRadius:12, padding:14 }}>
               <div style={{ fontWeight:800, fontSize:13, marginBottom:6 }}>{lang==="th"?"แนบสลิปโอนเงิน":"Upload payment slip"}</div>
-              <div style={{ fontSize:12, color:"#666", lineHeight:1.5, marginBottom:10 }}>{paymentMethod==="bank_transfer" ? (lang==="th"?"เลือกรูปสลิปหลังจากโอนเงินผ่านบัญชีธนาคาร":"Choose the slip image after bank transfer.") : (lang==="th"?"เลือกรูปสลิปหลังจากชำระเงินผ่านพร้อมเพย์":"Choose the slip image after paying with PromptPay.")}</div>
+              <div style={{ fontSize:12, color:"#666", lineHeight:1.5, marginBottom:10 }}>{lang==="th"?"เลือกรูปสลิปหลังจากโอนเงินผ่านบัญชีธนาคาร":"Choose the slip image after bank transfer."}</div>
               <input name="paymentSlip" type="file" accept="image/*" required style={{ fontSize:12, width:"100%" }} />
             </div>
             <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:4 }}>
@@ -2158,9 +2141,9 @@ function InventoryPanel({ brands, setBrands, lang, t, onLog, hiddenPartTypes=[],
     addToast(`"${short}" → ${newStock} ${ta.invUnits}`);
     onLog?.("stock_update", `Set ${displayName} stock to ${newStock}`);
     if (newStock === 0) {
-      fetch("https://bxwawwrxwkwqqhfgapdn.supabase.co/functions/v1/low-stock-alert", {
+      fetch(`${SKKJ_DATABASE_CONFIG.supabaseUrl}/functions/v1/low-stock-alert`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SKKJ_DATABASE_CONFIG.supabaseKey}` },
         body: JSON.stringify({ product: displayName }),
       }).catch(()=>{});
     }
@@ -2747,18 +2730,30 @@ function buildPromptPayPayload(promptPayId, amount) {
   return payload + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, "0");
 }
 
+// ─── ENVIRONMENT DETECTION ───────────────────────────────────────────────────
+// When the site runs on a staging URL it automatically uses the staging Supabase
+// project so test data never touches real customer records.
+// Staging URLs: anything with "staging" in the hostname, or a Netlify preview
+// that is NOT the main production site.
+const _SKKJ_HOSTNAME = (typeof window !== "undefined") ? window.location.hostname : "";
+const SKKJ_IS_STAGING = _SKKJ_HOSTNAME.includes("staging") ||
+                        (_SKKJ_HOSTNAME.endsWith(".netlify.app") && !_SKKJ_HOSTNAME.startsWith("skkj-autopart."));
+
 // ─── DATABASE-READY BRIDGE ───────────────────────────────────────────────────
 // This keeps GitHub Pages working now, and lets us plug in a real server later.
+// Security note: only anon/publishable keys belong here. Never put service-role
+// keys, OpenAI keys, or any secret in this file.
 const SKKJ_DATABASE_CONFIG = {
   enabled: true,
   provider: "supabase",
   apiBase: "",
-  // Security note: never put service-role keys, OpenAI keys, webhook secrets,
-  // or private admin tokens in this frontend file. Browser code may only use
-  // a Supabase publishable/anon key with strict RLS policies.
   adminToken: "",
-  supabaseUrl: "https://bxwawwrxwkwqqhfgapdn.supabase.co",
-  supabaseKey: "sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R",
+  supabaseUrl: SKKJ_IS_STAGING
+    ? "STAGING_SUPABASE_URL_HERE"         // ← replace after creating Supabase staging project
+    : "https://bxwawwrxwkwqqhfgapdn.supabase.co",
+  supabaseKey: SKKJ_IS_STAGING
+    ? "STAGING_SUPABASE_ANON_KEY_HERE"    // ← replace after creating Supabase staging project
+    : "sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R",
   supabaseTable: "skkj_site_state",
   supabaseRecordId: "main",
 };
@@ -3021,9 +3016,8 @@ function App() {
   const [orderStep, setOrderStep]         = useState(1);
   const [orderDetails, setOrderDetails]   = useState(null);
   const [selectedOrderAddress, setSelectedOrderAddress] = useState("");
-  const [singlePaymentMethod, setSinglePaymentMethod] = useState("promptpay");
+  const [singlePaymentMethod, setSinglePaymentMethod] = useState("bank_transfer");
   const [singleDeliveryMethod, setSingleDeliveryMethod] = useState("standard");
-  const [ppCountdown,    setPpCountdown]    = useState(900);
   const [copyAcctState,  setCopyAcctState]  = useState(false);
   const [pendingOrderRef,setPendingOrderRef] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -3097,6 +3091,7 @@ function App() {
   const [qrDataUrl, setQrDataUrl]         = useState("");
   const [qrGenerating, setQrGenerating]   = useState(false);
   const [qrError, setQrError]             = useState("");
+  const [printMenuOpen, setPrintMenuOpen] = useState(null);
   const dbLoadedRef                       = useRef(false);
   const dbSaveTimerRef                    = useRef(null);
   const dbFailCountRef                    = useRef(0);
@@ -3135,7 +3130,6 @@ function App() {
   const paymentMethodLabel = (method) => {
     const labels = {
       bank_transfer: lang==="th" ? "โอนเงิน" : "Bank transfer",
-      promptpay: lang==="th" ? "PromptPay" : "PromptPay",
       cod: lang==="th" ? "จ่ายปลายทาง" : "Cash on delivery",
     };
     return labels[method] || (lang==="th" ? "ยังไม่เลือก" : "Not selected");
@@ -4315,7 +4309,7 @@ function App() {
         notes:"",
       });
       setSelectedOrderAddress(savedAddress?.id || "");
-      setSinglePaymentMethod("promptpay");
+      setSinglePaymentMethod("bank_transfer");
       setSingleDeliveryMethod("standard");
       if (orderForm.brandId && orderForm.modelId) {
         trackAnalytics("order_start", {
@@ -4328,9 +4322,8 @@ function App() {
     }
   }, [orderForm]);
   useEffect(() => {
-    if (singleDeliveryMethod==="express_bkk" && singlePaymentMethod==="cod") setSinglePaymentMethod("promptpay");
+    if (singleDeliveryMethod==="express_bkk" && singlePaymentMethod==="cod") setSinglePaymentMethod("bank_transfer");
   }, [singleDeliveryMethod, singlePaymentMethod]);
-  useEffect(()=>{ if(orderStep===2&&orderForm){ setPpCountdown(900); const iv=setInterval(()=>setPpCountdown(p=>p>0?p-1:0),1000); return ()=>clearInterval(iv); } },[orderStep,orderForm]);
   useEffect(()=>{ if(orderStep===2&&orderForm&&!pendingOrderRef){ const d=new Date().toISOString().slice(0,10).replace(/-/g,""); setPendingOrderRef("SKKJ-"+d+"-"+String(Date.now()).slice(-4)); } if(!orderForm) setPendingOrderRef(""); },[orderStep,orderForm]);
   useEffect(()=>{ setCatalogPage(1); },[catalogSearch,selectedBrand,selectedPartType]);
   useEffect(()=>{ const _check=()=>setIsMobile(window.innerWidth<768); window.addEventListener("resize",_check); return ()=>window.removeEventListener("resize",_check); },[]);
@@ -4604,7 +4597,7 @@ function App() {
     finalizeSingleOrder({ paymentSlip, paymentSlipName:slipFile?.name || "", paymentMethod:singlePaymentMethod, paymentStatus:"waiting_review" });
   }
 
-  function finalizeSingleOrder({ paymentSlip="", paymentSlipName="", paymentMethod="promptpay", paymentStatus="waiting_review" } = {}) {
+  function finalizeSingleOrder({ paymentSlip="", paymentSlipName="", paymentMethod="bank_transfer", paymentStatus="waiting_review" } = {}) {
     if (orderForm.brandId && orderForm.modelId && getLiveStock(brands, orderForm.brandId, orderForm.modelId) < 1) {
       addBToast(tb.notEnoughStock, "error");
       return;
@@ -4614,10 +4607,10 @@ function App() {
     setOrders(nextOrders);
     queueImmediateOnlineSave("single_product_order_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(newOrder, "single_product_order");
-    fetch("https://bxwawwrxwkwqqhfgapdn.supabase.co/functions/v1/order-alert", {
+    fetch(`${SKKJ_DATABASE_CONFIG.supabaseUrl}/functions/v1/order-alert`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer sb_publishable_mnb1DsiYOKWncDpChjZayA_A74JfX7R" },
-      body: JSON.stringify({ orderId: newOrder.id || "-", customer: newOrder.customer || "-", brand: newOrder.brand || "-", model: newOrder.model || "-", price: Number(newOrder.price) || 0, phone: newOrder.phone || "-", paymentMethod: paymentMethod || "promptpay" }),
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SKKJ_DATABASE_CONFIG.supabaseKey}` },
+      body: JSON.stringify({ orderId: newOrder.id || "-", customer: newOrder.customer || "-", brand: newOrder.brand || "-", model: newOrder.model || "-", price: Number(newOrder.price) || 0, phone: newOrder.phone || "-", paymentMethod: paymentMethod || "bank_transfer" }),
     }).catch(() => {});
     {
       const cfg = dbConfigRef.current;
@@ -4633,7 +4626,7 @@ function App() {
     setOrderForm(null);
     setOrderStep(1);
     setOrderDetails(null);
-    setSinglePaymentMethod("promptpay");
+    setSinglePaymentMethod("bank_transfer");
     setSingleDeliveryMethod("standard");
     setOrderSuccess(true);
     setTimeout(()=>setOrderSuccess(false), 4500);
@@ -4642,7 +4635,7 @@ function App() {
   function handleLineConfirm() {
     const msg=(lang==="th"?"สั่งซื้อ ":"Order ")+pendingOrderRef+" | "+orderForm.brand+" "+orderForm.model+" | "+(lang==="th"?"โทร ":"Tel: ")+(orderDetails?.phone||"");
     window.open("https://line.me/R/ti/p/@skkjautopart?text="+encodeURIComponent(msg),"_blank","noopener,noreferrer");
-    finalizeSingleOrder({ paymentMethod:"promptpay", paymentStatus:"waiting_review" });
+    finalizeSingleOrder({ paymentMethod:"bank_transfer", paymentStatus:"waiting_review" });
   }
   // ── BASKET CHECKOUT ──
   function handleCheckoutOpen(shipping) {
@@ -4660,7 +4653,7 @@ function App() {
     const today = new Date().toISOString().slice(0,10);
     const newOrders = basket.map((item, idx) => attachShippingRecord({
       id: "ORD-" + String(orders.length + idx + 1).padStart(3,"0"),
-      customer, customerEmail:currentCustomer?.email || "", phone, address, year, customerNote:notes || "", adminNote:"", deliveryMethod:deliveryMethod || "standard", paymentSlip, paymentSlipName, paymentMethod:paymentMethod || "promptpay", paymentStatus:paymentStatus || "waiting_review", adminFlag:"none", labelPrinted:false,
+      customer, customerEmail:currentCustomer?.email || "", phone, address, year, customerNote:notes || "", adminNote:"", deliveryMethod:deliveryMethod || "standard", paymentSlip, paymentSlipName, paymentMethod:paymentMethod || "bank_transfer", paymentStatus:paymentStatus || "waiting_review", adminFlag:"none", labelPrinted:false,
       brand: item.brandNameTh,
       model: item.modelNameTh,
       brandId: item.brandId,
@@ -4675,7 +4668,7 @@ function App() {
     setOrders(nextOrders);
     queueImmediateOnlineSave("basket_checkout_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(newOrders, "basket_checkout");
-    (paymentMethod || "promptpay") !== "cod" ? setLastBillOrders(newOrders) : setLastBillOrders(null);
+    (paymentMethod || "bank_transfer") !== "cod" ? setLastBillOrders(newOrders) : setLastBillOrders(null);
     saveCustomerAddressSlot({ customer, phone, address });
     reduceStockForOrder(basket, { orders: nextOrders });
     checkoutDoneRef.current = true;
@@ -5036,6 +5029,206 @@ function App() {
     updateOrderStatus(order, "pending");
   }
 
+  function printAll(order) {
+    const w = window.open("", "_blank", "width=900,height=700");
+    if (!w) { alert(lang==="th" ? "เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่" : "Browser blocked pop-up. Please allow pop-ups and try again."); return; }
+    // shared data
+    const _oDate = new Date(order.createdAt || order.date || Date.now());
+    const _dateStr = _oDate.toLocaleDateString("th-TH",{year:"numeric",month:"long",day:"numeric"});
+    const _expiry = new Date(_oDate); _expiry.setMonth(_expiry.getMonth()+6);
+    const _expiryStr = _expiry.toLocaleDateString("th-TH",{year:"numeric",month:"long",day:"numeric"});
+    const _qty = Number(order.quantity)||1;
+    const _uprice = Number(order.price)||0;
+    const _fmt2 = n => Number(n).toLocaleString("th-TH");
+    const _addr = order.address || (lang==="th" ? "ยังไม่มีที่อยู่จัดส่ง" : "No delivery address saved");
+    const _isCod = order.paymentMethod==="cod";
+    const _isExp = order.deliveryMethod==="express_bkk";
+    // update labelPrinted status (same logic as printDeliveryLabel)
+    const _labEvt = makeOrderEvent("label", order.status==="pending"
+      ? (lang==="th" ? "พิมพ์ทั้งหมด 4 หน้า และเปลี่ยนเป็นกำลังบรรจุ" : "Printed all 4 pages and moved to packing")
+      : (lang==="th" ? "พิมพ์ทั้งหมด 4 หน้า" : "Printed all 4 pages"));
+    const _pAt = new Date().toISOString();
+    const _nxOrd = orders.map(o=>o.id===order.id?attachShippingRecord({...o,labelPrinted:true,labelPrintedAt:_pAt,status:o.status==="pending"?"processing":o.status,statusUpdatedAt:o.status==="pending"?_pAt:o.statusUpdatedAt,updatedAt:_pAt,timeline:[_labEvt,...(Array.isArray(o.timeline)?o.timeline:[])].slice(0,80)},{printed:true,now:_pAt}):o);
+    setOrders(_nxOrd);
+    queueImmediateOnlineSave("all_print",{orders:_nxOrd});
+    setDetailOrder(prev=>prev&&prev.id===order.id?attachShippingRecord({...prev,labelPrinted:true,labelPrintedAt:_pAt,status:prev.status==="pending"?"processing":prev.status,statusUpdatedAt:prev.status==="pending"?_pAt:prev.statusUpdatedAt,updatedAt:_pAt,timeline:[_labEvt,...(Array.isArray(prev.timeline)?prev.timeline:[])].slice(0,80)},{printed:true,now:_pAt}):prev);
+    logActivity("all_print",`พิมพ์ทั้งหมด 4 หน้า สำหรับ ${order.id}${order.status==="pending"?" และเปลี่ยนสถานะเป็นกำลังบรรจุ":""}`);
+    // bill HTML: page 1 (original) + page 2 (สำเนา copy)
+    const _bill = (isCopy) => `
+    <div class="bill">
+      ${isCopy ? '<div class="samna-badge">สำเนา</div>' : ''}
+      <div class="shop-name">SKKJ Autopart</div>
+      <div class="shop-sub">แร็คพวงมาลัย &nbsp;·&nbsp; บิลเงินสด / CASHSALE</div>
+      <div class="b-info">
+        <div><span class="b-lbl">ชื่อ </span><span class="b-val">${order.customer||"-"}</span></div>
+        <div style="text-align:right"><span class="b-lbl">วันที่ </span><span class="b-val">${_dateStr}</span></div>
+        <div style="grid-column:1/-1"><span class="b-lbl">ที่อยู่ </span><span class="b-val">${order.address||"-"}</span></div>
+        <div><span class="b-lbl">เบอร์ </span><span class="b-val">${order.phone||"-"}</span></div>
+        <div style="text-align:right"><span class="b-lbl">ออเดอร์ </span><span class="b-val">${order.id}</span></div>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="width:10%">จำนวน</th><th>รายการ</th>
+          <th style="width:25%;text-align:right">หน่วยละ</th>
+          <th style="width:25%;text-align:right">รวม</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center">${_qty}</td>
+            <td>${order.brand||""} ${order.model||""}${order.year?" ปี "+order.year:""}</td>
+            <td style="text-align:right">฿${_fmt2(_uprice)}</td>
+            <td style="text-align:right">฿${_fmt2(_uprice)}</td>
+          </tr>
+          <tr class="empty-row"><td colspan="4"></td></tr>
+          <tr class="empty-row"><td colspan="4"></td></tr>
+        </tbody>
+      </table>
+      <div class="total-section">
+        <span class="total-label">รวมเงิน / Total</span>
+        <span class="total-val">฿${_fmt2(_uprice)}</span>
+      </div>
+      <div class="sig-row">
+        <div class="sig"><div class="sig-line"></div><div class="sig-lbl">ผู้รับสินค้า / Receiver</div></div>
+        <div class="sig"><div class="sig-line" style="display:flex;align-items:flex-end;justify-content:center;font-size:10px;font-weight:700;padding-bottom:1mm">SKKJ Autopart</div><div class="sig-lbl">ผู้รับเงิน / Collector</div></div>
+      </div>
+    </div>`;
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>พิมพ์ทั้งหมด ${labelSafe(order.id)}</title><style>
+      @page{size:A6 landscape;margin:5mm}
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff}
+      .print-tools{display:flex;gap:8px;padding:8px;align-items:center}
+      .print-btn{padding:8px 18px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:14px}
+      .print-note{font-size:12px;color:#666;margin-left:8px}
+      @media print{.print-tools{display:none}}
+      .page{height:calc(105mm - 10mm);page-break-after:always;overflow:hidden;display:flex;flex-direction:column}
+      .page:last-child{page-break-after:auto}
+      .bill{position:relative;display:flex;flex-direction:column;gap:1.5mm;padding-top:0.5mm;flex:1}
+      .samna-badge{position:absolute;top:0;right:0;background:#000;color:#fff;font-size:11px;font-weight:900;padding:1mm 3mm}
+      .shop-name{font-size:20px;font-weight:900}
+      .shop-sub{font-size:10px;color:#555;border-bottom:1.5px solid #000;padding-bottom:2mm}
+      .b-info{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;font-size:11px;border-bottom:1px solid #ccc;padding-bottom:2mm}
+      .b-lbl{color:#888}.b-val{font-weight:700}
+      table{width:100%;border-collapse:collapse;border-top:1.5px solid #000;border-bottom:1.5px solid #000}
+      thead tr{border-bottom:1px solid #000}
+      th{padding:2mm;font-size:10px;font-weight:700;text-align:left}
+      td{padding:2mm;font-size:11px}
+      .empty-row td{height:4mm}
+      .total-section{display:flex;justify-content:flex-end;align-items:baseline;gap:3mm;padding-top:1mm}
+      .total-label{font-size:10px;color:#888}.total-val{font-size:20px;font-weight:900}
+      .sig-row{display:flex;justify-content:space-between;border-top:1px solid #000;padding-top:1.5mm;margin-top:auto}
+      .sig{text-align:center;width:44%}
+      .sig-line{border-bottom:1px solid #000;height:9mm;margin-bottom:1.5mm}
+      .sig-lbl{font-size:10px;color:#444}
+      .wcard{display:flex;flex-direction:column;flex:1}
+      .wheader{border-top:3px solid #000;border-bottom:3px solid #000;padding:3mm 4mm;display:flex;justify-content:space-between;align-items:center}
+      .wtitle-th{font-size:20px;font-weight:900}
+      .wtitle-en{font-size:12px;color:#444;margin-top:1mm}
+      .wshop{font-size:11px;color:#666;margin-top:1mm}
+      .expiry-box{border:2px solid #000;padding:2mm 3mm;text-align:right;border-radius:2mm}
+      .expiry-label{font-size:10px;color:#444}.expiry-date{font-size:16px;font-weight:900}
+      .wbody{padding:3mm 4mm;display:flex;flex-direction:column;gap:2.5mm;flex:1}
+      .winfo{display:grid;grid-template-columns:1fr 1fr;gap:2mm;font-size:10px}
+      .wlbl{color:#888;font-size:9px}.wval{font-weight:700;font-size:11px;border-bottom:1px solid #ccc;padding-bottom:0.5mm}
+      .terms{border-top:1px solid #ddd;padding-top:2mm;font-size:8.5px;color:#444;line-height:1.65}
+      .wfooter{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #ddd;padding-top:2mm;margin-top:auto}
+      .wurl{font-size:8px;color:#aaa}
+      .wsig{text-align:center;width:36%}.wsig-line{border-bottom:1px solid #000;height:9mm;margin-bottom:1.5mm}.wsig-lbl{font-size:8px;color:#555}
+      .alabel{width:100%;display:flex;flex-direction:column;gap:2mm;flex:1}
+      .altop{display:flex;align-items:center;justify-content:space-between;gap:3mm;border-bottom:2px solid #111;padding-bottom:2mm}
+      .albrand{font-size:16px;font-weight:900}.alorder{font-family:monospace;font-size:12px;font-weight:900}
+      .badge-row{display:flex;gap:2mm;flex-wrap:wrap}
+      .badge{display:inline-block;border:1.5px solid #111;border-radius:999px;padding:1mm 3mm;font-size:11px;font-weight:900}
+      .badge.cod{background:#111;color:#fff}.badge.express{border-color:#9A0018;color:#9A0018}
+      .alcard{border:1.5px solid #111;border-radius:3mm;padding:2.5mm}
+      .alcustomer{border-width:2px}.alsender{border-style:dashed}
+      .altitle{display:flex;align-items:center;justify-content:space-between;gap:3mm;margin-bottom:1.5mm;padding-bottom:1.5mm;border-bottom:1px solid #111}
+      .alrole{font-size:14px;font-weight:900;white-space:nowrap}.alname{font-size:16px;font-weight:900;line-height:1.2;text-align:right}
+      .cust-addr{font-size:15px;font-weight:900;line-height:1.3;white-space:pre-wrap;word-break:break-word;margin-top:1.5mm}
+      .alphone{font-size:13px;font-weight:900;margin-top:1.5mm}
+      .alline{font-size:11.5px;line-height:1.42;white-space:pre-wrap;word-break:break-word}
+      .price-box{margin-top:2mm;border:2px solid #111;border-radius:2mm;padding:1.5mm 3mm;display:flex;align-items:center;justify-content:space-between}
+      .price-label{font-size:13px;font-weight:900}.alp-price{font-size:20px;font-weight:900}
+      .alnote{font-size:9.5px;line-height:1.35;color:#333;border-top:1px solid #111;padding-top:1.5mm}
+    </style></head><body>
+    <div class="print-tools">
+      <button class="print-btn" onclick="window.print()">🖨 พิมพ์ทั้งหมด (4 หน้า)</button>
+      <span class="print-note">บิล × 2 &nbsp;·&nbsp; ประกัน × 1 &nbsp;·&nbsp; ป้ายจัดส่ง × 1</span>
+    </div>
+    <div class="page">${_bill(false)}</div>
+    <div class="page">${_bill(true)}</div>
+    <div class="page">
+      <div class="wcard">
+        <div class="wheader">
+          <div>
+            <div class="wtitle-th">ใบรับประกันสินค้า</div>
+            <div class="wtitle-en">WARRANTY CARD</div>
+            <div class="wshop">SKKJ Autopart · แร็คพวงมาลัย</div>
+          </div>
+          <div class="expiry-box">
+            <div class="expiry-label">ประกันหมดอายุ / Warranty Expires</div>
+            <div class="expiry-date">${_expiryStr}</div>
+          </div>
+        </div>
+        <div class="wbody">
+          <div class="winfo">
+            <div><div class="wlbl">เลขออเดอร์ / Order ID</div><div class="wval">${order.id}</div></div>
+            <div><div class="wlbl">วันที่ซื้อ / Purchase Date</div><div class="wval">${_dateStr}</div></div>
+            <div><div class="wlbl">ชื่อลูกค้า / Customer</div><div class="wval">${order.customer||"-"}</div></div>
+            <div><div class="wlbl">สินค้า / Product</div><div class="wval">${order.brand||""} ${order.model||""}${order.year?" ปี "+order.year:""}</div></div>
+          </div>
+          <div class="terms">
+            <b>เงื่อนไขการรับประกัน / Terms:</b><br/>
+            1. ลูกค้าต้องตรวจสอบรุ่นรถ ปีรถ และรายละเอียดสินค้าให้ถูกต้องก่อนสั่งซื้อ<br/>
+            2. ทางร้านไม่รับผิดชอบในกรณีที่ลูกค้ากรอกชื่อ ที่อยู่ หรือเบอร์โทรศัพท์ผิดพลาด<br/>
+            3. การรับประกันครอบคลุมเฉพาะความเสียหายจากตัวสินค้า ตามระยะเวลาที่ทางร้านกำหนด (20,000 กม. หรือ 6 เดือน)<br/>
+            4. ทางร้านไม่รับประกันสินค้าในกรณีติดตั้งผิดวิธี ใช้งานผิดประเภท ตัดแปลงสินค้า หรือเกิดความเสียหายจากอุบัติเหตุ<br/>
+            5. สินค้าที่หมดระยะเวลารับประกันแล้ว ทางร้านจะไม่รับผิดชอบค่าเสียหาย การเปลี่ยนสินค้า หรือค่าติดตั้งใดๆ
+          </div>
+          <div class="wfooter">
+            <div class="wurl">skkjthailand.github.io/skkj-autopart</div>
+            <div class="wsig"><div class="wsig-line"></div><div class="wsig-lbl">ผู้รับสินค้า / Receiver</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="alabel">
+        <div class="altop">
+          <div>
+            <div class="albrand">SKKJ AUTOPART</div>
+            <div class="badge-row">
+              ${_isCod ? '<span class="badge cod">เก็บเงินปลายทาง</span>' : ""}
+              ${_isExp ? '<span class="badge express">ส่งด่วน Grab</span>' : ""}
+            </div>
+          </div>
+          <div class="alorder">${labelSafe(order.id)}</div>
+        </div>
+        <div class="alcard alcustomer">
+          <div class="altitle">
+            <div class="alrole">ผู้รับ</div>
+            <div class="alname">${labelSafe(order.customer||"-")}</div>
+          </div>
+          <div class="alphone">${labelSafe(order.phone||"-")}</div>
+          <div class="cust-addr">${labelSafe(_addr)}</div>
+          ${_isCod ? `<div class="price-box"><span class="price-label">ยอดเก็บปลายทาง</span><span class="alp-price">${labelSafe(fmt(order.price||0))}</span></div>` : ""}
+        </div>
+        <div class="alcard alsender">
+          <div class="altitle">
+            <div class="alrole">ผู้ส่ง</div>
+            <div class="alname">SKKJ Autopart</div>
+          </div>
+          <div class="alline">36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพมหานคร 10150 โทร 087-102-2666</div>
+        </div>
+        <div class="alnote">หมายเหตุ: กรุณาตรวจสอบชื่อ เบอร์โทรศัพท์ และที่อยู่ก่อนจัดส่ง</div>
+      </div>
+    </div>
+    </body></html>`);
+    w.document.close();
+    w.focus();
+    w.addEventListener?.("load", () => setTimeout(() => { w.focus(); w.print(); }, 250));
+    setTimeout(() => { try { w.focus(); w.print(); } catch(e) {} }, 700);
+  }
+
   function labelSafe(value) {
     return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
   }
@@ -5242,7 +5435,7 @@ function App() {
                 <div>
                   <div class="brand">SKKJ AUTOPART</div>
                   <h1>${lang==="th" ? "ใบรับรายการชำระเงิน" : "Payment Bill"}</h1>
-                  <p class="muted">${lang==="th" ? "บิลสำหรับลูกค้าที่ชำระเงินออนไลน์ผ่านโอนเงินหรือ PromptPay" : "Bill for online payment by bank transfer or PromptPay."}</p>
+                  <p class="muted">${lang==="th" ? "บิลสำหรับลูกค้าที่ชำระเงินออนไลน์ผ่านโอนเงิน" : "Bill for online payment by bank transfer."}</p>
                 </div>
                 <div class="box" style="min-width:62mm">
                   <div class="label">${lang==="th"?"เลขที่บิล":"Bill No."}</div>
@@ -6541,7 +6734,7 @@ function App() {
           <SmoothSizeCard className="skkj-modal-card" style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, padding:26, width:"100%", maxWidth:440, maxHeight:"86vh", overflowY:"auto" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8, marginBottom:4 }}>
               <h3 style={{ margin:0, fontSize:20, fontWeight:700 }}>{t.order.title}</h3>
-              <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("promptpay"); setSingleDeliveryMethod("standard"); }} style={{ minWidth:44, minHeight:44, display:"flex", alignItems:"center", justifyContent:"center", background:"transparent", border:"1px solid #E0DDD8", borderRadius:10, cursor:"pointer", fontSize:18, color:"#888", fontFamily:thF, flexShrink:0 }}>✕</button>
+              <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("bank_transfer"); setSingleDeliveryMethod("standard"); }} style={{ minWidth:44, minHeight:44, display:"flex", alignItems:"center", justifyContent:"center", background:"transparent", border:"1px solid #E0DDD8", borderRadius:10, cursor:"pointer", fontSize:18, color:"#888", fontFamily:thF, flexShrink:0 }}>✕</button>
             </div>
             <div style={{ margin:"0 0 8px", display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
             <span style={{ color:"#888", fontSize:13 }}>{orderForm.brand} — {orderForm.model}</span>
@@ -6581,7 +6774,7 @@ function App() {
               </div>
               <TermsAgreement lang={lang} />
               <div className="checkout-actions" style={{ display:"flex", gap:10, marginTop:8 }}>
-                <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("promptpay"); setSingleDeliveryMethod("standard"); }} style={{ flex:1, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{t.order.cancel}</button>
+                <button type="button" onClick={()=>{ setOrderForm(null); setOrderStep(1); setOrderDetails(null); setSinglePaymentMethod("bank_transfer"); setSingleDeliveryMethod("standard"); }} style={{ flex:1, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{t.order.cancel}</button>
                 <button type="submit" style={{ flex:2, padding:12, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, cursor:"pointer", fontSize:14, fontWeight:600, fontFamily:thF }}>{lang==="th"?"เลือกจัดส่ง / จ่ายเงิน":"Choose delivery / payment"}</button>
               </div>
             </form>}
@@ -6592,21 +6785,8 @@ function App() {
                   <div style={{ fontSize:13, fontWeight:900, marginBottom:8 }}>{lang==="th"?"เลือกวิธีจัดส่ง":"Choose delivery method"}</div>
                   <DeliveryMethodSelector lang={lang} value={singleDeliveryMethod} onChange={setSingleDeliveryMethod} isDark={isDark} />
                 </div>
-                <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #ECECEC", borderRadius:14, padding:18, textAlign:"center" }}>
-                  <div style={{ fontSize:28, fontWeight:900, color:"#9A0018", fontFamily:"'Kanit', sans-serif", marginBottom:14 }}>{fmt(orderForm.price)}</div>
-                  <div style={{ width:190, height:190, margin:"0 auto 14px", background:isDark?"#1A1A1A":"#fff", border:isDark?"2px dashed #444":"2px dashed #CCC", borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", color:"#999" }}>
-                    <div style={{ fontWeight:800, fontSize:16 }}>PromptPay QR</div>
-                    <div style={{ fontSize:11, marginTop:4 }}>{lang==="th"?"รอใส่ QR จริง":"QR placeholder"}</div>
-                  </div>
-                  <div style={{ display:"flex", alignItems:"center", gap:8, background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, padding:"10px 14px", marginBottom:8, textAlign:"left" }}>
-                    <span style={{ flex:1, fontSize:13, fontFamily:"'Courier New', monospace", color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"เลขบัญชี: รอข้อมูล":"Account: Waiting for details"}</span>
-                    <button type="button" onClick={()=>{ if(navigator.clipboard) navigator.clipboard.writeText(lang==="th"?"รอข้อมูล":"Waiting").then(()=>{ setCopyAcctState(true); setTimeout(()=>setCopyAcctState(false),2000); }); }} style={{ background:copyAcctState?"#06C755":"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"6px 12px", fontSize:12, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap", transition:"background 0.2s", fontFamily:thF }}>
-                      {copyAcctState?(lang==="th"?"คัดลอกแล้ว ✓":"Copied ✓"):(lang==="th"?"คัดลอก":"Copy")}
-                    </button>
-                  </div>
-                  <div style={{ fontSize:12, color:"#888", marginBottom:10 }}>{lang==="th"?"QR หมดอายุใน ":"QR expires in "}{fmtCountdown(ppCountdown)}</div>
-                  <div style={{ fontSize:12, color:isDark?"#aaa":"#777", textAlign:"left", background:isDark?"#2A2A2A":"#F0EEE8", borderRadius:8, padding:"8px 12px", lineHeight:1.6 }}>{lang==="th"?"ค่าจัดส่ง: คำนวณตามพื้นที่ — ทีมงานจะแจ้งให้ทราบทาง LINE ก่อนจัดส่ง":"Shipping cost: calculated by area — our team will notify you via LINE before shipping."}</div>
-                </div>
+                <BankTransferBox lang={lang} amount={orderForm.price} />
+                <div style={{ fontSize:12, color:isDark?"#aaa":"#777", background:isDark?"#2A2A2A":"#F0EEE8", borderRadius:8, padding:"8px 12px", lineHeight:1.6 }}>{lang==="th"?"ค่าจัดส่ง: คำนวณตามพื้นที่ — ทีมงานจะแจ้งให้ทราบทาง LINE ก่อนจัดส่ง":"Shipping cost: calculated by area — our team will notify you via LINE before shipping."}</div>
                 <div className="checkout-actions" style={{ display:"flex", gap:8, marginTop:4, flexWrap:"wrap" }}>
                   <button type="button" onClick={()=>setOrderStep(1)} style={{ flex:1, minWidth:80, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #ddd", borderRadius:10, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:14, fontFamily:thF }}>{lang==="th"?"กลับ":"Back"}</button>
                   <button type="button" onClick={()=>finalizeSingleOrder({ paymentMethod:"cod", paymentStatus:"cod_pending" })} style={{ flex:1, minWidth:80, padding:12, border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:6, background:isDark?"#2C2C2E":"#fff", cursor:"pointer", fontSize:13, fontFamily:thF, color:isDark?"#aaa":"#555" }}>{lang==="th"?"จ่ายปลายทาง":"COD"}</button>
@@ -8254,66 +8434,106 @@ function App() {
                         </div>
                       )}
                     </div>
-                    <div className="admin-orders-table-wrap" style={{ overflowX:"auto" }}>
-                      <table className="admin-orders-table" style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
-                        <thead>
-                          <tr style={{ background:"#FAFAF8", borderBottom:"1px solid #ECECEC" }}>
-                            {ta.tableHeaders.map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:600, color:"#777", whiteSpace:"nowrap" }}>{h}</th>)}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {filteredAdminOrders.length === 0 && (
-                            <tr>
-                              <td colSpan={8} style={{ padding:"28px 16px", textAlign:"center", color:"#999", fontSize:13 }}>
-                                {lang==="th"?"ไม่พบออเดอร์ที่ตรงกับการค้นหา":"No orders match your search"}
-                              </td>
-                            </tr>
-                          )}
-                          {filteredAdminOrders.map((o,i)=>{
-                            const sc=ORDER_STATUS[o.status]||ORDER_STATUS.pending;
-                            const pc=PAYMENT_STATUS[o.paymentStatus || "waiting_review"]||PAYMENT_STATUS.waiting_review;
-                            const fc=orderFlagMeta(o.adminFlag);
-                            return (
-                              <tr key={o.id} style={{ borderBottom:i<filteredAdminOrders.length-1?"1px solid #ECECEC":"none" }}>
-                                <td className="order-id-cell" style={{ padding:"11px 13px", fontWeight:700, color:"#1A1A1A", fontFamily:"monospace" }}>{o.id}{o.status==="pending"&&<span style={{ display:"inline-block", marginLeft:7, background:"#ef4444", color:"#fff", borderRadius:20, padding:"2px 7px", fontSize:10, fontWeight:800, fontFamily:thF }}>{lang==="th"?"ใหม่":"NEW"}</span>}{o.labelPrinted===false&&<><br/><span style={{ display:"inline-block", marginTop:5, background:"#FFF7ED", color:"#9a3412", border:"1px solid #FED7AA", borderRadius:20, padding:"2px 7px", fontSize:10, fontWeight:900, fontFamily:thF }}>{lang==="th"?"ยังไม่พิมพ์ป้าย":"NEED LABEL"}</span></>}</td>
-                                <td className="order-customer-cell" data-label={lang==="th"?"ลูกค้า":"Customer"} style={{ padding:"11px 13px", color:"#1A1A1A" }}>{o.customer}<br/><span style={{ color:"#999", fontSize:11 }}>{o.phone}</span>{o.address&&<><br/><span style={{ color:"#777", fontSize:11 }}>{o.address}</span></>}{o.customerNote&&<><br/><span style={{ color:"#92400e", fontSize:11, fontWeight:700 }}>{lang==="th"?"ลูกค้าหมายเหตุ":"Customer note"}: {o.customerNote}</span></>}{o.adminNote&&<><br/><span style={{ color:"#7c2d12", fontSize:11, fontWeight:700 }}>{lang==="th"?"แอดมิน":"Admin"}: {o.adminNote}</span></>}{o.trackingNumber&&<><br/><span style={{ color:"#2563eb", fontSize:11, fontWeight:700 }}>{o.shippingCompany || (lang==="th"?"ขนส่ง":"Shipping")}: {o.trackingNumber}</span></>}{o.paymentSlip&&<><br/><span style={{ color:"#16a34a", fontSize:11, fontWeight:700 }}>{lang==="th"?"มีสลิปแล้ว":"Slip uploaded"}</span></>}<br/><span style={{ color:o.deliveryMethod==="express_bkk"?"#9A0018":"#555", fontSize:11, fontWeight:800 }}>{lang==="th"?"จัดส่ง":"Delivery"}: {deliveryMethodLabel(o.deliveryMethod)}</span><br/><span style={{ color:"#555", fontSize:11, fontWeight:800 }}>{lang==="th"?"วิธีจ่าย":"Method"}: {paymentMethodLabel(o.paymentMethod)}</span><br/><span style={{ color:pc.text, fontSize:11, fontWeight:800 }}>{lang==="th"?"จ่ายเงิน":"Payment"}: {ta.paymentLabels[o.paymentStatus || "waiting_review"]}</span>{(o.adminFlag || "none")!=="none"&&<><br/><span style={{ display:"inline-block", marginTop:3, background:fc.bg, color:fc.text, borderRadius:20, padding:"2px 8px", fontSize:11, fontWeight:800 }}>{orderFlagLabel(o.adminFlag)}</span></>}</td>
-                                <td className="order-product-cell" data-label={lang==="th"?"สินค้า":"Product"} style={{ padding:"11px 13px", color:"#444" }}>{o.brand} {o.model}{Number(o.quantity)>1&&<span style={{ display:"inline-block", marginLeft:6, background:"#F0EEE8", borderRadius:20, padding:"2px 7px", fontSize:11, fontWeight:700, color:"#555" }}>x{o.quantity}</span>}</td>
-                                <td className="order-year-cell" data-label={lang==="th"?"ปีรถ":"Year"} style={{ padding:"11px 13px", color:"#777" }}>{o.year}</td>
-                                <td className="order-price-cell" data-label={lang==="th"?"ราคา":"Price"} style={{ padding:"11px 13px", fontWeight:700, color:"#22c55e", fontFamily:"monospace" }}>{fmt(o.price)}</td>
-                                <td className="order-status-cell" data-label={lang==="th"?"สถานะ":"Status"} style={{ padding:"11px 13px" }}><span style={{ background:sc.bg, color:sc.text, borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:600, whiteSpace:"nowrap" }}>{ta.statusLabels[o.status]}</span></td>
-                                <td className="order-date-cell" data-label={lang==="th"?"วันที่":"Date"} style={{ padding:"11px 13px", color:"#777", whiteSpace:"nowrap" }}>{o.date}</td>
-                                <td className="order-actions-cell" data-label={lang==="th"?"จัดการ":"Actions"} style={{ padding:"11px 13px" }}>
-                                  <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-                                    <button onClick={()=>setDetailOrder({...o})} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"รายละเอียด":"Details"}</button>
-                                    <button onClick={()=>setEditOrder({...o})} style={{ background:"#F0EEE8", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{ta.edit}</button>
-                                    <button onClick={()=>duplicateOrder(o)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"ทำซ้ำ":"Duplicate"}</button>
-                                    {o.status==="cancelled" ? (
-                                      <button onClick={()=>restoreCancelledOrder(o)} style={{ background:"#DCFCE7", border:"1px solid #BBF7D0", color:"#166534", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"กู้คืน":"Restore"}</button>
-                                    ) : (
-                                      <button onClick={()=>cancelOrder(o)} style={{ background:"#FFF5F5", border:"1px solid #FECACA", color:"#dc2626", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ยกเลิก":"Cancel"}</button>
-                                    )}
-                                    {o.paymentSlip&&<button onClick={()=>openPaymentSlip(o)} style={{ background:"#DCFCE7", border:"1px solid #BBF7D0", color:"#166534", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>{lang==="th"?"ดูสลิป":"View Slip"}</button>}
-                                    {o.trackingNumber&&<button onClick={()=>copyTrackingNumber(o.trackingNumber)} style={{ background:"#EFF6FF", border:"1px solid #BFDBFE", color:"#1D4ED8", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>{lang==="th"?"คัดลอกเลข":"Copy Tracking"}</button>}
-                                    <button onClick={()=>printInvoice(o)} style={{ background:"#16A34A", border:"1px solid #16A34A", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e43\u0e1a\u0e40\u0e2a\u0e23\u0e47\u0e08":"Invoice"}</button>
-                                    <button onClick={()=>printCashBill(o)} style={{ background:"#444", border:"1px solid #444", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e1a\u0e34\u0e25\u0e40\u0e07\u0e34\u0e19\u0e2a\u0e14":"Cash Bill"}</button>
-                                    <button onClick={()=>printWarranty(o)} style={{ background:"#444", border:"1px solid #444", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th"?"\u0e1b\u0e23\u0e30\u0e01\u0e31\u0e19":"Warranty"}</button>
-                                    <button onClick={()=>printDeliveryLabel(o)} style={{ background:"#1A1A1A", border:"1px solid #1A1A1A", color:"#fff", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>{lang==="th" ? "\u0e1e\u0e34\u0e21\u0e1e\u0e4c\u0e1b\u0e49\u0e32\u0e22" : "Print Label"}</button>
-                                    <select value={o.status || "pending"} onChange={e=>updateOrderStatus(o,e.target.value)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>
-                                      {Object.keys(ORDER_STATUS).map(s=><option key={s} value={s}>{ta.statusLabels[s]}</option>)}
-                                    </select>
-                                    <select value={o.paymentStatus || "waiting_review"} onChange={e=>updatePaymentStatus(o,e.target.value)} style={{ background:pc.bg, border:"1px solid #E0DDD8", color:pc.text, borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>
-                                      {Object.keys(PAYMENT_STATUS).map(s=><option key={s} value={s}>{ta.paymentLabels[s]}</option>)}
-                                    </select>
-                                    <select value={o.adminFlag || "none"} onChange={e=>updateOrderFlag(o,e.target.value)} style={{ background:fc.bg, border:"1px solid #E0DDD8", color:fc.text, borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:800, fontFamily:thF }}>
-                                      {Object.keys(ORDER_FLAGS).map(s=><option key={s} value={s}>{orderFlagLabel(s)}</option>)}
-                                    </select>
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                    <div style={{ border:"1px solid #ECECEC", borderRadius:10, overflow:"hidden" }}>
+                      {filteredAdminOrders.length === 0 && (
+                        <div style={{ padding:"28px 16px", textAlign:"center", color:"#999", fontSize:13 }}>
+                          {lang==="th"?"ไม่พบออเดอร์ที่ตรงกับการค้นหา":"No orders match your search"}
+                        </div>
+                      )}
+                      {filteredAdminOrders.map((o,i)=>{
+                        const sc=ORDER_STATUS[o.status]||ORDER_STATUS.pending;
+                        const pc=PAYMENT_STATUS[o.paymentStatus || "waiting_review"]||PAYMENT_STATUS.waiting_review;
+                        const fc=orderFlagMeta(o.adminFlag);
+                        const btnBase = { border:"1px solid #E0DDD8", borderRadius:7, padding:"5px 11px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF };
+                        return (
+                          <div key={o.id} style={{ borderBottom:i<filteredAdminOrders.length-1?"1px solid #ECECEC":"none", padding:"12px 14px", background:i%2===0?"#fff":"#FAFAF8" }}>
+
+                            {/* ── TOP ROW: info + main actions ── */}
+                            <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+
+                              {/* Info cluster */}
+                              <div style={{ flex:1, display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", minWidth:0 }}>
+                                <span style={{ fontWeight:800, fontFamily:"monospace", fontSize:13, color:"#1A1A1A" }}>{o.id}</span>
+                                {o.status==="pending"&&<span style={{ background:"#ef4444", color:"#fff", borderRadius:20, padding:"2px 7px", fontSize:10, fontWeight:800, fontFamily:thF }}>{lang==="th"?"ใหม่":"NEW"}</span>}
+                                {o.labelPrinted===false&&<span style={{ background:"#FFF7ED", color:"#9a3412", border:"1px solid #FED7AA", borderRadius:20, padding:"2px 7px", fontSize:10, fontWeight:900, fontFamily:thF }}>{lang==="th"?"ยังไม่พิมพ์ป้าย":"NEED LABEL"}</span>}
+                                <span style={{ fontSize:13, color:"#444", fontWeight:600 }}>{o.brand} {o.model}{Number(o.quantity)>1&&<span style={{ marginLeft:5, background:"#F0EEE8", borderRadius:20, padding:"1px 6px", fontSize:11, fontWeight:700, color:"#555" }}>x{o.quantity}</span>}</span>
+                                <span style={{ fontWeight:800, color:"#22c55e", fontFamily:"monospace", fontSize:13 }}>{fmt(o.price)}</span>
+                                <span style={{ background:sc.bg, color:sc.text, borderRadius:20, padding:"3px 9px", fontSize:11, fontWeight:700, whiteSpace:"nowrap" }}>{ta.statusLabels[o.status]}</span>
+                                <span style={{ color:"#aaa", fontSize:11 }}>{o.date}</span>
+                                {o.customer&&<span style={{ color:"#777", fontSize:11, fontWeight:600 }}>{o.customer}{o.phone?` · ${o.phone}`:""}</span>}
+                                {o.paymentSlip&&<span style={{ background:"#DCFCE7", color:"#166534", border:"1px solid #BBF7D0", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800, cursor:"pointer" }} onClick={()=>openPaymentSlip(o)}>{lang==="th"?"🧾 สลิป":"🧾 Slip"}</span>}
+                                {o.trackingNumber&&<span style={{ background:"#EFF6FF", color:"#1D4ED8", border:"1px solid #BFDBFE", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800, cursor:"pointer" }} onClick={()=>copyTrackingNumber(o.trackingNumber)}>📦 {o.trackingNumber}</span>}
+                                {(o.adminFlag || "none")!=="none"&&<span style={{ background:fc.bg, color:fc.text, borderRadius:20, padding:"2px 8px", fontSize:10, fontWeight:800 }}>{orderFlagLabel(o.adminFlag)}</span>}
+                              </div>
+
+                              {/* Main action buttons */}
+                              <div style={{ display:"flex", gap:6, alignItems:"center", flexShrink:0, flexWrap:"wrap" }}>
+                                <button onClick={()=>setDetailOrder({...o})} style={{ ...btnBase, background:"#fff", color:"#1A1A1A" }}>{lang==="th"?"รายละเอียด":"Details"}</button>
+                                <button onClick={()=>setEditOrder({...o})} style={{ ...btnBase, background:"#F0EEE8", color:"#1A1A1A" }}>{ta.edit}</button>
+
+                                {/* Print dropdown */}
+                                <div style={{ position:"relative" }}>
+                                  <button onClick={()=>setPrintMenuOpen(printMenuOpen===o.id?null:o.id)} style={{ ...btnBase, background:"#1A1A1A", color:"#fff", border:"1px solid #1A1A1A", display:"flex", alignItems:"center", gap:5 }}>
+                                    🖨 {lang==="th"?"พิมพ์":"Print"} ▾
+                                  </button>
+                                  {printMenuOpen===o.id&&(
+                                    <>
+                                      <div onClick={()=>setPrintMenuOpen(null)} style={{ position:"fixed", inset:0, zIndex:200 }} />
+                                      <div style={{ position:"absolute", right:0, top:"calc(100% + 4px)", background:"#fff", border:"1px solid #E0DDD8", borderRadius:10, boxShadow:"0 4px 16px rgba(0,0,0,0.12)", zIndex:201, minWidth:150, overflow:"hidden" }}>
+                                        {[
+                                          { label:lang==="th"?"บิลเงินสด":"Cash Bill",   fn:()=>{ printCashBill(o); setPrintMenuOpen(null); } },
+                                          { label:lang==="th"?"ประกัน":"Warranty",                       fn:()=>{ printWarranty(o); setPrintMenuOpen(null); } },
+                                          { label:lang==="th"?"พิมพ์ป้าย":"Print Label", fn:()=>{ printDeliveryLabel(o); setPrintMenuOpen(null); } },
+                                          { label:lang==="th"?"พิมพ์ทั้งหมด":"Print All", fn:()=>{ printAll(o); setPrintMenuOpen(null); }, bold:true },
+                                        ].map((item,idx,arr)=>(
+                                          <button key={item.label} onClick={item.fn} style={{ display:"block", width:"100%", padding:"10px 14px", background:"#fff", border:"none", borderBottom:idx<arr.length-1?"1px solid #F0EEE8":"none", textAlign:"left", cursor:"pointer", fontSize:13, fontWeight:item.bold?800:600, fontFamily:thF, color:"#1A1A1A" }}
+                                            onMouseEnter={e=>e.currentTarget.style.background="#F8F7F4"}
+                                            onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+                                            {item.label}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+
+                                {/* Visual separator before ใบสำเร็จ */}
+                                <div style={{ width:1, height:20, background:"#E0DDD8", margin:"0 2px" }} />
+
+                                <button onClick={()=>printInvoice(o)} style={{ ...btnBase, background:"#16A34A", color:"#fff", border:"1px solid #16A34A" }}>✓ {lang==="th"?"ใบสำเร็จ":"Invoice"}</button>
+                              </div>
+                            </div>
+
+                            {/* ── BOTTOM ROW: status dropdowns + ghost actions ── */}
+                            <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:8, flexWrap:"wrap" }}>
+
+                              {/* Status dropdowns */}
+                              <div style={{ display:"flex", gap:6, flex:1, flexWrap:"wrap" }}>
+                                <select value={o.status || "pending"} onChange={e=>updateOrderStatus(o,e.target.value)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:600, fontFamily:thF }}>
+                                  {Object.keys(ORDER_STATUS).map(s=><option key={s} value={s}>📦 {ta.statusLabels[s]}</option>)}
+                                </select>
+                                <select value={o.paymentStatus || "waiting_review"} onChange={e=>updatePaymentStatus(o,e.target.value)} style={{ background:pc.bg, border:"1px solid #E0DDD8", color:pc.text, borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>
+                                  {Object.keys(PAYMENT_STATUS).map(s=><option key={s} value={s}>💳 {ta.paymentLabels[s]}</option>)}
+                                </select>
+                                <select value={o.adminFlag || "none"} onChange={e=>updateOrderFlag(o,e.target.value)} style={{ background:fc.bg, border:"1px solid #E0DDD8", color:fc.text, borderRadius:7, padding:"5px 8px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:thF }}>
+                                  {Object.keys(ORDER_FLAGS).map(s=><option key={s} value={s}>✅ {orderFlagLabel(s)}</option>)}
+                                </select>
+                              </div>
+
+                              {/* Ghost buttons */}
+                              <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+                                <button onClick={()=>duplicateOrder(o)} style={{ ...btnBase, background:"transparent", border:"1px solid #D6D1C8", color:"#777" }}>{lang==="th"?"ทำซ้ำ":"Duplicate"}</button>
+                                {o.status==="cancelled" ? (
+                                  <button onClick={()=>restoreCancelledOrder(o)} style={{ ...btnBase, background:"#DCFCE7", border:"1px solid #BBF7D0", color:"#166534" }}>{lang==="th"?"กู้คืน":"Restore"}</button>
+                                ) : (
+                                  <button onClick={()=>cancelOrder(o)} style={{ ...btnBase, background:"transparent", border:"1px solid #FECACA", color:"#dc2626" }}>{lang==="th"?"ยกเลิก":"Cancel"}</button>
+                                )}
+                              </div>
+                            </div>
+
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -9049,4 +9269,84 @@ function App() {
                     if(!qfReqModel||!qfReqPhone) return;
                     const req = { id:"REQ-"+Date.now(), brand:lang==="th"?qfReqBrand.nameTh:qfReqBrand.nameEn, model:qfReqModel, name:qfReqName, phone:qfReqPhone, date:new Date().toLocaleDateString("th-TH") };
                     setSpecialRequests(prev=>[req,...prev]);
-                    setQfReqSent(t
+                    setQfReqSent(true);
+                  }} style={{ background:(!qfReqModel||!qfReqPhone)?"#CCC":"#9A0018", color:"#fff", border:"none", borderRadius:12, padding:"13px", fontSize:15, fontWeight:900, cursor:(!qfReqModel||!qfReqPhone)?"not-allowed":"pointer", fontFamily:thF }}>
+                    {lang==="th"?"ส่งคำขอ — เราจะโทรกลับ":"Send Request — We'll call you back"}
+                  </button>
+                </div>
+              );
+            })() : !quickFindBrand ? (
+              /* Step 1 — brand grid */
+              <div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:10 }}>
+                  {brands.map(b => {
+                    const hasModels = (b.models||[]).length > 0;
+                    return (
+                      <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, opacity:hasModels?1:0.4, transition:"border-color .15s" }}
+                        onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A0018"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
+                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:40, marginBottom:8 }}>
+                          <BrandLogo logo={b.logo} size={32} place="brandCard" />
+                        </div>
+                        <div style={{ fontWeight:800, fontSize:13 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
+                        <div style={{ fontSize:11, color:"#999", marginTop:2 }}>{(b.models||[]).length} {lang==="th"?"รุ่น":"models"}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(null); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:16, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
+                  {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
+                </button>
+              </div>
+            ) : (()=>{
+              const models = (quickFindBrand.models || []);
+              if (models.length === 0) return (
+                /* Sorry screen */
+                <div style={{ textAlign:"center", padding:"20px 0" }}>
+                  <img src="assets/sorry.gif" alt="sorry" style={{ width:200, borderRadius:12, marginBottom:16 }} />
+                  <div style={{ fontSize:18, fontWeight:900, marginBottom:6 }}>{lang==="th"?"เราไม่มีสิ่งที่คุณต้องการ":"We don't have what you want"}</div>
+                  <div style={{ fontSize:13, color:"#888", marginBottom:18 }}>{lang==="th"?"ขออภัย ยังไม่มีสินค้าสำหรับยี่ห้อนี้":"Sorry, no parts available for this brand yet"}</div>
+                  <button onClick={()=>setQuickFindBrand(null)} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"11px 24px", fontSize:14, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
+                    {lang==="th"?"ลองยี่ห้ออื่น":"Try another brand"}
+                  </button>
+                </div>
+              );
+              return (
+                /* Step 2 — model list */
+                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                  {models.map(m => {
+                    const inStock = (m.stock||0) > 0;
+                    return (
+                      <button key={m.id} onClick={()=>{ openProductDetail(quickFindBrand, m); setQuickFindOpen(false); setQuickFindBrand(null); }}
+                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"14px 16px", cursor:"pointer", textAlign:"left", fontFamily:thF, transition:"border-color .15s" }}
+                        onMouseEnter={e=>{ e.currentTarget.style.borderColor="#9A0018"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
+                        <div>
+                          <div style={{ fontWeight:800, fontSize:14 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{m.years||""} · {fmt(m.price)}</div>
+                        </div>
+                        <div style={{ flexShrink:0, background:inStock?"#DCFCE7":"#FEE2E2", color:inStock?"#16A34A":"#9A0018", borderRadius:999, padding:"4px 10px", fontSize:11, fontWeight:800 }}>
+                          {inStock ? (lang==="th"?`มี ${m.stock}`:`${m.stock} left`) : (lang==="th"?"หมดสต็อก":"Out")}
+                        </div>
+                      </button>
+                    );
+                  })}
+                  <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(quickFindBrand); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:8, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
+                    {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
+                  </button>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+    )}
+    </div>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
