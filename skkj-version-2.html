@@ -5544,7 +5544,7 @@ function App() {
   }
 
   function printCashBill(order) {
-    const w = window.open("", "_blank", "width=700,height=900");
+    const w = window.open("", "_blank", "width=900,height=700");
     if (!w) { alert(lang==="th" ? "เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่" : "Browser blocked pop-up. Please allow pop-ups and try again."); return; }
     const dateStr = new Date(order.createdAt || order.date || Date.now()).toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
     const qty = Number(order.quantity) || 1;
@@ -5586,17 +5586,17 @@ function App() {
       </div>
       <div class="sig-row">
         <div class="sig"><div class="sig-line"></div><div class="sig-label">ผู้รับสินค้า / Receiver</div></div>
-        <div class="sig"><div class="sig-line"></div><div class="sig-label">ผู้รับเงิน / Collector</div></div>
+        <div class="sig"><div class="sig-line" style="display:flex;align-items:flex-end;justify-content:center;font-size:10px;font-weight:700;padding-bottom:1mm">SKKJ Autopart</div><div class="sig-label">ผู้รับเงิน / Collector</div></div>
       </div>
     </div>`;
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>บิลเงินสด ${order.id}</title><style>
-      @page{size:A6 portrait;margin:5mm}
+      @page{size:A6 landscape;margin:5mm}
       *{box-sizing:border-box;margin:0;padding:0}
       body{font-family:Tahoma,Arial,sans-serif;color:#000;background:#fff}
       .print-tools{display:flex;gap:8px;padding:8px}
       .print-btn{padding:8px 16px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:700;font-size:14px}
       @media print{.print-tools{display:none}}
-      .bill{position:relative;page-break-after:always;height:calc(148mm - 10mm);display:flex;flex-direction:column;gap:2.5mm;padding-top:1mm}
+      .bill{position:relative;page-break-after:always;height:calc(105mm - 10mm);display:flex;flex-direction:column;gap:1.5mm;padding-top:0.5mm}
       .bill:last-child{page-break-after:auto}
       .samna-badge{position:absolute;top:0;right:0;background:#000;color:#fff;font-size:11px;font-weight:900;padding:1mm 3mm}
       .shop-name{font-size:20px;font-weight:900}
@@ -5608,7 +5608,7 @@ function App() {
       thead tr{border-bottom:1px solid #000}
       th{padding:2mm;font-size:10px;font-weight:700;text-align:left}
       td{padding:2mm;font-size:11px}
-      .empty-row td{height:7mm}
+      .empty-row td{height:4mm}
       .total-section{display:flex;justify-content:flex-end;align-items:baseline;gap:3mm;padding-top:1mm}
       .total-label{font-size:10px;color:#888}
       .total-val{font-size:20px;font-weight:900}
