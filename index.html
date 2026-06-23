@@ -1400,7 +1400,12 @@ function BasketPanel({ open, onClose, basket, setBasket, brands, lang, t, onChec
           {basket.length === 0 ? (
             <div style={{ textAlign:"center", padding:"60px 20px" }}>
               <div style={{ fontSize:48, marginBottom:16 }}>🛒</div>
-              <p style={{ fontSize:16, fontWeight:600, color:isDark?"#aaa":"#555", marginBottom:8 }}>{tb.empty}</p>
+              <p style={{ fontSize:16, fontWeight:600, color:isDark?"#aaa":"#555", marginBottom:6 }}>{tb.empty}</p>
+              <p style={{ fontSize:12, color:isDark?"#666":"#999", marginBottom:16, lineHeight:1.6 }}>
+                {lang==="th"
+                  ? "กดปุ่ม 🛒 ที่สินค้าเพื่อเพิ่มลงตะกร้า หรือกด \"สั่งซื้อเลย\" ที่สินค้าเพื่อซื้อทันที (ไม่ผ่านตะกร้า)"
+                  : "Tap \"🛒\" on a product to add it here, or tap \"Order Now\" to buy one item instantly — it skips the cart."}
+              </p>
               <button onClick={onClose} style={{ background:isDark?"#F5F5F5":"#1A1A1A", color:isDark?"#1A1A1A":"#fff", border:"none", borderRadius:10, padding:"10px 20px", cursor:"pointer", fontSize:13, fontWeight:600, marginTop:8, fontFamily:thF }}>{tb.browse}</button>
             </div>
           ) : (
@@ -7306,6 +7311,7 @@ function App() {
                               {/* ADD TO BASKET */}
                               <button
                                 disabled={model.stock===0}
+                                title={model.stock===0?"":(lang==="th"?"เพิ่มลงตะกร้า — ซื้อหลายรายการพร้อมกัน":"Add to cart — checkout multiple items together")}
                                 onClick={(e)=>{ e.stopPropagation(); model.stock>0&&addToBasket(brand,model); }}
                                 style={{ background:model.stock===0?(isDark?"#2C2C2E":"#eee"):inBasket?(isDark?"#312e81":"#f0f0ff"):(isDark?"#2C2C2E":"#F0EEE8"), color:model.stock===0?(isDark?"#666":"#aaa"):inBasket?(isDark?"#a5b4fc":"#4f46e5"):(isDark?"#eee":"#444"), border:`1px solid ${model.stock===0?(isDark?"#2C2C2E":"#eee"):inBasket?"#6366f1":(isDark?"#2A2A2A":"#E0DDD8")}`, borderRadius:10, padding:"7px 10px", cursor:model.stock===0?"not-allowed":"pointer", fontSize:11, fontWeight:600, fontFamily:thF, whiteSpace:"nowrap" }}>
                                 {model.stock===0?"–":"🛒"}
@@ -7324,8 +7330,9 @@ function App() {
                               <RestockAlertButton brandId={brand.id} modelId={model.id} lang={lang} isDark={isDark} thF={thF} />
                             </div>
                           ) : (
-                            <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"12px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF }}>
-                              {t.orderNow}
+                            <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"12px", cursor:"pointer", fontFamily:thF, display:"flex", flexDirection:"column", alignItems:"center", gap:2 }}>
+                              <span style={{ fontSize:13, fontWeight:800 }}>{t.orderNow}</span>
+                              <span style={{ fontSize:10, fontWeight:500, opacity:0.60 }}>{lang==="th"?"ซื้อทันที ไม่ผ่านตะกร้า":"Quick buy — skips cart"}</span>
                             </button>
                           )}
                         </div>
@@ -9043,17 +9050,4 @@ function App() {
                     const req = { id:"REQ-"+Date.now(), brand:lang==="th"?qfReqBrand.nameTh:qfReqBrand.nameEn, model:qfReqModel, name:qfReqName, phone:qfReqPhone, date:new Date().toLocaleDateString("th-TH") };
                     setSpecialRequests(prev=>[req,...prev]);
                     setQfReqSent(true);
-                  }} style={{ background:(!qfReqModel||!qfReqPhone)?"#CCC":"#9A0018", color:"#fff", border:"none", borderRadius:12, padding:"13px", fontSize:15, fontWeight:900, cursor:(!qfReqModel||!qfReqPhone)?"not-allowed":"pointer", fontFamily:thF }}>
-                    {lang==="th"?"ส่งคำขอ — เราจะโทรกลับ":"Send Request — We'll call you back"}
-                  </button>
-                </div>
-              );
-            })() : !quickFindBrand ? (
-              /* Step 1 — brand grid */
-              <div>
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:10 }}>
-                  {brands.map(b => {
-                    const hasModels = (b.models||[]).length > 0;
-                    return (
-                      <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, opacity:hasModels?1:0.4, transition:"border-color .15s" }}
-                        onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A
+                  }} style={{ background:(!qfReqModel||!qfReqPhone)?"#CCC":"#9A0018", color:"#fff", border:"none", borde
