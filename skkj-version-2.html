@@ -9245,17 +9245,15 @@ function App() {
                         onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
                         <div>
                           <div style={{ fontWeight:800, fontSize:14 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
-                          <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{m.years||""} · {fmt(m.price)}</div>
+                          <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{m.years || ""}</div>
                         </div>
-                        <div style={{ flexShrink:0, background:inStock?"#DCFCE7":"#FEE2E2", color:inStock?"#16A34A":"#9A0018", borderRadius:999, padding:"4px 10px", fontSize:11, fontWeight:800 }}>
-                          {inStock ? (lang==="th"?`มี ${m.stock}`:`${m.stock} left`) : (lang==="th"?"หมดสต็อก":"Out")}
+                        <div style={{ textAlign:"right", flexShrink:0 }}>
+                          <div style={{ fontSize:11, fontWeight:800, color:inStock?"#16A34A":"#9A0018", background:inStock?"#F0FDF4":"#FFF0F0", borderRadius:20, padding:"3px 9px", marginBottom:3, whiteSpace:"nowrap" }}>{inStock?(lang==="th"?"มีสินค้า":"In Stock"):(lang==="th"?"หมดสต็อก":"Out of Stock")}</div>
+                          <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A", marginTop:2 }}>{fmt(m.price)}</div>
                         </div>
                       </button>
                     );
                   })}
-                  <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(quickFindBrand); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:8, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
-                    {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
-                  </button>
                 </div>
               );
             })()}
@@ -9267,8 +9265,5 @@ function App() {
   );
 }
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
-</body>
-</html>
+</script></body></html>
