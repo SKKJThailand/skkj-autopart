@@ -53,7 +53,7 @@ test('T2: contact page cards readable in dark mode', async ({ page }) => {
 
   // Navigate to contact page
   await page.locator('.nav-page-btn', { hasText: 'ติดต่อ' }).click();
-  await page.locator('text=087-102-2666').waitFor({ timeout: 8000 });
+  await page.locator('text=087-102-2666').first().waitFor({ timeout: 8000 });
 
   // Enable dark mode
   await page.locator('button[title="โหมดมืด"]').click();
@@ -160,8 +160,8 @@ test('T5: language toggle switches nav text between Thai and English', async ({ 
   await expect(page.locator('.nav-page-btn', { hasText: 'Catalog' }).first()).toBeVisible({ timeout: 3000 });
   await expect(page.locator('.nav-page-btn', { hasText: 'Contact' }).first()).toBeVisible();
 
-  // Switch back to Thai
-  await page.locator('.lang-switch button', { hasText: 'TH' }).click();
+  // Switch back to Thai (button label is "ไทย", not "TH")
+  await page.locator('.lang-switch button', { hasText: 'ไทย' }).click();
   await expect(page.locator('.nav-page-btn', { hasText: 'สินค้า' }).first()).toBeVisible({ timeout: 3000 });
 });
 

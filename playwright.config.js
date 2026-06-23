@@ -23,7 +23,7 @@ module.exports = defineConfig({
   // Start a local server before running tests.
   // Python's http.server serves index.html at http://localhost:3000/
   webServer: {
-    command: 'python3 -m http.server 3000',
+    command: 'node server.js',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 15000,
