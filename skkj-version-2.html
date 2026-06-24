@@ -3041,6 +3041,7 @@ function App() {
   const [savedCarModelId, setSavedCarModelId] = useState("");
   const [favoritePulseKey, setFavoritePulseKey] = useState("");
   const [loginOpen, setLoginOpen]         = useState(false);
+  const [loginHint, setLoginHint]         = useState(""); // context message shown at top of login modal
   const [authMode, setAuthMode]           = useState("login"); // "login" | "register"
   const [authEmail, setAuthEmail]         = useState("");
   const [authPw, setAuthPw]               = useState("");
@@ -3072,6 +3073,8 @@ function App() {
   const [orderSuccess, setOrderSuccess]   = useState(false);
   const [lastBillOrders, setLastBillOrders] = useState(null);
   const [confirmedOrders, setConfirmedOrders] = useState(null); // COD confirmation modal
+  const [checkoutSaveError, setCheckoutSaveError] = useState(null); // order ID if backend save failed after checkout
+  const justCheckedOutRef = useRef(null); // order ID set for 12s window after checkout
   const [orderLookupOpen, setOrderLookupOpen] = useState(false);
   const [orderLookupId, setOrderLookupId] = useState("");
   const [orderLookupPhone, setOrderLookupPhone] = useState("");
@@ -3402,14 +3405,15 @@ function App() {
     }, 0);
     return updatedCustomer;
   };
-  const requireCustomerLogin = () => {
+  const requireCustomerLogin = (hint) => {
     if (currentCustomer) return true;
     setAuthMode("login");
+    setLoginHint(hint || "");
     setLoginOpen(true);
     return false;
   };
   const toggleFavoriteProduct = (brand, model) => {
-    if (!brand || !model || !requireCustomerLogin()) return;
+    if (!brand || !model || !requireCustomerLogin(lang==="th"?"กรุณาเข้าสู่ระบบเพื่อบันทึกรายการโปรด":"Log in to save favorites")) return;
     const key = productKey(brand.id, model.id);
     const isFav = isFavoriteProduct(brand.id, model.id);
     setFavoritePulseKey(key);
@@ -3915,6 +3919,11 @@ function App() {
         if (dbFailCountRef.current >= 3) {
           dbCircuitUntilRef.current = Date.now() + 60000;
           dbFailCountRef.current = 0;
+        }
+        // If a checkout just happened, surface the failure to the customer
+        if (justCheckedOutRef.current) {
+          setCheckoutSaveError(justCheckedOutRef.current);
+          justCheckedOutRef.current = null;
         }
         setDbStatus(prev => ({
           ...prev,
@@ -4599,6 +4608,41 @@ function App() {
     };
   }
 
+  // ── ATOMIC SERVER-SIDE STOCK CHECK ──────────────────────────────────────────
+  // Calls the stock-decrement Edge Function which holds a PostgreSQL advisory
+  // lock, so two concurrent checkouts cannot both pass a stock=1 check.
+  // Returns true if stock was available (and decremented server-side).
+  // Returns false and shows an error toast if sold out or the call fails.
+  // Falls back gracefully (returns true) if the Edge Function is unavailable.
+  async function checkStockServerSide(items) {
+    const cfg = dbConfigRef.current;
+    if (!cfg?.supabaseUrl || !cfg?.supabaseKey) return true; // no DB configured — allow
+    try {
+      const res = await fetch(`${cfg.supabaseUrl}/functions/v1/stock-decrement`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${cfg.supabaseKey}` },
+        body: JSON.stringify({ items }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 409 && data.soldOut?.length > 0) {
+        const s = data.soldOut[0];
+        const msg = lang==="th"
+          ? `"${s.modelName || s.modelId}" หมดสต็อกแล้ว — มีคนอื่นซื้อก่อนคุณ กรุณาเลือกสินค้าอื่น`
+          : `"${s.modelName || s.modelId}" just sold out — someone else ordered it first. Please choose another item.`;
+        addBToast(msg, "error");
+        return false;
+      }
+      if (!res.ok && res.status !== 500) {
+        // 500 from Edge Function means the SQL function isn't deployed yet — degrade gracefully
+        addBToast(lang==="th"?"ไม่สามารถตรวจสอบสต็อกได้ กรุณาลองอีกครั้ง":"Could not verify stock. Please try again.", "error");
+        return false;
+      }
+      return true; // ok or degraded (SQL function not yet deployed)
+    } catch (_e) {
+      return true; // network error — degrade gracefully, let client-side check stand
+    }
+  }
+
   function sendOrdersToGoogleSheet(newOrders, source = "website") {
     const config = googleSheetConfig;
     if (!config.enabled || !String(config.scriptUrl || "").trim()) return;
@@ -4634,6 +4678,9 @@ function App() {
     const fd = new FormData(e.target);
     const slipFile = fd.get("paymentSlip");
     const paymentSlip = await readSlipFile(slipFile);
+    // Atomic server-side stock check before finalizing
+    const stockOk = await checkStockServerSide([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }]);
+    if (!stockOk) return; // error already shown by checkStockServerSide
     finalizeSingleOrder({ paymentSlip, paymentSlipName:slipFile?.name || "", paymentMethod:singlePaymentMethod, paymentStatus:"waiting_review" });
   }
 
@@ -4646,6 +4693,13 @@ function App() {
     const nextOrders = [newOrder, ...orders];
     setOrders(nextOrders);
     queueImmediateOnlineSave("single_product_order_created", { orders: nextOrders });
+    // Watch for save failure within a 12-second window; also warn immediately if circuit breaker is open
+    justCheckedOutRef.current = newOrder.id;
+    setTimeout(() => { justCheckedOutRef.current = null; }, 12000);
+    if (hasOnlineDatabaseTarget(dbConfigRef.current) && Date.now() < dbCircuitUntilRef.current) {
+      setCheckoutSaveError(newOrder.id);
+      justCheckedOutRef.current = null;
+    }
     sendOrdersToGoogleSheet(newOrder, "single_product_order");
     fetch(`${SKKJ_DATABASE_CONFIG.supabaseUrl}/functions/v1/order-alert`, {
       method: "POST",
@@ -4672,7 +4726,9 @@ function App() {
     setTimeout(()=>setOrderSuccess(false), 4500);
   }
 
-  function handleLineConfirm() {
+  async function handleLineConfirm() {
+    const stockOk = await checkStockServerSide([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }]);
+    if (!stockOk) return;
     const msg=(lang==="th"?"สั่งซื้อ ":"Order ")+pendingOrderRef+" | "+orderForm.brand+" "+orderForm.model+" | "+(lang==="th"?"โทร ":"Tel: ")+(orderDetails?.phone||"");
     window.open("https://line.me/R/ti/p/@skkjautopart?text="+encodeURIComponent(msg),"_blank","noopener,noreferrer");
     finalizeSingleOrder({ paymentMethod:"bank_transfer", paymentStatus:"waiting_review" });
@@ -4688,7 +4744,24 @@ function App() {
     setCheckoutData({ shipping });
   }
 
-  function handleCheckoutConfirm({ customer, phone, address, year, notes, deliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus }) {
+  async function handleCheckoutConfirm({ customer, phone, address, year, notes, deliveryMethod, paymentSlip, paymentSlipName, paymentMethod, paymentStatus }) {
+    // Re-check stock at confirm time — the item could have sold out since the checkout modal opened
+    const soldOutItems = basket.filter(item => {
+      const live = getLiveStock(brands, item.brandId, item.modelId);
+      return live === 0 || item.quantity > live;
+    });
+    if (soldOutItems.length > 0) {
+      const name = soldOutItems[0];
+      const label = lang==="th"
+        ? `"${name.brandNameTh} ${name.modelNameTh}" หมดสต็อกแล้วในขณะนี้ กรุณาลบออกจากตะกร้าก่อนสั่งซื้อ`
+        : `"${name.brandNameEn} ${name.modelNameEn}" just sold out. Please remove it from your basket before ordering.`;
+      addBToast(label, "error");
+      return;
+    }
+    // Atomic server-side stock check (prevents cross-device oversell)
+    const serverItems = basket.map(item => ({ brandId:item.brandId, modelId:item.modelId, quantity:item.quantity || 1 }));
+    const stockOk = await checkStockServerSide(serverItems);
+    if (!stockOk) return;
     const shippingCost = 0;
     const today = new Date().toISOString().slice(0,10);
     const newOrders = basket.map((item, idx) => attachShippingRecord({
@@ -4707,6 +4780,13 @@ function App() {
     const nextOrders = [...newOrders, ...orders];
     setOrders(nextOrders);
     queueImmediateOnlineSave("basket_checkout_created", { orders: nextOrders });
+    // Watch for save failure within a 12-second window; also warn immediately if circuit breaker is open
+    justCheckedOutRef.current = newOrders[0]?.id || "basket";
+    setTimeout(() => { justCheckedOutRef.current = null; }, 12000);
+    if (hasOnlineDatabaseTarget(dbConfigRef.current) && Date.now() < dbCircuitUntilRef.current) {
+      setCheckoutSaveError(newOrders[0]?.id || "basket");
+      justCheckedOutRef.current = null;
+    }
     sendOrdersToGoogleSheet(newOrders, "basket_checkout");
     fetch(`${SKKJ_DATABASE_CONFIG.supabaseUrl}/functions/v1/order-alert`, {
       method: "POST",
@@ -6597,6 +6677,28 @@ function App() {
         />
       )}
 
+      {/* ── CHECKOUT SAVE ERROR — shown if backend save failed after order was placed ── */}
+      {checkoutSaveError && (
+        <div style={{ position:"fixed", top:0, left:0, right:0, zIndex:10002, background:"#9A0018", color:"#fff", padding:"16px 20px", boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontFamily:thF }}>
+          <div style={{ maxWidth:700, margin:"0 auto" }}>
+            <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12 }}>
+              <div style={{ flex:1 }}>
+                <div style={{ fontWeight:900, fontSize:15, marginBottom:6 }}>
+                  ⚠️ {lang==="th"?"ไม่สามารถบันทึกคำสั่งซื้อได้ในขณะนี้":"Could not confirm your order was saved"}
+                </div>
+                <div style={{ fontSize:13, lineHeight:1.65, opacity:0.92 }}>
+                  {lang==="th"
+                    ? `คำสั่งซื้อ ${checkoutSaveError} บันทึกในเครื่องของคุณแล้ว แต่เซิร์ฟเวอร์ตอบสนองไม่ได้ กรุณาถ่ายหน้าจอนี้และติดต่อร้านทาง LINE: @skkjautopart หรือโทร 0ขข-ขขข-ขขขข เพื่อยืนยันออเดอร์`
+                    : `Order ${checkoutSaveError} is saved on your device but the server did not respond. Please screenshot this and contact us on LINE: @skkjautopart or call us directly to confirm your order.`
+                  }
+                </div>
+              </div>
+              <button onClick={()=>setCheckoutSaveError(null)} style={{ background:"rgba(255,255,255,0.2)", border:"none", borderRadius:8, color:"#fff", cursor:"pointer", fontSize:20, lineHeight:1, padding:"4px 8px", flexShrink:0 }}>×</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── ORDER SUCCESS BANNER ── */}
       {orderSuccess && (
         <div className="order-success-banner" style={{ position:"fixed", top:70, left:"50%", transform:"translateX(-50%)", zIndex:9999, background:"linear-gradient(135deg,#166534,#15803d)", color:"#fff", borderRadius:14, padding:"14px 24px", fontSize:14, fontWeight:600, display:"flex", alignItems:"center", gap:10, boxShadow:"0 8px 28px rgba(0,0,0,0.3)", animation:"toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1)", whiteSpace:"nowrap" }}>
@@ -6795,6 +6897,12 @@ function App() {
       {loginOpen && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
           <div className="skkj-modal-card" style={{ background:"#fff", borderRadius:20, padding:32, width:"100%", maxWidth:400, fontFamily:thF, boxShadow:"0 24px 60px rgba(0,0,0,0.25)" }}>
+            {/* Hint banner — shows context when login is triggered by a site action */}
+            {loginHint && (
+              <div style={{ background:"#FFFBEB", border:"1px solid #FDE68A", borderRadius:10, padding:"10px 14px", marginBottom:18, fontSize:13, fontWeight:700, color:"#92400E" }}>
+                ♥ {loginHint}
+              </div>
+            )}
             {/* Header */}
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:24 }}>
               <div>
@@ -6803,7 +6911,7 @@ function App() {
                 </h2>
                 <p style={{ margin:0, fontSize:13, color:"#888" }}>SKKJ Autopart</p>
               </div>
-              <button onClick={()=>{ setLoginOpen(false); resetAuthForm(); }} style={{ background:"#F0EEE8", border:"none", borderRadius:8, width:32, height:32, cursor:"pointer", fontSize:18, color:"#555", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
+              <button onClick={()=>{ setLoginOpen(false); setLoginHint(""); resetAuthForm(); }} style={{ background:"#F0EEE8", border:"none", borderRadius:8, width:32, height:32, cursor:"pointer", fontSize:18, color:"#555", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
             </div>
 
             {/* Form */}
