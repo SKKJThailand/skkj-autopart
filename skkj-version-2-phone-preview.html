@@ -6683,8 +6683,10 @@ function App() {
           .v2-home-sub { font-size: 13px !important; line-height: 1.55 !important; max-width: none !important; margin: 0 0 14px !important; color: #555 !important; }
           .v2-home-actions { justify-content: stretch !important; gap: 8px !important; }
           .v2-home-actions button { flex: 1 1 0 !important; min-height: 42px !important; padding: 10px 12px !important; border-radius: 14px !important; font-size: 13px !important; }
-          /* Quick Find hero button — full-width red on mobile */
-          .v2-quickfind-hero-btn { width: 100% !important; flex: 1 1 100% !important; font-size: 16px !important; padding: 16px !important; letter-spacing: -0.3px !important; box-shadow: 0 4px 16px rgba(154,0,24,0.35) !important; }
+          /* Quick Find hero button — move to top, slightly narrower */
+          .v2-quickfind-hero-btn { order: -1 !important; flex: 0 0 85% !important; width: 85% !important; margin: 0 auto 10px !important; font-size: 17px !important; padding: 18px !important; letter-spacing: -0.3px !important; box-shadow: 0 4px 20px rgba(154,0,24,0.35) !important; border-radius: 14px !important; }
+          /* Hide paragraph sub-text on mobile (button takes its spot) */
+          .v2-home-sub { display: none !important; }
           /* Hide part-type test card on mobile */
           .v2-catalog-part-type { display: none !important; }
           /* Compact Find-My-Part card header on mobile */
@@ -9681,7 +9683,8 @@ function App() {
           </div>
         )}
 
-        {/* ── TWO SEPARATE BUTTONS ── */}
+        {/* ── TWO SEPARATE BUTTONS — hidden when order form is open ── */}
+        {!orderForm && (
         <div style={{ display:"flex", gap:8, alignItems:"center", justifyContent:"flex-end" }}>
           <button className="line-help-button" onClick={()=>{ setLineFinderOpen(v=>!v); setLineContactOpen(false); }} style={{ background:lineFinderOpen?"#1A1A1A":"#F0EEE8", color:lineFinderOpen?"#fff":"#1A1A1A", border:"1px solid "+(lineFinderOpen?"#1A1A1A":"#E0DDD8"), borderRadius:999, padding:"11px 14px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, boxShadow:"0 6px 18px rgba(0,0,0,0.14)", display:"flex", alignItems:"center", gap:7 }}>
             <span style={{ fontSize:15 }}>🔍</span>
@@ -9692,6 +9695,7 @@ function App() {
             {lang==="th"?"LINE ถามร้าน":"LINE Help"}
           </button>
         </div>
+        )}
       </div>
 
     {/* ══ QUICK FIND MODAL ══ */}
