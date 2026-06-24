@@ -58,7 +58,7 @@
 const { useState, useRef, useCallback, useEffect } = React;// ─── FULL PRODUCT LIST ────────────────────────────────────────────────────────
 const INIT_BRANDS = [
   {
-    id: "nissan", logo: "🚕",
+    id: "nissan",
     nameTh: "นิสสัน", nameEn: "Nissan",
     logo: "image:assets/nissan-logo.png",
     models: [
@@ -70,7 +70,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "honda", logo: "🚘",
+    id: "honda",
     nameTh: "ฮอนด้า", nameEn: "Honda",
     logo: "image:assets/honda-logo.png",
     models: [
@@ -92,7 +92,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "isuzu", logo: "🚛",
+    id: "isuzu",
     nameTh: "อีซูซุ", nameEn: "Isuzu",
     logo: "image:assets/isuzu-logo.png",
     models: [
@@ -108,7 +108,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "mazda", logo: "🏎",
+    id: "mazda",
     nameTh: "มาสด้า", nameEn: "Mazda",
     logo: "image:assets/mazda-logo.png",
     models: [
@@ -121,7 +121,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "mitsubishi", logo: "🔷",
+    id: "mitsubishi",
     nameTh: "มิตซูบิชิ", nameEn: "Mitsubishi",
     logo: "image:assets/mitsubishi-logo.png",
     models: [
@@ -137,7 +137,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "toyota", logo: "🚗",
+    id: "toyota",
     nameTh: "โตโยต้า", nameEn: "Toyota",
     logo: "image:assets/toyota-logo.png",
     models: [
@@ -164,7 +164,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "ford", logo: "🚐",
+    id: "ford",
     nameTh: "ฟอร์ด", nameEn: "Ford",
     logo: "image:assets/ford-logo.png",
     models: [
@@ -173,7 +173,7 @@ const INIT_BRANDS = [
     ],
   },
   {
-    id: "mg", logo: "🏅",
+    id: "mg",
     nameTh: "เอ็มจี", nameEn: "MG",
     logo: "image:assets/mg-logo.png",
     models: [
@@ -396,7 +396,7 @@ const T = {
       badge:"Steering Rack Specialists",
       h1a:"Precision Steering.", h1b:"Every Make & Model.",
       sub:"Quality replacement steering racks for Nissan, Honda, Isuzu, Mazda, Mitsubishi, Toyota, Ford & MG. Warranty included.",
-      browse:"Browse Products →", contactUs:"Contact Us",
+      browse:"Browse Products →", contactUs:"💬 Chat on LINE",
     },
     features: [
       { icon:"✓", title:"Quality Replacement Parts", desc:"Reliable steering rack parts checked before sale" },
@@ -421,7 +421,7 @@ const T = {
     },
     contact:{
       h2:"Get in Touch",
-      sub:"Have a question about your car model or need a custom quote? We respond within 2–4 hours.",
+      sub:"Quick question? Chat with us on LINE for a fast reply during business hours. Use the form below for detailed requests or quotes.",
       name:"Full Name", namePh:"Your name",
       phone:"Phone", phonePh:"08x-xxx-xxxx",
       email:"Email", emailPh:"you@email.com",
@@ -551,7 +551,7 @@ const T = {
       badge:"ผู้เชี่ยวชาญแร็คพวงมาลัย",
       h1a:"พวงมาลัยแม่นยำ.", h1b:"ทุกยี่ห้อ ทุกรุ่น.",
       sub:"แร็คพวงมาลัยอะไหล่ทดแทนคุณภาพ สำหรับนิสสัน ฮอนด้า อีซูซุ มาสด้า มิตซูบิชิ โตโยต้า ฟอร์ด และเอ็มจี พร้อมการรับประกัน",
-      browse:"ดูสินค้าทั้งหมด →", contactUs:"ติดต่อเรา",
+      browse:"ดูสินค้าทั้งหมด →", contactUs:"💬 ทัก LINE",
     },
     features: [
       { icon:"✓", title:"อะไหล่ทดแทนคุณภาพ", desc:"ตรวจเช็กแร็คพวงมาลัยก่อนขายทุกชิ้น" },
@@ -576,7 +576,7 @@ const T = {
     },
     contact:{
       h2:"ติดต่อเรา",
-      sub:"มีคำถามเกี่ยวกับรุ่นรถหรือต้องการใบเสนอราคา? เราตอบกลับภายใน 2–4 ชั่วโมง",
+      sub:"ถามเร็วๆ ทักผ่าน LINE ได้เลย ตอบไวในเวลาทำการ สำหรับคำถามละเอียดหรือใบเสนอราคา ส่งผ่านแบบฟอร์มด้านล่าง",
       name:"ชื่อ-นามสกุล", namePh:"ชื่อของคุณ",
       phone:"เบอร์โทรศัพท์", phonePh:"08x-xxx-xxxx",
       email:"อีเมล", emailPh:"you@email.com",
@@ -1043,7 +1043,7 @@ function WholesalePrice({ price, fmt, lang, isDark, thF }) {
       <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
         <span style={{ fontSize:18, fontWeight:800 }}>{fmt(price)}</span>
         <button type="button" onClick={()=>setOpen(v=>!v)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:10, fontWeight:600, color:"#aaa", padding:0, fontFamily:thF, lineHeight:1.2 }}>
-          {open?"ราคาช่าง ▴":"ราคาช่าง ▾"}
+          {open?(lang==="th"?"ราคาช่าง ▴":"Trade price ▴"):(lang==="th"?"ราคาช่าง ▾":"Trade price ▾")}
         </button>
       </div>
       {open&&(
@@ -1716,7 +1716,9 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
           <div><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:5 }}>{lang==="th"?"หมายเหตุถึงร้าน":"Note for SKKJ"}</label>
             <textarea name="notes" value={details?.notes || ""} onChange={e=>setDetails(prev=>({...prev, notes:e.target.value}))} placeholder={t.order.notesPh} rows={3} style={{ ...iSLight, resize:"vertical" }} />
             <div style={{ marginTop:8, background:isDark?"#2C2C2E":"#F8F7F4", borderLeft:"3px solid #C4A35A", borderRadius:"0 8px 8px 0", padding:"8px 12px", fontSize:12, color:isDark?"#aaa":"#666", fontWeight:600, lineHeight:1.6 }}>
-              การเสียหายของพัสดุเกิดจากบริษัทขนส่งสินค้านั้นทำการโยนพัสดุ และนี่อยู่นอกเหนือการควบคุมของบริษัท
+              {lang==="th"
+                ? "การเสียหายของพัสดุเกิดจากบริษัทขนส่งสินค้านั้นทำการโยนพัสดุ และนี่อยู่นอกเหนือการควบคุมของบริษัท"
+                : "Damage caused by rough courier handling is outside the shop's control. Photograph any damage immediately on receipt."}
             </div>
           </div>
           <TermsAgreement lang={lang} />
@@ -2961,7 +2963,7 @@ class ErrorBoundary extends React.Component {
 }
 
 function App() {
-  const [lang, setLang]                   = useState("th");
+  const [lang, setLang]                   = useState(() => { try { return localStorage.getItem("skkj_lang") || "th"; } catch(e) { return "th"; } });
   const [page, setPage]                   = useState("home");
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedPartType, setSelectedPartType] = useState("steering_rack");
@@ -3107,7 +3109,7 @@ function App() {
   const [catalogPage, setCatalogPage] = useState(1);
   const [finderQuery, setFinderQuery]     = useState("");
   const [finderMessages, setFinderMessages] = useState([
-    { role:"bot", lang:"th", text:"สวัสดีครับ พิมพ์รุ่นรถหรือชื่ออะไหล่ เช่น ดีแมค รีโว่ ซีวิค หรือแร็คพวงมาลัย ได้เลย" }
+    { role:"bot", lang, text:T[lang].finder.subtitle }
   ]);
   const [findBrandId, setFindBrandId]     = useState("");
   const [findModelId, setFindModelId]     = useState("");
@@ -3279,6 +3281,10 @@ function App() {
     try { localStorage.setItem("skkj_v2_dark", isDark ? "1" : "0"); } catch(e) {}
     document.documentElement.setAttribute("data-dark", isDark ? "1" : "0");
   }, [isDark]);
+  // Reset finder welcome message when language changes
+  useEffect(() => {
+    setFinderMessages([{ role:"bot", lang, text:T[lang].finder.subtitle }]);
+  }, [lang]);
   useEffect(() => {
     const onScroll = () => setShowBackToTop(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive:true });
@@ -6619,7 +6625,7 @@ function App() {
 
             <div className="lang-switch" style={{ display:"flex", background:"#F0EEE8", borderRadius:20, padding:3, border:"1px solid #E0DDD8", gap:2 }}>
               {["th","en"].map(l=>(
-                <button key={l} onClick={()=>setLang(l)} style={{ background:lang===l?"#1A1A1A":"transparent", color:lang===l?"#fff":"#888", border:"none", borderRadius:16, padding:"5px 12px", cursor:"pointer", fontSize:12, fontWeight:lang===l?700:400, display:"flex", alignItems:"center", gap:5, fontFamily:thF }}>
+                <button key={l} onClick={()=>{ setLang(l); try{localStorage.setItem("skkj_lang",l);}catch(e){} }} style={{ background:lang===l?"#1A1A1A":"transparent", color:lang===l?"#fff":"#888", border:"none", borderRadius:16, padding:"5px 12px", cursor:"pointer", fontSize:12, fontWeight:lang===l?700:400, display:"flex", alignItems:"center", gap:5, fontFamily:thF }}>
                   <span>{l==="th"?"🇹🇭":"🇬🇧"}</span><span>{l==="th"?"ไทย":"EN"}</span>
                 </button>
               ))}
@@ -7010,7 +7016,7 @@ function App() {
             </div>
             <div style={{ margin:"0 0 8px", display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
             <span style={{ color:"#888", fontSize:13 }}>{orderForm.brand} — {orderForm.model}</span>
-            {(()=>{ const stk=getLiveStock(brands,orderForm.brandId||"",orderForm.modelId||""); return stk>0&&stk<=5?(<span style={{ fontSize:11, fontWeight:900, padding:"2px 8px", borderRadius:999, background:stk===1?"#FEE2E2":"#FFF7ED", color:stk===1?"#9A0018":"#C2410C", border:"1px solid "+(stk===1?"#FECACA":"#FDBA74") }}>{"เหลือ "+stk+" ชิ้น"}</span>):null; })()}
+            {(()=>{ const stk=getLiveStock(brands,orderForm.brandId||"",orderForm.modelId||""); return stk>0&&stk<=5?(<span style={{ fontSize:11, fontWeight:900, padding:"2px 8px", borderRadius:999, background:stk===1?"#FEE2E2":"#FFF7ED", color:stk===1?"#9A0018":"#C2410C", border:"1px solid "+(stk===1?"#FECACA":"#FDBA74") }}>{lang==="th"?"เหลือ "+stk+" ชิ้น":stk+" left"}</span>):null; })()}
           </div>
             <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, background:isDark?"#2C2C2E":"#F8F7F4", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:10, padding:"10px 14px" }}>
               <span style={{ fontSize:12, color:"#888", fontWeight:600 }}>{lang==="th"?"ราคา":"Price"}</span>
@@ -7041,7 +7047,9 @@ function App() {
               <div>
                 <textarea name="notes" value={orderDetails?.notes || ""} onChange={e=>setOrderDetails(prev=>({ ...(prev || {}), notes:e.target.value }))} placeholder={t.order.notesPh} rows={3} style={{ ...iSLight, resize:"vertical" }} />
                 <div style={{ marginTop:8, background:isDark?"#2C2C2E":"#F8F7F4", borderLeft:"3px solid #C4A35A", borderRadius:"0 8px 8px 0", padding:"8px 12px", fontSize:12, color:isDark?"#aaa":"#666", fontWeight:600, lineHeight:1.6 }}>
-                  การเสียหายของพัสดุเกิดจากบริษัทขนส่งสินค้านั้นทำการโยนพัสดุ และนี่อยู่นอกเหนือการควบคุมของบริษัท
+                  {lang==="th"
+                    ? "การเสียหายของพัสดุเกิดจากบริษัทขนส่งสินค้านั้นทำการโยนพัสดุ และนี่อยู่นอกเหนือการควบคุมของบริษัท"
+                    : "Damage caused by rough courier handling is outside the shop's control. Photograph any damage immediately on receipt."}
                 </div>
               </div>
               <TermsAgreement lang={lang} />
@@ -7401,7 +7409,7 @@ function App() {
                   <p className="v2-home-sub" style={{ fontSize:17, color:"#666", maxWidth:520, margin:"0 auto 36px", lineHeight:1.7 }}>{t.hero.sub}</p>
                   <div className="v2-home-actions" style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
                     <button className="v2-buy-button" onClick={()=>setPage("catalog")} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.hero.browse}</button>
-                    <button className="v2-ask-button" onClick={()=>setPage("contact")} style={{ background:"#fff", color:"#1A1A1A", border:"1px solid #ddd", borderRadius:6, padding:"14px 30px", fontSize:15, cursor:"pointer", fontFamily:thF }}>{t.hero.contactUs}</button>
+                    <button className="v2-ask-button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, cursor:"pointer", fontFamily:thF, fontWeight:700 }}>{t.hero.contactUs}</button>
                   </div>
                 </div>
                 <div className="v2-hero-visual">
@@ -7477,6 +7485,21 @@ function App() {
                   );
                 })}
               </div>
+
+              {/* ══ LINE PRE-SALE STRIP ══ */}
+              <div style={{ marginTop:40, background:"#06C755", borderRadius:16, padding:"22px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, flexWrap:"wrap" }}>
+                <div>
+                  <div style={{ fontWeight:900, fontSize:16, color:"#fff", marginBottom:4 }}>
+                    {lang==="th"?"ไม่แน่ใจว่ารุ่นไหนใช้ได้กับรถคุณ?":"Not sure which model fits your car?"}
+                  </div>
+                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.88)", lineHeight:1.5 }}>
+                    {lang==="th"?"ทักถามทีมงานผ่าน LINE ตอบเร็วในเวลาทำการ จ–ส 8:00–18:00":"Ask our team on LINE — fast reply Mon–Sat 8:00–18:00."}
+                  </div>
+                </div>
+                <button onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ background:"#fff", color:"#06C755", border:"none", borderRadius:10, padding:"12px 24px", fontSize:15, fontWeight:900, cursor:"pointer", fontFamily:thF, whiteSpace:"nowrap", flexShrink:0 }}>
+                  {lang==="th"?"ทัก LINE เลย →":"Chat on LINE →"}
+                </button>
+              </div>
             </section>
           </div>
         )}
@@ -7486,25 +7509,32 @@ function App() {
         {page==="about"&&(
           <div style={{ padding:"56px 0 80px", maxWidth:860, margin:"0 auto" }}>
             {/* heading */}
-            <h1 style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(32px,6vw,52px)", fontWeight:800, letterSpacing:"-1px", margin:"0 0 14px", color:isDark?"#F5F5F5":"#1A1A1A" }}>เกี่ยวกับ SKKJ Autopart</h1>
-            <p style={{ fontSize:17, color:isDark?"#aaa":"#555", lineHeight:1.75, maxWidth:600, margin:"0 0 40px" }}>ผู้เชี่ยวชาญแร็คพวงมาลัย ก่อตั้งปี 2558 ตั้งอยู่ที่กรุงเทพฯ เราคัดสรรและตรวจสอบคุณภาพแร็คพวงมาลัยทุกชิ้นก่อนจัดส่งถึงมือลูกค้า</p>
+            <h1 style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(32px,6vw,52px)", fontWeight:800, letterSpacing:"-1px", margin:"0 0 14px", color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"เกี่ยวกับ SKKJ Autopart":"About SKKJ Autopart"}</h1>
+            <p style={{ fontSize:17, color:isDark?"#aaa":"#555", lineHeight:1.75, maxWidth:600, margin:"0 0 40px" }}>{lang==="th"?"ผู้เชี่ยวชาญแร็คพวงมาลัย ก่อตั้งปี 2558 ตั้งอยู่ที่กรุงเทพฯ เราคัดสรรและตรวจสอบคุณภาพแร็คพวงมาลัยทุกชิ้นก่อนจัดส่งถึงมือลูกค้า":"Steering rack specialists founded in 2015, based in Bangkok. Every part is inspected for quality before we ship it to you."}</p>
             {/* stat strip */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16, marginBottom:48, background:isDark?"#2C2C2E":"#1A1A1A", borderRadius:16, padding:"28px 20px" }}>
-              {[{num:"2558",label:"ก่อตั้งปี"},{num:"66+",label:"รุ่นในสต็อก"},{num:"6 เดือน",label:"รับประกัน"}].map(s=>(
-                <div key={s.num} style={{ textAlign:"center" }}>
+              {(lang==="th"
+                ? [{num:"2558",label:"ก่อตั้งปี"},{num:"66+",label:"รุ่นในสต็อก"},{num:"6 เดือน",label:"รับประกัน"}]
+                : [{num:"2015",label:"Founded"},{num:"66+",label:"Models in stock"},{num:"6 months",label:"Warranty"}]
+              ).map(s=>(
+                <div key={s.label} style={{ textAlign:"center" }}>
                   <div style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(24px,5vw,38px)", fontWeight:800, color:"#fff", lineHeight:1.1, marginBottom:6 }}>{s.num}</div>
                   <div style={{ fontSize:12, color:"rgba(255,255,255,0.60)", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.5px" }}>{s.label}</div>
                 </div>
               ))}
             </div>
             {/* why choose us */}
-            <h2 style={{ fontSize:22, fontWeight:800, margin:"0 0 20px", color:isDark?"#F5F5F5":"#1A1A1A" }}>ทำไมต้องเลือก SKKJ</h2>
+            <h2 style={{ fontSize:22, fontWeight:800, margin:"0 0 20px", color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"ทำไมต้องเลือก SKKJ":"Why choose SKKJ"}</h2>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:16, marginBottom:48 }}>
-              {[
+              {(lang==="th" ? [
                 {icon:"✅",title:"ตรวจเช็กก่อนส่งทุกชิ้น",desc:"สินค้าทุกชิ้นผ่านการตรวจสอบคุณภาพก่อนแพ็กส่งให้ลูกค้า"},
                 {icon:"🚚",title:"จัดส่งทั่วประเทศ",desc:"ส่งฟรีผ่านบริษัทขนส่ง ใช้เวลา 2-5 วันทำการ"},
                 {icon:"🛡️",title:"รับประกัน 6 เดือน หรือ 20,000 กม.",desc:"คุ้มครองครอบคลุมทุกความเสียหายจากตัวสินค้า"},
-              ].map(p=>(
+              ] : [
+                {icon:"✅",title:"Inspected before every shipment",desc:"Every part goes through a quality check before we pack and ship it."},
+                {icon:"🚚",title:"Nationwide delivery",desc:"Free shipping via courier. Delivery takes 2–5 business days."},
+                {icon:"🛡️",title:"6-month or 20,000 km warranty",desc:"Covers all product defects within the warranty period."},
+              ]).map(p=>(
                 <div key={p.title} style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E1D2", borderRadius:14, padding:"22px 20px" }}>
                   <div style={{ fontSize:28, marginBottom:10 }}>{p.icon}</div>
                   <div style={{ fontWeight:800, fontSize:14, marginBottom:6, color:isDark?"#F5F5F5":"#1A1A1A" }}>{p.title}</div>
@@ -7517,15 +7547,15 @@ function App() {
               <div style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:14, padding:"20px 18px", display:"flex", gap:14, alignItems:"flex-start" }}>
                 <span style={{ fontSize:22, flexShrink:0 }}>📍</span>
                 <div>
-                  <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>ที่อยู่ร้าน</div>
+                  <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"ที่อยู่ร้าน":"Shop address"}</div>
                   <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.7 }}>36/1 ซอยอนามัยงามเจริญ 33{"\n"}แขวงท่าข้าม เขตบางขุนเทียน{"\n"}กรุงเทพฯ 10150</div>
                 </div>
               </div>
               <div style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:14, padding:"20px 18px", display:"flex", gap:14, alignItems:"flex-start" }}>
                 <span style={{ fontSize:22, flexShrink:0 }}>🕐</span>
                 <div>
-                  <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>เวลาทำการ</div>
-                  <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.8 }}>จ–ส 8:00–18:00{"\n"}อา 9:00–15:00</div>
+                  <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"เวลาทำการ":"Opening hours"}</div>
+                  <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.8 }}>{lang==="th"?"จ–ส 8:00–18:00\nอา 9:00–15:00":"Mon–Sat 8:00–18:00\nSun 9:00–15:00"}</div>
                 </div>
               </div>
             </div>
@@ -7533,7 +7563,7 @@ function App() {
             <div style={{ textAlign:"center" }}>
               <button type="button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:14, padding:"14px 32px", fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:thF, display:"inline-flex", alignItems:"center", gap:10, boxShadow:"0 8px 24px rgba(6,199,85,0.30)" }}>
                 <span style={{ width:26, height:26, background:"#fff", borderRadius:"50%", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:900, color:"#06C755" }}>L</span>
-                ทักหาเราทาง LINE
+                {lang==="th"?"ทักหาเราทาง LINE":"Contact us on LINE"}
               </button>
             </div>
           </div>
@@ -8118,7 +8148,8 @@ function App() {
                 <div style={{ order:10, background:isDark?"#1E1E1E":"#fff", borderRadius:12, padding:"14px 16px", border:"1px solid "+(isDark?"#333":"#ECECEC"), display:"flex", gap:12, alignItems:"flex-start" }}>
                   <span style={{ fontSize:18 }}>LINE</span>
                   <div>
-                    <div style={{ fontWeight:700, fontSize:12, marginBottom:8, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"เพิ่มเพื่อนทาง LINE":"Add us on LINE"}</div>
+                    <div style={{ fontWeight:700, fontSize:12, marginBottom:4, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"เพิ่มเพื่อนทาง LINE":"Add us on LINE"}</div>
+                    <div style={{ fontSize:12, color:"#06C755", fontWeight:700, marginBottom:8 }}>{lang==="th"?"⚡ ตอบไวในเวลาทำการ":"⚡ Fast reply during business hours"}</div>
                     <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" loading="lazy" style={{ width:150, maxWidth:"100%", border:"1px solid "+(isDark?"#444":"#ECECEC"), borderRadius:8, display:"block" }} />
                   </div>
                 </div>
@@ -9185,11 +9216,11 @@ function App() {
           <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"calc(100vh - 260px)", padding:"60px 20px", textAlign:"center" }}>
             <div style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(80px,18vw,140px)", fontWeight:900, lineHeight:1, color:isDark?"#F5F5F5":"#1A1A1A", letterSpacing:"-4px", marginBottom:4, userSelect:"none" }}>404</div>
             <div style={{ width:48, height:4, background:"#9A0018", borderRadius:2, margin:"0 0 20px" }} />
-            <h2 style={{ fontSize:22, fontWeight:800, margin:"0 0 8px", color:isDark?"#F5F5F5":"#1A1A1A" }}>ไม่พบหน้าที่คุณต้องการ</h2>
-            <p style={{ fontSize:14, color:isDark?"#666":"#999", margin:"0 0 36px", lineHeight:1.6 }}>หน้านี้อาจถูกย้ายหรือไม่มีอยู่แล้ว</p>
+            <h2 style={{ fontSize:22, fontWeight:800, margin:"0 0 8px", color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"ไม่พบหน้าที่คุณต้องการ":"Page not found"}</h2>
+            <p style={{ fontSize:14, color:isDark?"#666":"#999", margin:"0 0 36px", lineHeight:1.6 }}>{lang==="th"?"หน้านี้อาจถูกย้ายหรือไม่มีอยู่แล้ว":"This page may have moved or no longer exists."}</p>
             <div style={{ display:"flex", gap:12, flexWrap:"wrap", justifyContent:"center" }}>
-              <button type="button" onClick={()=>{ setPage("home"); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"13px 28px", fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF }}>กลับหน้าหลัก</button>
-              <button type="button" onClick={()=>{ setPage("catalog"); setSelectedBrand(null); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ background:"transparent", color:isDark?"#F5F5F5":"#1A1A1A", border:isDark?"1px solid #555":"1px solid #1A1A1A", borderRadius:12, padding:"13px 28px", fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF }}>ดูสินค้าทั้งหมด</button>
+              <button type="button" onClick={()=>{ setPage("home"); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"13px 28px", fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"กลับหน้าหลัก":"Back to home"}</button>
+              <button type="button" onClick={()=>{ setPage("catalog"); setSelectedBrand(null); window.scrollTo({top:0,behavior:"smooth"}); }} style={{ background:"transparent", color:isDark?"#F5F5F5":"#1A1A1A", border:isDark?"1px solid #555":"1px solid #1A1A1A", borderRadius:12, padding:"13px 28px", fontSize:15, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ดูสินค้าทั้งหมด":"View all products"}</button>
             </div>
           </div>
         )}
@@ -9224,6 +9255,16 @@ function App() {
           </div>
         </div>
       )}
+      {/* ══ LINE FLOATING CHAT BUTTON ══ */}
+      <button
+        onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")}
+        title={lang==="th"?"มีคำถาม? ทักผ่าน LINE":"Questions? Chat on LINE"}
+        aria-label="Chat on LINE"
+        style={{ position:"fixed", bottom:showBackToTop?76:20, right:20, zIndex:9996, background:"#06C755", color:"#fff", border:"none", borderRadius:999, padding:"10px 16px 10px 12px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, display:"flex", alignItems:"center", gap:7, boxShadow:"0 4px 18px rgba(6,199,85,0.45)", transition:"bottom 0.2s ease" }}
+      >
+        <span style={{ fontSize:17, lineHeight:1 }}>💬</span>
+        <span>LINE</span>
+      </button>
       {showBackToTop && (
         <button className="back-to-top-btn" onClick={()=>window.scrollTo({ top:0, behavior:"smooth" })} title={lang==="th"?"กลับด้านบน":"Back to top"} aria-label="Back to top">
           ↑
@@ -9518,6 +9559,11 @@ function App() {
                         onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
                         <div>
                           <div style={{ fontWeight:800, fontSize:14 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          {getModelPartType(m) !== "steering_rack" && (
+                            <div style={{ fontSize:10, fontWeight:800, color:"#9A0018", background:"#FFF0F0", borderRadius:20, padding:"2px 8px", display:"inline-block", marginTop:3 }}>
+                              {getPartTypeLabel(getModelPartType(m), lang)}
+                            </div>
+                          )}
                           <div style={{ fontSize:12, color:"#888", marginTop:2 }}>{m.years || ""}</div>
                         </div>
                         <div style={{ textAlign:"right", flexShrink:0 }}>

@@ -3,38 +3,55 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SKKJ Version 2 Phone Preview</title>
+  <title>SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ | Steering Racks Thailand</title>
+  <meta name="description" content="SKKJ Autopart ผู้เชี่ยวชาญแร็คพวงมาลัยในกรุงเทพฯ นิสสัน ฮอนด้า อีซูซุ มาสด้า มิตซูบิชิ โตโยต้า ฟอร์ด เอ็มจี รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
+  <meta name="keywords" content="แร็คพวงมาลัย, steering rack, อะไหล่รถยนต์, SKKJ, นิสสัน, ฮอนด้า, อีซูซุ, โตโยต้า, มาสด้า" />
+  <link rel="canonical" href="https://skkjthailand.github.io/skkj-autopart/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;800&display=swap" rel="stylesheet" />
+  <!-- Open Graph — controls how the link looks when shared on LINE, Facebook, Messenger -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
+  <meta property="og:description" content="ผู้เชี่ยวชาญแร็คพวงมาลัย รับประกัน 6 เดือน จัดส่งทั่วประเทศ ถามร้านผ่าน LINE ได้เลย" />
+  <meta property="og:image" content="assets/nissan-teana-j32-top-skkj.png" />
+  <meta property="og:site_name" content="SKKJ Autopart" />
+  <meta property="og:locale" content="th_TH" />
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
+  <meta name="twitter:description" content="ผู้เชี่ยวชาญแร็คพวงมาลัย รับประกัน 6 เดือน จัดส่งทั่วประเทศ" />
+  <meta name="twitter:image" content="assets/nissan-teana-j32-top-skkj.png" />
+  <!-- Schema.org — tells Google this is an auto parts store (rich results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoPartsStore",
+    "name": "SKKJ Autopart",
+    "description": "ผู้เชี่ยวชาญแร็คพวงมาลัยและอะไหล่พวงมาลัย ทุกยี่ห้อ",
+    "email": "skkjthailand@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน โทร 087-102-2666",
+      "addressLocality": "กรุงเทพมหานคร",
+      "postalCode": "10150",
+      "addressCountry": "TH"
+    },
+    "areaServed": "TH",
+    "priceRange": "฿฿"
+  }
+  </script>
+  <title>SKKJ Version 2 Preview</title>
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; font-family: Arial, Tahoma, sans-serif; background: #f3f4f6; color: #111827; overflow: hidden; }
-    body { display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 24px; }
-    .wrap { width: min(100%, 460px); }
-    .title { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 12px; }
-    h1 { margin: 0; font-size: 18px; }
-    .size { color: #6b7280; font-size: 12px; }
-    .phone {
-      width: 390px;
-      max-width: 100%;
-      height: min(844px, calc(100vh - 96px));
-      margin: 0 auto;
-      border: 12px solid #111;
-      border-radius: 34px;
-      background: #fff;
-      overflow: hidden;
-      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.25);
-    }
-    iframe { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+    html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
+    #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <div class="title">
-      <h1>SKKJ Version 2 phone preview</h1>
-      <div class="size">390px wide</div>
-    </div>
-    <div class="phone">
-      <iframe src="skkj-version-2.html?v=bilingual-slip-reviews-qr-20260617" title="SKKJ Version 2 mobile website preview"></iframe>
-    </div>
-  </main>
-</body>
-</html>
+  <div id="root"><div id="loading">Opening SKKJ website preview...</div></div>
+  <script src="bundle.js"></script>
+</body></html>
