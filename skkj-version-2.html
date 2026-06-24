@@ -7619,7 +7619,7 @@ function App() {
                   <div className="v2-home-actions" style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
                     <button className="v2-buy-button" onClick={()=>setPage("catalog")} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.hero.browse}</button>
                     <button className="v2-ask-button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, cursor:"pointer", fontFamily:thF, fontWeight:700 }}>{t.hero.contactUs}</button>
-                    <button className="v2-quickfind-hero-btn" onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:900, cursor:"pointer", fontFamily:thF }}>🔍 {lang===\"th\"?\"หาอะไหล่\":\"Find My Part\"}</button>
+                    <button className="v2-quickfind-hero-btn" onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:900, cursor:"pointer", fontFamily:thF }}>🔍 {lang==="th"?"หาอะไหล่":"Find My Part"}</button>
                   </div>
                 </div>
                 <div className="v2-hero-visual">
