@@ -441,6 +441,9 @@ const T = {
         { icon:"💳", title:"Payment", body:"We accept bank transfer and cash on delivery." },
         { icon:"🚚", title:"Shipping", body:"After the item reaches the shipping company, the shop cannot edit or provide additional information on behalf of the customer. Please contact the shipping company directly yourself. We apologize for the inconvenience." },
         { icon:"🔄", title:"Exchange", body:"We are ready to exchange the item. If there is a price difference, we will refund the difference or the customer must pay the additional amount." },
+        { icon:"🔒", title:"Privacy Policy", body:"SKKJ Autopart is the data controller under Thailand's Personal Data Protection Act (PDPA B.E. 2562). We collect and use personal data only to process your orders, manage your account, and improve our service. We do not sell your personal data. Order data is stored on Supabase servers (Japan). Order notifications are sent by email via Resend (US). If you have set up Google Sheets reporting, order data is also sent there. To withdraw consent or make a data request, contact us on LINE @skkjautopart." },
+        { icon:"📋", title:"What data we collect", body:"Order data (name, phone, delivery address, car year, payment slip) — kept for order fulfilment and warranty records. Account data (email, name, phone) — kept while your account is active. Usage analytics (pages visited, products viewed, search terms) — stored in your browser only, and only after you give consent. Product reviews — your name and review text. Restock alerts — product ID and date only, no contact details." },
+        { icon:"✅", title:"Your data rights (PDPA)", body:"You have the right to access, correct, delete, or transfer your personal data. You may withdraw consent at any time using the Decline button in our cookie notice. To exercise your rights, contact us on LINE @skkjautopart or email skkjthailand@gmail.com. You may also file a complaint with the Office of the PDPA Committee at www.pdpc.or.th." },
       ],
       noteTitle:"Need help?",
       note:"Please contact us on LINE before returning or exchanging an item.",
@@ -450,6 +453,21 @@ const T = {
       yearPh:"Your car year (e.g. 2021)", notesPh:"Additional notes (optional)",
       cancel:"Cancel", confirm:"Confirm Order",
       alert:"Order submitted! We'll contact you within 24 hours.",
+    },
+    lookup:{
+      title:"Check Order Status",
+      sub:"Enter your order number and the phone number used at checkout.",
+      idPh:"Order number — e.g. ORD-003",
+      phonePh:"Phone number used at checkout",
+      search:"Check Status",
+      notFound:"No order found. Please check the order number and phone number.",
+      saveNote:"Save your order number to check status anytime.",
+      checkLink:"Check your order status later →",
+      codTitle:"Order Confirmed!",
+      codSub:"Your order has been placed. Save this reference number.",
+      timelineTitle:"Timeline",
+      contact:"Questions? Contact LINE: @skkjautopart",
+      close:"Close",
     },
     auth:{
       loginTitle:"Welcome back", registerTitle:"Create your account",
@@ -497,7 +515,7 @@ const T = {
       copyright:"© 2025 SKKJ Autopart. All rights reserved.",
     },
     cookie:{
-      text:"This site uses cookies to improve your experience and comply with Thailand's PDPA data protection law.",
+      text:"This site uses browser storage for visit analytics and recently viewed products. Order data is collected to process purchases. See our Privacy Policy (FAQ / Policy page) for full details.",
       accept:"Accept",
       decline:"Decline",
     },
@@ -578,6 +596,9 @@ const T = {
         { icon:"💳", title:"การชำระเงิน", body:"รับโอนเงิน มีจ่ายเงินปลายทาง" },
         { icon:"🚚", title:"การจัดส่ง", body:"เมื่อสินค้าถึงบริษัทขนส่งแล้ว ทางร้านไม่สามารถแก้ไขหรือแจ้งข้อมูลเพิ่มเติมแทนลูกค้าได้ กรุณาติดต่อบริษัทขนส่งโดยตรงด้วยตนเอง ขออภัยในความไม่สะดวก" },
         { icon:"🔄", title:"การเปลี่ยนสินค้า", body:"เราพร้อมเปลี่ยนให้ แต่ถ้าหากสินค้าราคามีส่วนต่าง เราจะทำการคืนเงินหรือลูกค้าต้องจ่ายเพิ่ม" },
+        { icon:"🔒", title:"นโยบายความเป็นส่วนตัว", body:"SKKJ Autopart เป็นผู้ควบคุมข้อมูลส่วนบุคคลตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 เราเก็บและใช้ข้อมูลส่วนบุคคลเพื่อดำเนินการสั่งซื้อ บริหารบัญชีผู้ใช้ และปรับปรุงการบริการเท่านั้น ไม่มีการขายข้อมูลส่วนบุคคล ข้อมูลจัดเก็บบนเซิร์ฟเวอร์ Supabase (ญี่ปุ่น) การแจ้งเตือนออเดอร์ส่งผ่านระบบอีเมล Resend (สหรัฐฯ) หากตั้งค่า Google Sheets ข้อมูลออเดอร์จะถูกส่งไปด้วย ติดต่อขอใช้สิทธิ์หรือถอนความยินยอมได้ที่ LINE: @skkjautopart" },
+        { icon:"📋", title:"ข้อมูลที่เรารวบรวม", body:"ข้อมูลคำสั่งซื้อ (ชื่อ เบอร์โทร ที่อยู่ ปีรถ สลิปโอนเงิน) เก็บเพื่อดำเนินการและรับประกัน | ข้อมูลบัญชีสมาชิก (อีเมล ชื่อ เบอร์โทร) เก็บตลอดที่บัญชียังเปิดอยู่ | ข้อมูลการใช้งาน (หน้าที่เข้าชม สินค้าที่ดู คำค้นหา) เก็บในเบราว์เซอร์เท่านั้น และเก็บหลังได้รับความยินยอมเท่านั้น | รีวิวสินค้า (ชื่อและข้อความรีวิว) | การแจ้งเตือนสินค้าหมด เก็บเฉพาะรหัสสินค้าและวันที่ ไม่เก็บข้อมูลติดต่อ" },
+        { icon:"✅", title:"สิทธิ์ของคุณ (PDPA)", body:"คุณมีสิทธิ์ขอดู แก้ไข ลบ หรือโอนข้อมูลส่วนบุคคลของคุณ และถอนความยินยอมได้ตลอดเวลาโดยกดปุ่ม 'ปฏิเสธ' ในแบนเนอร์คุกกี้ ติดต่อขอใช้สิทธิ์ได้ที่ LINE: @skkjautopart หรืออีเมล skkjthailand@gmail.com นอกจากนี้คุณมีสิทธิ์ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (www.pdpc.or.th)" },
       ],
       noteTitle:"ต้องการความช่วยเหลือ?",
       note:"กรุณาติดต่อทาง LINE ก่อนทำการคืนหรือเปลี่ยนสินค้า",
@@ -587,6 +608,21 @@ const T = {
       yearPh:"ปีรถของคุณ (เช่น 2021)", notesPh:"หมายเหตุเพิ่มเติม (ถ้ามี)",
       cancel:"ยกเลิก", confirm:"ยืนยันคำสั่งซื้อ",
       alert:"ส่งคำสั่งซื้อแล้ว! เราจะติดต่อกลับภายใน 24 ชั่วโมง",
+    },
+    lookup:{
+      title:"ตรวจสอบสถานะคำสั่งซื้อ",
+      sub:"ใส่เลขออเดอร์และเบอร์โทรที่ใช้สั่งซื้อ",
+      idPh:"เลขออเดอร์ เช่น ORD-003",
+      phonePh:"เบอร์โทรที่ใช้สั่งซื้อ",
+      search:"ตรวจสอบ",
+      notFound:"ไม่พบออเดอร์นี้ กรุณาตรวจสอบเลขออเดอร์และเบอร์โทรอีกครั้ง",
+      saveNote:"บันทึกเลขออเดอร์ไว้เพื่อตรวจสอบสถานะได้ตลอดเวลา",
+      checkLink:"ตรวจสอบสถานะออเดอร์ภายหลัง →",
+      codTitle:"รับคำสั่งซื้อแล้ว!",
+      codSub:"สั่งซื้อสำเร็จ บันทึกเลขออเดอร์นี้ไว้",
+      timelineTitle:"ประวัติ",
+      contact:"มีข้อสงสัย ติดต่อ LINE: @skkjautopart",
+      close:"ปิด",
     },
     auth:{
       loginTitle:"ยินดีต้อนรับกลับ", registerTitle:"สมัครสมาชิก",
@@ -634,7 +670,7 @@ const T = {
       copyright:"© 2568 SKKJ Autopart สงวนลิขสิทธิ์ทั้งหมด",
     },
     cookie:{
-      text:"เว็บไซต์นี้ใช้คุกกี้เพื่อพัฒนาประสบการณ์การใช้งาน และปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)",
+      text:"เว็บไซต์นี้ใช้ที่จัดเก็บข้อมูลในเบราว์เซอร์เพื่อสถิติการเข้าชมและสินค้าที่ดูล่าสุด ข้อมูลคำสั่งซื้อถูกเก็บเพื่อดำเนินการสั่งซื้อ ดูนโยบายความเป็นส่วนตัวฉบับเต็มในหน้า คำถาม/นโยบาย",
       accept:"ยอมรับ",
       decline:"ปฏิเสธ",
     },
@@ -3035,6 +3071,11 @@ function App() {
   });
   const [orderSuccess, setOrderSuccess]   = useState(false);
   const [lastBillOrders, setLastBillOrders] = useState(null);
+  const [confirmedOrders, setConfirmedOrders] = useState(null); // COD confirmation modal
+  const [orderLookupOpen, setOrderLookupOpen] = useState(false);
+  const [orderLookupId, setOrderLookupId] = useState("");
+  const [orderLookupPhone, setOrderLookupPhone] = useState("");
+  const [orderLookupResult, setOrderLookupResult] = useState(null);
   const [contactSent, setContactSent]     = useState(false);
   const [contactBrandId, setContactBrandId] = useState("");
   const [contactModelId, setContactModelId] = useState("");
@@ -4619,7 +4660,7 @@ function App() {
         body: JSON.stringify({ order_id: newOrder.id, order_date: newOrder.date, slip_data: paymentSlip || "", slip_name: paymentSlipName || "", customer: newOrder.customer || "-", brand: newOrder.brand || "-", model: newOrder.model || "-", price: Number(newOrder.price) || 0, phone: newOrder.phone || "-", address: newOrder.address || "-", payment_method: paymentMethod || "-", delivery_method: newOrder.deliveryMethod || "-" }),
       }).catch(() => {});
     }
-    paymentMethod !== "cod" ? setLastBillOrders([newOrder]) : setLastBillOrders(null);
+    paymentMethod !== "cod" ? setLastBillOrders([newOrder]) : setConfirmedOrders([newOrder]);
     saveCustomerAddressSlot(orderDetails);
     if (orderForm.brandId && orderForm.modelId) reduceStockForOrder([{ brandId:orderForm.brandId, modelId:orderForm.modelId, quantity:1 }], { orders: nextOrders });
     setOrderForm(null);
@@ -4667,7 +4708,12 @@ function App() {
     setOrders(nextOrders);
     queueImmediateOnlineSave("basket_checkout_created", { orders: nextOrders });
     sendOrdersToGoogleSheet(newOrders, "basket_checkout");
-    (paymentMethod || "bank_transfer") !== "cod" ? setLastBillOrders(newOrders) : setLastBillOrders(null);
+    fetch(`${SKKJ_DATABASE_CONFIG.supabaseUrl}/functions/v1/order-alert`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SKKJ_DATABASE_CONFIG.supabaseKey}` },
+      body: JSON.stringify({ orderId: newOrders[0]?.id || "-", customer: customer || "-", phone: phone || "-", paymentMethod: paymentMethod || "bank_transfer", items: newOrders.map(o => ({ brand: o.brand || "-", model: o.model || "-", price: Number(o.price) || 0 })) }),
+    }).catch(() => {});
+    (paymentMethod || "bank_transfer") !== "cod" ? setLastBillOrders(newOrders) : setConfirmedOrders(newOrders);
     saveCustomerAddressSlot({ customer, phone, address });
     reduceStockForOrder(basket, { orders: nextOrders });
     checkoutDoneRef.current = true;
@@ -6587,6 +6633,13 @@ function App() {
                 <span>{fmt(lastBillOrders.reduce((sum,o)=>sum+Number(o.price || 0),0))}</span>
               </div>
             </div>
+            <div style={{ background:"#FFFBEB", border:"1px solid #FDE68A", borderRadius:10, padding:"10px 14px", marginBottom:14, fontSize:13, lineHeight:1.55 }}>
+              💾 {lang==="th"?"บันทึกเลขออเดอร์:":"Save your reference:"} <strong>{lastBillOrders.map(o=>o.id).join(", ")}</strong>
+              <span style={{ color:"#777", margin:"0 6px" }}>·</span>
+              <button onClick={()=>{ setOrderLookupOpen(true); setOrderLookupId(lastBillOrders[0]?.id||""); setOrderLookupPhone(lastBillOrders[0]?.phone||""); setOrderLookupResult(null); setLastBillOrders(null); }} style={{ background:"none", border:"none", color:"#9A0018", cursor:"pointer", fontWeight:800, padding:0, fontFamily:thF, fontSize:13, textDecoration:"underline" }}>
+                {t.lookup.checkLink}
+              </button>
+            </div>
             <div style={{ display:"flex", gap:10 }}>
               <button onClick={()=>setLastBillOrders(null)} style={{ flex:1, background:"#fff", border:"1px solid #E0DDD8", color:"#555", borderRadius:12, padding:"12px 14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF }}>
                 {lang==="th"?"ปิด":"Close"}
@@ -6595,6 +6648,118 @@ function App() {
                 {lang==="th"?"ดาวน์โหลดบิล PDF":"Download bill PDF"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── COD ORDER CONFIRMATION ── */}
+      {confirmedOrders && (
+        <div style={{ position:"fixed", inset:0, zIndex:260, background:"rgba(0,0,0,.48)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+          <div style={{ width:"100%", maxWidth:420, background:"#fff", borderRadius:20, padding:28, boxShadow:"0 24px 70px rgba(0,0,0,.28)", fontFamily:thF }}>
+            <div style={{ textAlign:"center", marginBottom:20 }}>
+              <div style={{ width:56, height:56, borderRadius:28, background:"#DCFCE7", display:"flex", alignItems:"center", justifyContent:"center", fontSize:28, margin:"0 auto 14px" }}>✓</div>
+              <h3 style={{ margin:"0 0 6px", fontSize:21, fontWeight:900 }}>{t.lookup.codTitle}</h3>
+              <p style={{ margin:0, color:"#666", fontSize:13, lineHeight:1.6 }}>{t.lookup.codSub}</p>
+            </div>
+            <div style={{ background:"#F8F7F4", border:"2px dashed #DDD", borderRadius:14, padding:"14px 18px", marginBottom:18, textAlign:"center" }}>
+              <div style={{ fontSize:12, color:"#888", marginBottom:6 }}>{lang==="th"?"เลขออเดอร์ของคุณ":"Your order number"}</div>
+              <div style={{ fontSize:26, fontWeight:900, letterSpacing:2, color:"#1A1A1A", fontFamily:"monospace" }}>
+                {confirmedOrders.map(o=>o.id).join(", ")}
+              </div>
+              <div style={{ fontSize:11, color:"#888", marginTop:8, lineHeight:1.5 }}>{t.lookup.saveNote}</div>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+              <button
+                onClick={()=>{ setOrderLookupOpen(true); setOrderLookupId(confirmedOrders[0]?.id||""); setOrderLookupPhone(confirmedOrders[0]?.phone||""); setOrderLookupResult(null); setConfirmedOrders(null); }}
+                style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:14, fontSize:14, fontWeight:900, cursor:"pointer", fontFamily:thF }}>
+                🔍 {t.lookup.title}
+              </button>
+              <button onClick={()=>setConfirmedOrders(null)} style={{ background:"#F5F4F2", color:"#444", border:"none", borderRadius:12, padding:12, fontSize:13, fontWeight:700, cursor:"pointer", fontFamily:thF }}>
+                {t.lookup.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── ORDER STATUS LOOKUP MODAL ── */}
+      {orderLookupOpen && (
+        <div onClick={()=>setOrderLookupOpen(false)} style={{ position:"fixed", inset:0, zIndex:310, background:"rgba(0,0,0,.55)", display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+          <div onClick={e=>e.stopPropagation()} style={{ width:"min(96vw,460px)", background:"#fff", borderRadius:20, padding:28, boxShadow:"0 24px 60px rgba(0,0,0,.28)", fontFamily:thF }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:20 }}>
+              <div>
+                <div style={{ fontSize:18, fontWeight:900 }}>🔍 {t.lookup.title}</div>
+                <div style={{ fontSize:13, color:"#888", marginTop:4 }}>{t.lookup.sub}</div>
+              </div>
+              <button onClick={()=>setOrderLookupOpen(false)} style={{ background:"#F5F4F2", border:"none", borderRadius:999, width:32, height:32, cursor:"pointer", fontSize:15, fontWeight:900, lineHeight:1 }}>✕</button>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:11, marginBottom:14 }}>
+              <input
+                value={orderLookupId}
+                onChange={e=>{ setOrderLookupId(e.target.value.toUpperCase()); setOrderLookupResult(null); }}
+                placeholder={t.lookup.idPh}
+                style={{ border:"1px solid #DDD", borderRadius:10, padding:"11px 13px", fontSize:14, fontFamily:thF, outline:"none" }}
+              />
+              <input
+                value={orderLookupPhone}
+                onChange={e=>{ setOrderLookupPhone(e.target.value); setOrderLookupResult(null); }}
+                placeholder={t.lookup.phonePh}
+                type="tel"
+                style={{ border:"1px solid #DDD", borderRadius:10, padding:"11px 13px", fontSize:14, fontFamily:thF, outline:"none" }}
+              />
+              <button
+                onClick={()=>{
+                  const id = orderLookupId.trim().toUpperCase();
+                  const ph = (orderLookupPhone||"").trim().replace(/[\s\-()]/g,"");
+                  const found = orders.find(o => o.id === id && (o.phone||"").replace(/[\s\-()]/g,"") === ph);
+                  setOrderLookupResult(found || "not_found");
+                }}
+                style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:14, fontSize:15, fontWeight:900, cursor:"pointer", fontFamily:thF }}
+              >
+                {t.lookup.search}
+              </button>
+            </div>
+            {orderLookupResult === "not_found" && (
+              <div style={{ background:"#FFF0F0", border:"1px solid #FCC", borderRadius:10, padding:"12px 14px", color:"#9A0018", fontSize:13, lineHeight:1.5 }}>
+                {t.lookup.notFound}
+              </div>
+            )}
+            {orderLookupResult && orderLookupResult !== "not_found" && (()=>{
+              const o = orderLookupResult;
+              const sCols = { pending:"#EAB308", processing:"#3B82F6", shipped:"#8B5CF6", delivered:"#16A34A", cancelled:"#EF4444" };
+              const sLabels = { pending:lang==="th"?"รอตรวจสอบ":"Pending", processing:lang==="th"?"กำลังบรรจุ":"Processing", shipped:lang==="th"?"กำลังจัดส่ง":"Shipped", delivered:lang==="th"?"ได้รับแล้ว":"Delivered", cancelled:lang==="th"?"ยกเลิก":"Cancelled" };
+              return (
+                <div style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:14, padding:16 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12, gap:10 }}>
+                    <div style={{ minWidth:0 }}>
+                      <div style={{ fontSize:12, color:"#888", fontWeight:700, marginBottom:2 }}>{o.id}</div>
+                      <div style={{ fontSize:15, fontWeight:900, color:"#1A1A1A" }}>{o.brand} {o.model}</div>
+                      <div style={{ fontSize:12, color:"#888", marginTop:3 }}>{o.date} · {fmt(o.price)}</div>
+                    </div>
+                    <div style={{ background:sCols[o.status]||"#888", color:"#fff", borderRadius:999, padding:"4px 12px", fontSize:12, fontWeight:900, whiteSpace:"nowrap", flexShrink:0 }}>
+                      {sLabels[o.status]||o.status}
+                    </div>
+                  </div>
+                  {Array.isArray(o.timeline) && o.timeline.length > 0 && (
+                    <div style={{ borderTop:"1px solid #ECECEC", paddingTop:10, marginBottom:10 }}>
+                      <div style={{ fontSize:11, fontWeight:900, color:"#888", marginBottom:8, textTransform:"uppercase", letterSpacing:".5px" }}>{t.lookup.timelineTitle}</div>
+                      {[...o.timeline].slice(0,4).map((ev,i)=>(
+                        <div key={i} style={{ display:"flex", gap:10, marginBottom:6, alignItems:"flex-start" }}>
+                          <div style={{ width:7, height:7, borderRadius:4, background:"#9A0018", marginTop:5, flexShrink:0 }} />
+                          <div>
+                            <div style={{ fontSize:12, fontWeight:700, color:"#1A1A1A" }}>{ev.text||ev.label||ev.status||""}</div>
+                            <div style={{ fontSize:11, color:"#888" }}>{ev.date||ev.time||ev.at||""}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div style={{ borderTop:"1px solid #ECECEC", paddingTop:10, fontSize:12, color:"#888" }}>
+                    {t.lookup.contact}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
@@ -7796,7 +7961,16 @@ function App() {
         {page==="contact"&&(
           <div style={{ padding:"60px 0", maxWidth:700, margin:"0 auto" }}>
             <h2 style={{ fontSize:32, fontWeight:800, letterSpacing:"-1px", margin:"0 0 8px" }}>{t.contact.h2}</h2>
-            <p style={{ color:"#666", fontSize:15, marginBottom:34, lineHeight:1.7 }}>{t.contact.sub}</p>
+            <p style={{ color:"#666", fontSize:15, marginBottom:24, lineHeight:1.7 }}>{t.contact.sub}</p>
+            <div style={{ background:isDark?"#1A1A1A":"#F0F9FF", border:"1px solid "+(isDark?"#1E3A5F":"#BAE6FD"), borderRadius:14, padding:"16px 20px", marginBottom:28, display:"flex", alignItems:"center", justifyContent:"space-between", gap:14, flexWrap:"wrap" }}>
+              <div>
+                <div style={{ fontWeight:900, fontSize:14, color:isDark?"#93C5FD":"#0C4A6E", marginBottom:3 }}>📦 {t.lookup.title}</div>
+                <div style={{ fontSize:13, color:isDark?"#7EC8F9":"#0369A1" }}>{t.lookup.sub}</div>
+              </div>
+              <button onClick={()=>{ setOrderLookupOpen(true); setOrderLookupId(""); setOrderLookupPhone(""); setOrderLookupResult(null); }} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:10, padding:"10px 20px", cursor:"pointer", fontSize:13, fontWeight:900, fontFamily:thF, whiteSpace:"nowrap" }}>
+                {t.lookup.search} →
+              </button>
+            </div>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:24 }}>
               <div>
                 {contactSent ? (
@@ -9204,44 +9378,35 @@ function App() {
                   {brands.map(b => {
                     const hasModels = (b.models||[]).length > 0;
                     return (
-                      <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, opacity:hasModels?1:0.4, transition:"border-color .15s" }}
+                      <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} disabled={!hasModels}
+                        style={{ background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, transition:"border-color .15s", opacity:hasModels?1:0.4 }}
                         onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A0018"; }}
                         onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
-                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:40, marginBottom:8 }}>
-                          <BrandLogo logo={b.logo} size={32} place="brandCard" />
+                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:36, marginBottom:6, fontSize:22 }}>
+                          {b.logo.startsWith("image:") ? <BrandLogo logo={b.logo} size={28} place="brandCard" /> : b.logo}
                         </div>
-                        <div style={{ fontWeight:800, fontSize:13 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
-                        <div style={{ fontSize:11, color:"#999", marginTop:2 }}>{(b.models||[]).length} {lang==="th"?"รุ่น":"models"}</div>
+                        <div style={{ fontWeight:800, fontSize:12 }}>{lang==="th"?b.nameTh:b.nameEn}</div>
                       </button>
                     );
                   })}
                 </div>
-                <button onClick={()=>{ setQuickFindBrand("__REQUEST__"); setQfReqBrand(null); setQfReqModel(""); setQfReqName(""); setQfReqPhone(""); setQfReqSent(false); }} style={{ marginTop:16, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", fontSize:14, fontWeight:800, color:"#555", cursor:"pointer", fontFamily:thF }}>
-                  {lang==="th"?"ไม่มีรุ่นที่ต้องการ ? แจ้งเราได้เลย →":"Don't see your model? Let us know →"}
+                <button onClick={()=>setQuickFindBrand("__REQUEST__")} style={{ marginTop:16, width:"100%", background:"#F5F4F2", border:"1.5px dashed #CCC", borderRadius:14, padding:"14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, color:"#666" }}>
+                  {lang==="th"?"ไม่เจอยี่ห้อที่ต้องการ? แจ้งรุ่นที่ต้องการ →":"Don’t see your brand? Request a model →"}
                 </button>
               </div>
             ) : (()=>{
+              /* Step 2 — model list */
               const models = (quickFindBrand.models || []);
-              if (models.length === 0) return (
-                /* Sorry screen */
-                <div style={{ textAlign:"center", padding:"20px 0" }}>
-                  <img src="assets/sorry.gif" alt="sorry" style={{ width:200, borderRadius:12, marginBottom:16 }} />
-                  <div style={{ fontSize:18, fontWeight:900, marginBottom:6 }}>{lang==="th"?"เราไม่มีสิ่งที่คุณต้องการ":"We don't have what you want"}</div>
-                  <div style={{ fontSize:13, color:"#888", marginBottom:18 }}>{lang==="th"?"ขออภัย ยังไม่มีสินค้าสำหรับยี่ห้อนี้":"Sorry, no parts available for this brand yet"}</div>
-                  <button onClick={()=>setQuickFindBrand(null)} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:12, padding:"11px 24px", fontSize:14, fontWeight:800, cursor:"pointer", fontFamily:thF }}>
-                    {lang==="th"?"ลองยี่ห้ออื่น":"Try another brand"}
-                  </button>
-                </div>
-              );
               return (
-                /* Step 2 — model list */
-                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {models.map(m => {
-                    const inStock = (m.stock||0) > 0;
+                <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
+                  {models.map((m, idx) => {
+                    const inStock = getLiveStock(brands, quickFindBrand.id, m.id) > 0;
                     return (
-                      <button key={m.id} onClick={()=>{ openProductDetail(quickFindBrand, m); setQuickFindOpen(false); setQuickFindBrand(null); }}
-                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"14px 16px", cursor:"pointer", textAlign:"left", fontFamily:thF, transition:"border-color .15s" }}
-                        onMouseEnter={e=>{ e.currentTarget.style.borderColor="#9A0018"; }}
+                      <button key={idx}
+                        onClick={()=>{ if(!inStock) return; setOrderForm({ brand:lang==="th"?quickFindBrand.nameTh:quickFindBrand.nameEn, model:lang==="th"?m.nameTh:m.nameEn, brandId:quickFindBrand.id, modelId:m.id, price:m.price }); setOrderStep(1); setQuickFindOpen(false); setQuickFindBrand(null); }}
+                        disabled={!inStock}
+                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:"#FAFAF8", border:"1.5px solid #ECECEC", borderRadius:14, padding:"14px 16px", cursor:inStock?"pointer":"default", textAlign:"left", fontFamily:thF, transition:"border-color .15s", opacity:inStock?1:0.55 }}
+                        onMouseEnter={e=>{ if(inStock) e.currentTarget.style.borderColor="#9A0018"; }}
                         onMouseLeave={e=>{ e.currentTarget.style.borderColor="#ECECEC"; }}>
                         <div>
                           <div style={{ fontWeight:800, fontSize:14 }}>{lang==="th"?m.nameTh:m.nameEn}</div>
