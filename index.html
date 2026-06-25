@@ -6683,10 +6683,16 @@ function App() {
           .v2-home-sub { font-size: 13px !important; line-height: 1.55 !important; max-width: none !important; margin: 0 0 14px !important; color: #555 !important; }
           .v2-home-actions { justify-content: stretch !important; gap: 8px !important; }
           .v2-home-actions button { flex: 1 1 0 !important; min-height: 42px !important; padding: 10px 12px !important; border-radius: 14px !important; font-size: 13px !important; }
-          /* Quick Find hero button — move to top, slightly narrower */
-          .v2-quickfind-hero-btn { order: -1 !important; flex: 0 0 85% !important; width: 85% !important; margin: 0 auto 10px !important; font-size: 17px !important; padding: 18px !important; letter-spacing: -0.3px !important; box-shadow: 0 4px 20px rgba(154,0,24,0.35) !important; border-radius: 14px !important; }
-          /* Hide paragraph sub-text on mobile (button takes its spot) */
+          /* Hide small quick-find hero btn on mobile — replaced by band */
+          .v2-quickfind-hero-btn { display: none !important; }
+          /* Hide paragraph on mobile — it moves below slideshow */
           .v2-home-sub { display: none !important; }
+          /* Show Quick Find dark band inside hero on mobile */
+          .mobile-qf-band { display: block !important; margin: 14px 0 20px !important; }
+          /* Hide desktop dark band on mobile (mobile-qf-band replaces it) */
+          .v2-qf-desktop-band { display: none !important; }
+          /* Sub-text below slideshow on mobile */
+          .mobile-hero-sub { display: block !important; font-size: 14px !important; color: #666; line-height: 1.65; margin: 14px 4px 2px !important; text-align: left !important; }
           /* Hide part-type test card on mobile */
           .v2-catalog-part-type { display: none !important; }
           /* Compact Find-My-Part card header on mobile */
@@ -7617,6 +7623,11 @@ function App() {
                       ))}
                     </div>
                   </div>
+                  {/* Mobile: Quick Find dark band — hidden on desktop via CSS */}
+                  <div className="mobile-qf-band" onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ display:"none" }}>
+                    <div style={{ background:"#9A0018", color:"#fff", borderRadius:12, padding:"18px 16px", cursor:"pointer", textAlign:"center", fontSize:16, fontWeight:900, fontFamily:thF, lineHeight:1.4 }}>{lang==="th"?"รู้ว่าอยากได้อะไร แต่ขี้เกียจหา 👉":"Know what you need but too lazy to search? 👉"}</div>
+                    <div style={{ textAlign:"center", fontSize:12, color:"#aaa", marginTop:8 }}>{lang==="th"?"เลือกยี่ห้อ → รุ่น → เสร็จ":"Pick brand → model → done"}</div>
+                  </div>
                   <p className="v2-home-sub" style={{ fontSize:17, color:"#666", maxWidth:520, margin:"0 auto 36px", lineHeight:1.7 }}>{t.hero.sub}</p>
                   <div className="v2-home-actions" style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
                     <button className="v2-buy-button" onClick={()=>setPage("catalog")} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.hero.browse}</button>
@@ -7656,9 +7667,11 @@ function App() {
                   </button>
                 </div>
               </div>
+              {/* Mobile: sub-text shown below slideshow on phones */}
+              <p className="mobile-hero-sub" style={{ display:"none" }}>{t.hero.sub}</p>
             </section>
             {/* ══ QUICK FIND BUTTON ══ */}
-            <div style={{ background:"#111111", margin:"0 -9999px", padding:"32px 9999px" }}>
+            <div className="v2-qf-desktop-band" style={{ background:"#111111", margin:"0 -9999px", padding:"32px 9999px" }}>
               <div style={{ maxWidth:960, margin:"0 auto", textAlign:"center" }}>
                 <button onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:6, padding:"22px 40px", fontSize:22, fontWeight:900, fontFamily:thF, cursor:"pointer", width:"100%", maxWidth:760, letterSpacing:"-0.3px", lineHeight:1.3, boxShadow:"0 8px 32px rgba(154,0,24,0.4)" }}>
                   {lang==="th" ? "รู้ว่าอยากได้อะไร แต่ขี้เกียจหา 👉" : "I know what I want but too lazy to find it 👉"}
@@ -7696,6 +7709,25 @@ function App() {
                   </button>
                   );
                 })}
+              </div>
+
+              {/* ══ FACTORY PHOTO GALLERY ══ */}
+              <div style={{ marginTop:40 }}>
+                <h2 style={{ fontFamily:"'Kanit',sans-serif", fontSize:20, fontWeight:800, letterSpacing:"-0.3px", margin:"0 0 14px", color:isDark?"#F5F5F5":"#1A1A1A" }}>
+                  {lang==="th"?"ภาพจากโรงงาน":"Factory Photos"}
+                </h2>
+                {/* Big photo */}
+                <div style={{ borderRadius:14, overflow:"hidden", marginBottom:6, height:220, background:isDark?"#2C2C2E":"#E8E6E0", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <span style={{ fontSize:44, opacity:.2 }}>📷</span>
+                </div>
+                {/* 3 small photos */}
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:6 }}>
+                  {[0,1,2].map(i=>(
+                    <div key={i} style={{ borderRadius:10, height:110, background:isDark?"#242424":"#D5D2CB", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                      <span style={{ fontSize:22, opacity:.2 }}>📷</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* ══ LINE PRE-SALE STRIP ══ */}
@@ -7760,7 +7792,7 @@ function App() {
                 <span style={{ fontSize:22, flexShrink:0 }}>📍</span>
                 <div>
                   <div style={{ fontWeight:800, fontSize:13, marginBottom:5, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"ที่อยู่ร้าน":"Shop address"}</div>
-                  <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.7 }}>36/1 ซอยอนามัยงามเจริญ 33{"\n"}แขวงท่าข้าม เขตบางขุนเทียน{"\n"}กรุงเทพฯ 10150</div>
+                  <div style={{ fontSize:13, color:isDark?"#999":"#555", lineHeight:1.7 }}>{lang==="th"?"36/1 ซอยอนามัยงามเจริญ 33\nแขวงท่าข้าม เขตบางขุนเทียน\nกรุงเทพฯ 10150":"36/1 Soi Anamai Ngam Charoen 33\nTha Kham, Bang Khun Thian\nBangkok 10150"}</div>
                 </div>
               </div>
               <div style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #1E1E1E":"1px solid #E8E6E0", borderRadius:14, padding:"20px 18px", display:"flex", gap:14, alignItems:"flex-start" }}>
@@ -8394,6 +8426,23 @@ function App() {
                 ))}
               </div>
             </div>
+            {/* ── Map card ── */}
+            <a href="https://www.google.com/maps/search/?api=1&query=36%2F1+Soi+Anamai+Ngam+Charoen+33+Tha+Kham+Bang+Khun+Thian+Bangkok+10150" target="_blank" rel="noopener noreferrer" style={{ display:"block", marginTop:24, borderRadius:12, overflow:"hidden", border:"1px solid "+(isDark?"#333":"#ECECEC"), position:"relative", textDecoration:"none" }}>
+              <img
+                src="https://staticmap.openstreetmap.de/staticmap.php?center=13.6282,100.4627&zoom=15&size=700x280&maptype=mapnik&markers=13.6282,100.4627,red-pushpin"
+                alt={lang==="th"?"แผนที่ร้าน SKKJ Autopart":"SKKJ Autopart map"}
+                loading="lazy"
+                style={{ width:"100%", height:280, objectFit:"cover", display:"block" }}
+                onError={e=>{ e.target.style.display="none"; e.target.nextSibling.style.display="flex"; }}
+              />
+              <div style={{ display:"none", width:"100%", height:280, background:isDark?"#2C2C2E":"#F0EEE8", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:8 }}>
+                <span style={{ fontSize:32 }}>📍</span>
+                <span style={{ fontSize:13, color:isDark?"#aaa":"#666" }}>{lang==="th"?"แตะเพื่อเปิด Google Maps":"Tap to open Google Maps"}</span>
+              </div>
+              <div style={{ position:"absolute", bottom:12, left:"50%", transform:"translateX(-50%)", background:"#fff", border:"1px solid #E0DDD8", borderRadius:20, padding:"7px 16px", fontSize:13, fontWeight:700, color:"#1A1A1A", display:"flex", alignItems:"center", gap:6, boxShadow:"0 2px 8px rgba(0,0,0,0.12)", whiteSpace:"nowrap" }}>
+                <span>📍</span>{lang==="th"?"เปิดใน Google Maps":"Open in Google Maps"}
+              </div>
+            </a>
           </div>
         )}
 
@@ -9521,7 +9570,7 @@ function App() {
         </div>
       )}
       {/* ══ LINE FLOATING CHAT BUTTON ══ */}
-      <button
+      {!orderForm && <button
         onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")}
         title={lang==="th"?"มีคำถาม? ทักผ่าน LINE":"Questions? Chat on LINE"}
         aria-label="Chat on LINE"
@@ -9529,7 +9578,7 @@ function App() {
       >
         <span style={{ fontSize:17, lineHeight:1 }}>💬</span>
         <span>LINE</span>
-      </button>
+      </button>}
       {showBackToTop && (
         <button className="back-to-top-btn" onClick={()=>window.scrollTo({ top:0, behavior:"smooth" })} title={lang==="th"?"กลับด้านบน":"Back to top"} aria-label="Back to top">
           ↑
@@ -9807,49 +9856,4 @@ function App() {
                   })}
                 </div>
                 <button onClick={()=>setQuickFindBrand("__REQUEST__")} style={{ marginTop:16, width:"100%", background:isDark?"#2C2C2E":"#F5F4F2", border:`1.5px dashed ${isDark?"#3A3A3C":"#CCC"}`, borderRadius:14, padding:"14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, color:isDark?"#A0A09A":"#666" }}>
-                  {lang==="th"?"ไม่เจอยี่ห้อที่ต้องการ? แจ้งรุ่นที่ต้องการ →":"Don’t see your brand? Request a model →"}
-                </button>
-              </div>
-            ) : (()=>{
-              /* Step 2 — model list */
-              const models = (quickFindBrand.models || []);
-              return (
-                <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
-                  {models.map((m, idx) => {
-                    const inStock = getLiveStock(brands, quickFindBrand.id, m.id) > 0;
-                    return (
-                      <button key={idx}
-                        onClick={()=>{ if(!inStock) return; setOrderForm({ brand:lang==="th"?quickFindBrand.nameTh:quickFindBrand.nameEn, model:lang==="th"?m.nameTh:m.nameEn, brandId:quickFindBrand.id, modelId:m.id, price:m.price }); setOrderStep(1); setQuickFindOpen(false); setQuickFindBrand(null); }}
-                        disabled={!inStock}
-                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:isDark?"#2C2C2E":"#FAFAF8", border:`1.5px solid ${isDark?"#3A3A3C":"#ECECEC"}`, borderRadius:14, padding:"14px 16px", cursor:inStock?"pointer":"default", textAlign:"left", fontFamily:thF, transition:"border-color .15s", opacity:inStock?1:0.55 }}
-                        onMouseEnter={e=>{ if(inStock) e.currentTarget.style.borderColor="#9A0018"; }}
-                        onMouseLeave={e=>{ e.currentTarget.style.borderColor=isDark?"#3A3A3C":"#ECECEC"; }}>
-                        <div>
-                          <div style={{ fontWeight:800, fontSize:14, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
-                          {getModelPartType(m) !== "steering_rack" && (
-                            <div style={{ fontSize:10, fontWeight:800, color:"#9A0018", background:"#FFF0F0", borderRadius:20, padding:"2px 8px", display:"inline-block", marginTop:3 }}>
-                              {getPartTypeLabel(getModelPartType(m), lang)}
-                            </div>
-                          )}
-                          <div style={{ fontSize:12, color:isDark?"#A0A09A":"#888", marginTop:2 }}>{m.years || ""}</div>
-                        </div>
-                        <div style={{ textAlign:"right", flexShrink:0 }}>
-                          <div style={{ fontSize:11, fontWeight:800, color:inStock?(isDark?"#4ADE80":"#16A34A"):(isDark?"#F87171":"#9A0018"), background:inStock?(isDark?"#1A2E1A":"#F0FDF4"):(isDark?"#2E1A1A":"#FFF0F0"), borderRadius:20, padding:"3px 9px", marginBottom:3, whiteSpace:"nowrap" }}>{inStock?(lang==="th"?"มีสินค้า":"In Stock"):(lang==="th"?"หมดสต็อก":"Out of Stock")}</div>
-                          <div style={{ fontSize:13, fontWeight:900, color:isDark?"#F0EFE8":"#1A1A1A", marginTop:2 }}>{fmt(m.price)}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-      </div>
-    )}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-</script></body></html>
+                  {lang==="th"?"ไม่เจอยี่ห้อที่ต้องการ? แจ้งรุ่นที่ต�
