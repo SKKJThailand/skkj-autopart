@@ -10070,4 +10070,101 @@ function App() {
                     ))}
                   </div>
                 </div>
-      
+              );
+              /* Pick model + fill contact */
+              const isOther = qfReqBrand.id === "sr-other";
+              return (
+                <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                  <div style={{ fontSize:13, color:"#888" }}>{lang==="th"?"เลือกรุ่นที่ต้องการ":"Pick the model"}</div>
+                  {!isOther && (
+                    <div style={{ display:"flex", flexDirection:"column", gap:7, maxHeight:180, overflowY:"auto" }}>
+                      {qfReqBrand.models.map((m,i)=>(
+                        <button key={i} onClick={()=>setQfReqModel(lang==="th"?m.nameTh:m.nameEn)}
+                          style={{ display:"flex", alignItems:"center", justifyContent:"space-between", background:qfReqModel===(lang==="th"?m.nameTh:m.nameEn)?(isDark?"#3A1820":"#FFF0F2"):(isDark?"#2C2C2E":"#FAFAF8"), border:`1.5px solid ${qfReqModel===(lang==="th"?m.nameTh:m.nameEn)?"#9A0018":(isDark?"#3A3A3C":"#ECECEC")}`, borderRadius:12, padding:"10px 14px", cursor:"pointer", textAlign:"left", fontFamily:thF }}>
+                          <div style={{ fontWeight:800, fontSize:13, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          <div style={{ fontSize:11, color:isDark?"#A0A09A":"#999" }}>{m.years}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <input value={qfReqModel} onChange={e=>setQfReqModel(e.target.value)} placeholder={lang==="th"?"รุ่นรถ (พิมพ์เพิ่มเติมได้)":"Model name"} style={{ border:`1px solid ${isDark?"#3A3A3C":"#DDD"}`, borderRadius:10, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none", background:isDark?"#2C2C2E":"#fff", color:isDark?"#F0EFE8":"#1A1A1A" }} />
+                  <input value={qfReqName} onChange={e=>setQfReqName(e.target.value)} placeholder={lang==="th"?"ชื่อของคุณ":"Your name"} style={{ border:`1px solid ${isDark?"#3A3A3C":"#DDD"}`, borderRadius:10, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none", background:isDark?"#2C2C2E":"#fff", color:isDark?"#F0EFE8":"#1A1A1A" }} />
+                  <input value={qfReqPhone} onChange={e=>setQfReqPhone(e.target.value)} placeholder={lang==="th"?"เบอร์โทรกลับ":"Phone number"} type="tel" style={{ border:`1px solid ${isDark?"#3A3A3C":"#DDD"}`, borderRadius:10, padding:"10px 12px", fontSize:13, fontFamily:thF, outline:"none", background:isDark?"#2C2C2E":"#fff", color:isDark?"#F0EFE8":"#1A1A1A" }} />
+                  <button disabled={!qfReqModel||!qfReqPhone} onClick={()=>{
+                    if(!qfReqModel||!qfReqPhone) return;
+                    const req = { id:"REQ-"+Date.now(), brand:lang==="th"?qfReqBrand.nameTh:qfReqBrand.nameEn, model:qfReqModel, name:qfReqName, phone:qfReqPhone, date:new Date().toLocaleDateString("th-TH") };
+                    setSpecialRequests(prev=>[req,...prev]);
+                    setQfReqSent(true);
+                  }} style={{ background:(!qfReqModel||!qfReqPhone)?"#CCC":"#9A0018", color:"#fff", border:"none", borderRadius:12, padding:"13px", fontSize:15, fontWeight:900, cursor:(!qfReqModel||!qfReqPhone)?"not-allowed":"pointer", fontFamily:thF }}>
+                    {lang==="th"?"ส่งคำขอ — เราจะโทรกลับ":"Send Request — We'll call you back"}
+                  </button>
+                </div>
+              );
+            })() : !quickFindBrand ? (
+              /* Step 1 — brand grid */
+              <div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:10 }}>
+                  {brands.filter(b => b.logo.startsWith("image:")).map(b => {
+                    const hasModels = (b.models||[]).length > 0;
+                    return (
+                      <button key={b.id} onClick={()=>{ if(hasModels) setQuickFindBrand(b); }} disabled={!hasModels}
+                        style={{ background:isDark?"#2C2C2E":"#FAFAF8", border:`1.5px solid ${isDark?"#3A3A3C":"#ECECEC"}`, borderRadius:14, padding:"16px 10px 12px", cursor:hasModels?"pointer":"not-allowed", textAlign:"center", fontFamily:thF, transition:"border-color .15s", opacity:hasModels?1:0.4 }}
+                        onMouseEnter={e=>{ if(hasModels) e.currentTarget.style.borderColor="#9A0018"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.borderColor=isDark?"#3A3A3C":"#ECECEC"; }}>
+                        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", height:36, marginBottom:6, fontSize:22 }}>
+                          {b.logo.startsWith("image:") ? <BrandLogo logo={b.logo} size={28} place="brandCard" /> : b.logo}
+                        </div>
+                        <div style={{ fontWeight:800, fontSize:12, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?b.nameTh:b.nameEn}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <button onClick={()=>setQuickFindBrand("__REQUEST__")} style={{ marginTop:16, width:"100%", background:isDark?"#2C2C2E":"#F5F4F2", border:`1.5px dashed ${isDark?"#3A3A3C":"#CCC"}`, borderRadius:14, padding:"14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, color:isDark?"#A0A09A":"#666" }}>
+                  {lang==="th"?"ไม่เจอยี่ห้อที่ต้องการ? แจ้งรุ่นที่ต้องการ →":"Don’t see your brand? Request a model →"}
+                </button>
+              </div>
+            ) : (()=>{
+              /* Step 2 — model list */
+              const models = (quickFindBrand.models || []);
+              return (
+                <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
+                  {models.map((m, idx) => {
+                    const inStock = getLiveStock(brands, quickFindBrand.id, m.id) > 0;
+                    return (
+                      <button key={idx}
+                        onClick={()=>{ if(!inStock) return; setOrderForm({ brand:lang==="th"?quickFindBrand.nameTh:quickFindBrand.nameEn, model:lang==="th"?m.nameTh:m.nameEn, brandId:quickFindBrand.id, modelId:m.id, price:m.price }); setOrderStep(1); setQuickFindOpen(false); setQuickFindBrand(null); }}
+                        disabled={!inStock}
+                        style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, background:isDark?"#2C2C2E":"#FAFAF8", border:`1.5px solid ${isDark?"#3A3A3C":"#ECECEC"}`, borderRadius:14, padding:"14px 16px", cursor:inStock?"pointer":"default", textAlign:"left", fontFamily:thF, transition:"border-color .15s", opacity:inStock?1:0.55 }}
+                        onMouseEnter={e=>{ if(inStock) e.currentTarget.style.borderColor="#9A0018"; }}
+                        onMouseLeave={e=>{ e.currentTarget.style.borderColor=isDark?"#3A3A3C":"#ECECEC"; }}>
+                        <div>
+                          <div style={{ fontWeight:800, fontSize:14, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                          {getModelPartType(m) !== "steering_rack" && (
+                            <div style={{ fontSize:10, fontWeight:800, color:"#9A0018", background:"#FFF0F0", borderRadius:20, padding:"2px 8px", display:"inline-block", marginTop:3 }}>
+                              {getPartTypeLabel(getModelPartType(m), lang)}
+                            </div>
+                          )}
+                          <div style={{ fontSize:12, color:isDark?"#A0A09A":"#888", marginTop:2 }}>{m.years || ""}</div>
+                        </div>
+                        <div style={{ textAlign:"right", flexShrink:0 }}>
+                          <div style={{ fontSize:11, fontWeight:800, color:inStock?(isDark?"#4ADE80":"#16A34A"):(isDark?"#F87171":"#9A0018"), background:inStock?(isDark?"#1A2E1A":"#F0FDF4"):(isDark?"#2E1A1A":"#FFF0F0"), borderRadius:20, padding:"3px 9px", marginBottom:3, whiteSpace:"nowrap" }}>{inStock?(lang==="th"?"มีสินค้า":"In Stock"):(lang==="th"?"หมดสต็อก":"Out of Stock")}</div>
+                          <div style={{ fontSize:13, fontWeight:900, color:isDark?"#F0EFE8":"#1A1A1A", marginTop:2 }}>{fmt(m.price)}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+    )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
