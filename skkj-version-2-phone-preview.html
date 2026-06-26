@@ -460,8 +460,9 @@ const T = {
       loginTitle:"Welcome back", registerTitle:"Create your account",
       email:"Email", emailPh:"your@email.com",
       password:"Password", passwordPh:"••••••••",
-      name:"Full Name", namePh:"Your full name",
-      phone:"Phone", phonePh:"08x-xxx-xxxx",
+      firstName:"First Name", firstNamePh:"First name",
+      lastName:"Last Name", lastNamePh:"Last name",
+      phone:"Phone number *", phonePh:"08x-xxx-xxxx",
       loginBtn:"Login →", registerBtn:"Create Account →",
       noAccount:"Don't have an account?", hasAccount:"Already have an account?",
       signUp:"Sign up", signIn:"Sign in",
@@ -613,10 +614,11 @@ const T = {
     },
     auth:{
       loginTitle:"ยินดีต้อนรับกลับ", registerTitle:"สมัครสมาชิก",
-      email:"อีเมล", emailPh:"your@email.com",
+      email:"อีเมล (ไม่บังคับ)", emailPh:"your@email.com",
       password:"รหัสผ่าน", passwordPh:"••••••••",
-      name:"ชื่อ-นามสกุล", namePh:"ชื่อของคุณ",
-      phone:"เบอร์โทรศัพท์", phonePh:"08x-xxx-xxxx",
+      firstName:"ชื่อ", firstNamePh:"ชื่อจริง",
+      lastName:"นามสกุล", lastNamePh:"นามสกุล",
+      phone:"เบอร์โทรศัพท์ *", phonePh:"08x-xxx-xxxx",
       loginBtn:"เข้าสู่ระบบ →", registerBtn:"สมัครสมาชิก →",
       noAccount:"ยังไม่มีบัญชี?", hasAccount:"มีบัญชีแล้ว?",
       signUp:"สมัครเลย", signIn:"เข้าสู่ระบบ",
@@ -3234,6 +3236,7 @@ function App() {
   const [authEmail, setAuthEmail]         = useState("");
   const [authPw, setAuthPw]               = useState("");
   const [authName, setAuthName]           = useState("");
+  const [authLastName, setAuthLastName]   = useState("");
   const [authPhone, setAuthPhone]         = useState("");
   const [authError, setAuthError]         = useState("");
   const [authRemember, setAuthRemember]   = useState(true);
@@ -5057,18 +5060,22 @@ function App() {
     setAuthError("");
     const email = authEmail.trim().toLowerCase();
     const phone = normalizePhone(authPhone);
-    if (!authName.trim() || !authPw.trim() || (!email && !phone)) { setAuthError(t.auth.fillAll); return; }
+    const fullName = (authName.trim() + " " + authLastName.trim()).trim();
+    if (!authName.trim() || !authLastName.trim() || !authPw.trim()) { setAuthError(t.auth.fillAll); return; }
+    if (!phone) {
+      setAuthError(lang==="th" ? "กรุณากรอกเบอร์โทรศัพท์" : "Phone number is required"); return;
+    }
     if (email && (accounts.find(a => a.email.toLowerCase()===email) || customers.find(c => c.email && c.email.toLowerCase()===email))) {
       setAuthError(t.auth.emailExists); return;
     }
-    if (phone && customers.find(c => normalizePhone(c.phone)===phone)) {
+    if (customers.find(c => normalizePhone(c.phone)===phone)) {
       setAuthError(lang==="th" ? "เบอร์โทรนี้มีในระบบแล้ว" : "This phone number already has an account"); return;
     }
     const newCustomer = normalizeCustomerOnlineProfile({
       id: "C" + String(customers.length + 1).padStart(3,"0"),
       email: authEmail.trim(),
       password: authPw.trim(),
-      name: authName.trim(),
+      name: fullName,
       phone: authPhone.trim(),
       joinDate: new Date().toISOString().slice(0,10),
       addresses:[],
@@ -5173,7 +5180,7 @@ function App() {
   }
 
   function resetAuthForm() {
-    setAuthEmail(""); setAuthPw(""); setAuthName(""); setAuthPhone(""); setAuthError(""); setAuthMode("login");
+    setAuthEmail(""); setAuthPw(""); setAuthName(""); setAuthLastName(""); setAuthPhone(""); setAuthError(""); setAuthMode("login");
   }
 
   function makeOrderEvent(type, text) {
@@ -7128,9 +7135,15 @@ function App() {
             <div style={{ display:"flex", flexDirection:"column", gap:13 }}>
               {authMode==="register" && (
                 <>
-                  <div>
-                    <label style={{ fontSize:12, color:"#666", display:"block", marginBottom:5 }}>{t.auth.name}</label>
-                    <input value={authName} onChange={e=>setAuthName(e.target.value)} placeholder={t.auth.namePh} style={iSLight} />
+                  <div style={{ display:"flex", gap:10 }}>
+                    <div style={{ flex:1 }}>
+                      <label style={{ fontSize:12, color:"#666", display:"block", marginBottom:5 }}>{t.auth.firstName}</label>
+                      <input value={authName} onChange={e=>setAuthName(e.target.value)} placeholder={t.auth.firstNamePh} style={iSLight} />
+                    </div>
+                    <div style={{ flex:1 }}>
+                      <label style={{ fontSize:12, color:"#666", display:"block", marginBottom:5 }}>{t.auth.lastName}</label>
+                      <input value={authLastName} onChange={e=>setAuthLastName(e.target.value)} placeholder={t.auth.lastNamePh} style={iSLight} />
+                    </div>
                   </div>
                   <div>
                     <label style={{ fontSize:12, color:"#666", display:"block", marginBottom:5 }}>{t.auth.phone}</label>
@@ -7619,7 +7632,6 @@ function App() {
                   <div className="v2-home-actions" style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
                     <button className="v2-buy-button" onClick={()=>setPage("catalog")} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:600, cursor:"pointer", fontFamily:thF }}>{t.hero.browse}</button>
                     <button className="v2-ask-button" onClick={()=>window.open("https://line.me/R/ti/p/@skkjautopart","_blank","noopener,noreferrer")} style={{ background:"#06C755", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, cursor:"pointer", fontFamily:thF, fontWeight:700 }}>{t.hero.contactUs}</button>
-                    <button className="v2-quickfind-hero-btn" onClick={()=>{ setQuickFindOpen(true); setQuickFindBrand(null); }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:6, padding:"14px 30px", fontSize:15, fontWeight:900, cursor:"pointer", fontFamily:thF }}>🔍 {lang==="th"?"หาอะไหล่":"Find My Part"}</button>
                   </div>
                 </div>
                 <div className="v2-hero-visual">
