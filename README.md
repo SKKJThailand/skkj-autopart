@@ -7,7 +7,7 @@ Upload these files to GitHub:
 - `skkj-version-2-phone-preview.html`
 - `assets/`
 
-For GitHub Pages, `index.html` is the main website page.
+For GitHub Pages, `index.html` is the main website page. 
 
 Important:
 - Keep the `assets` folder next to `index.html`.
