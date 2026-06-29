@@ -7537,7 +7537,7 @@ function App() {
               <div style={{ border:"1px solid #E0DDD8", borderRadius:14, padding:14, background:"#FAFAF8", marginBottom:16 }}>
                 <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:12 }}>
                   <div>
-                    <div style={{ fontSize:14, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ประวัติข้อมูลจัดส่งที่บันทึกไว้":"Saved Delivery Record"}</div>
+                    <div style={{ fontSize:14, fontWeight:900, color:isDark?"#fff":"#1A1A1A" }}>{lang==="th"?"ประวัติข้อมูลจัดส่งที่บันทึกไว้":"Saved Delivery Record"}</div>
                     <div style={{ fontSize:11, color:"#777", marginTop:2 }}>{lang==="th"?"ส่วนนี้ไม่พิมพ์ลงป้าย A6 แต่บันทึกไว้กับออเดอร์ใน Supabase สำหรับแอดมินตรวจย้อนหลัง":"This is not printed on the A6 label. It is saved with the order for admin history."}</div>
                   </div>
                   <span style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#777", borderRadius:999, padding:"4px 9px", fontSize:11, fontWeight:800 }}>{shippingRecord.id}</span>
@@ -7592,7 +7592,7 @@ function App() {
               <div style={{ border:"1px solid #E0DDD8", borderRadius:14, padding:14, background:"#FAFAF8", marginBottom:16 }}>
                 <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:12 }}>
                   <div>
-                    <div style={{ fontSize:14, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"ประวัติออเดอร์ภายใน":"Private order timeline"}</div>
+                    <div style={{ fontSize:14, fontWeight:900, color:isDark?"#fff":"#1A1A1A" }}>{lang==="th"?"ประวัติออเดอร์ภายใน":"Private order timeline"}</div>
                     <div style={{ fontSize:11, color:"#777", marginTop:2 }}>{lang==="th"?"ลูกค้าไม่เห็นส่วนนี้ ใช้สำหรับแอดมินเท่านั้น":"Customer cannot see this. Admin only."}</div>
                   </div>
                   <span style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#777", borderRadius:999, padding:"4px 9px", fontSize:11, fontWeight:800 }}>{orderTimeline(detailOrder).length} {lang==="th"?"รายการ":"events"}</span>
@@ -7919,7 +7919,7 @@ function App() {
             </div>
             <div className="v2-catalog-tools v2-catalog-part-type" style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, padding:14, marginBottom:16, display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, flexWrap:"wrap" }}>
               <div>
-                <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?"เลือกประเภทอะไหล่":"Choose part type"}</div>
+                <div style={{ fontSize:13, fontWeight:900, color:isDark?"#fff":"#1A1A1A" }}>{lang==="th"?"เลือกประเภทอะไหล่":"Choose part type"}</div>
                 <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{lang==="th"?"ใช้ทดสอบเวลาเรามีสินค้าอื่นนอกจากแร็คพวงมาลัย":"Testing how the site works with other product types"}</div>
               </div>
               <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap", justifyContent:"flex-end" }}>
@@ -8524,7 +8524,7 @@ function App() {
             </div>
 
             {/* Profile info */}
-            <div style={{ background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"24px", marginBottom:24 }}>
+            <div style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, border:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, padding:"24px", marginBottom:24 }}>
               <h3 style={{ margin:"0 0 18px", fontSize:16, fontWeight:700 }}>{lang==="th"?"ข้อมูลของฉัน":"My Information"}</h3>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))", gap:14 }}>
                 {[
@@ -8533,7 +8533,7 @@ function App() {
                   [t.auth.phone, currentCustomer.phone || "—"],
                   [t.auth.customersSince, currentCustomer.joinDate],
                 ].map(([label,val])=>(
-                  <div key={label} style={{ background:"#F8F7F4", borderRadius:10, padding:"12px 14px" }}>
+                  <div key={label} style={{ background:isDark?"#2C2C2E":"#F8F7F4", borderRadius:10, padding:"12px 14px" }}>
                     <div style={{ fontSize:11, color:"#999", marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>{label}</div>
                     <div style={{ fontSize:14, fontWeight:600 }}>{val}</div>
                   </div>
@@ -8541,7 +8541,7 @@ function App() {
               </div>
             </div>
 
-            <div style={{ background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"24px", marginBottom:24 }}>
+            <div style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, border:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, padding:"24px", marginBottom:24 }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:16 }}>
                 <div>
                   <h3 style={{ margin:"0 0 5px", fontSize:16, fontWeight:800 }}>{lang==="th"?"ที่อยู่ที่บันทึกไว้":"Saved addresses"}</h3>
@@ -8549,36 +8549,36 @@ function App() {
                 </div>
               </div>
               {(currentCustomer.addresses || []).length === 0 ? (
-                <div style={{ background:"#F8F7F4", border:"1px solid #F0EEE8", borderRadius:12, padding:"18px", color:"#999", fontSize:13 }}>
+                <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:`1px solid ${isDark?"#3A3A3A":"#F0EEE8"}`, borderRadius:12, padding:"18px", color:"#999", fontSize:13 }}>
                   {lang==="th"?"ยังไม่มีที่อยู่ที่บันทึกไว้ สั่งซื้อครั้งแรกแล้วระบบจะบันทึกให้":"No saved address yet. Your first order will save one automatically."}
                 </div>
               ) : (
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:10 }}>
                   {(currentCustomer.addresses || []).map((addr, i) => (
-                    <div key={addr.id || i} style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"13px 14px" }}>
+                    <div key={addr.id || i} style={{ background:isDark?"#2C2C2E":"#FAFAF8", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:12, padding:"13px 14px" }}>
                       <div style={{ display:"flex", justifyContent:"space-between", gap:8, alignItems:"center", marginBottom:7 }}>
-                        <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A" }}>{addr.label || (lang==="th"?`ที่อยู่ ${i+1}`:`Address ${i+1}`)}</div>
-                        <button onClick={()=>removeCustomerAddress(addr.id)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#9A0018", borderRadius:8, padding:"4px 8px", cursor:"pointer", fontSize:11, fontWeight:800, fontFamily:thF }}>
+                        <div style={{ fontSize:13, fontWeight:900, color:isDark?"#fff":"#1A1A1A" }}>{addr.label || (lang==="th"?`ที่อยู่ ${i+1}`:`Address ${i+1}`)}</div>
+                        <button onClick={()=>removeCustomerAddress(addr.id)} style={{ background:isDark?"#2C2C2E":"#fff", border:`1px solid ${isDark?"#3A3A3A":"#E0DDD8"}`, color:"#9A0018", borderRadius:8, padding:"4px 8px", cursor:"pointer", fontSize:11, fontWeight:800, fontFamily:thF }}>
                           {lang==="th"?"ลบ":"Remove"}
                         </button>
                       </div>
-                      <div style={{ fontSize:12, color:"#555", lineHeight:1.55, fontWeight:700 }}>{addr.customer || currentCustomer.name}</div>
-                      <div style={{ fontSize:12, color:"#555", lineHeight:1.55 }}>{addr.phone || currentCustomer.phone || "-"}</div>
-                      <div style={{ fontSize:12, color:"#666", lineHeight:1.55, marginTop:4, whiteSpace:"pre-wrap" }}>{addr.address}</div>
+                      <div style={{ fontSize:12, color:isDark?"#ccc":"#555", lineHeight:1.55, fontWeight:700 }}>{addr.customer || currentCustomer.name}</div>
+                      <div style={{ fontSize:12, color:isDark?"#ccc":"#555", lineHeight:1.55 }}>{addr.phone || currentCustomer.phone || "-"}</div>
+                      <div style={{ fontSize:12, color:isDark?"#aaa":"#666", lineHeight:1.55, marginTop:4, whiteSpace:"pre-wrap" }}>{addr.address}</div>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div style={{ background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"24px", marginBottom:24 }}>
+            <div style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, border:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, padding:"24px", marginBottom:24 }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:16 }}>
                 <div>
                   <h3 style={{ margin:"0 0 5px", fontSize:16, fontWeight:900 }}>{lang==="th"?"รถที่บันทึกไว้":"Saved cars"}</h3>
                   <p style={{ margin:0, color:"#777", fontSize:13, lineHeight:1.5 }}>{lang==="th"?"กลับมาครั้งหน้าเลือกจากตรงนี้ได้เลย ไม่ต้องจำรุ่นเอง":"Next time, pick from here instead of searching again."}</p>
                 </div>
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))", gap:10, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:12, marginBottom:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))", gap:10, background:isDark?"#2C2C2E":"#FAFAF8", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:12, padding:12, marginBottom:14 }}>
                 <select value={savedCarBrandId} onChange={e=>{ setSavedCarBrandId(e.target.value); setSavedCarModelId(""); }} style={{ ...iSLight, background:"#fff", cursor:"pointer" }}>
                   <option value="">{lang==="th"?"เลือกยี่ห้อรถ":"Choose brand"}</option>
                   {brands.map(b=><option key={b.id} value={b.id}>{lang==="th"?b.nameTh:b.nameEn}</option>)}
@@ -8592,19 +8592,19 @@ function App() {
                 </button>
               </div>
               {(currentCustomer.savedCars || []).length === 0 ? (
-                <div style={{ background:"#F8F7F4", border:"1px solid #F0EEE8", borderRadius:12, padding:"18px", color:"#999", fontSize:13 }}>
+                <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:`1px solid ${isDark?"#3A3A3A":"#F0EEE8"}`, borderRadius:12, padding:"18px", color:"#999", fontSize:13 }}>
                   {lang==="th"?"ยังไม่มีรถที่บันทึกไว้ ลองใช้ช่องค้นหาอะไหล่แล้วกดบันทึกรถคันนี้":"No saved cars yet. Use Find My Part and save one."}
                 </div>
               ) : (
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:10 }}>
                   {(currentCustomer.savedCars || []).map(car => (
-                    <div key={car.id} style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"13px 14px" }}>
+                    <div key={car.id} style={{ background:isDark?"#2C2C2E":"#FAFAF8", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:12, padding:"13px 14px" }}>
                       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:8, marginBottom:8 }}>
                         <div>
-                          <div style={{ fontSize:14, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?car.brandNameTh:car.brandNameEn} {lang==="th"?car.modelNameTh:car.modelNameEn}</div>
+                          <div style={{ fontSize:14, fontWeight:900, color:isDark?"#fff":"#1A1A1A" }}>{lang==="th"?car.brandNameTh:car.brandNameEn} {lang==="th"?car.modelNameTh:car.modelNameEn}</div>
                           <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{car.years || (lang==="th"?"ไม่ระบุปี":"Year not listed")} · {getPartTypeLabel(car.partType, lang)}</div>
                         </div>
-                        <button onClick={()=>removeCustomerCar(car.id)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#9A0018", borderRadius:8, padding:"4px 8px", cursor:"pointer", fontSize:11, fontWeight:800, fontFamily:thF }}>
+                        <button onClick={()=>removeCustomerCar(car.id)} style={{ background:isDark?"#2C2C2E":"#fff", border:`1px solid ${isDark?"#3A3A3A":"#E0DDD8"}`, color:"#9A0018", borderRadius:8, padding:"4px 8px", cursor:"pointer", fontSize:11, fontWeight:800, fontFamily:thF }}>
                           {lang==="th"?"ลบ":"Remove"}
                         </button>
                       </div>
@@ -8617,7 +8617,7 @@ function App() {
               )}
             </div>
 
-            <div style={{ background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"24px", marginBottom:24 }}>
+            <div style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, border:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, padding:"24px", marginBottom:24 }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:16 }}>
                 <div>
                   <h3 style={{ margin:"0 0 5px", fontSize:16, fontWeight:900 }}>{lang==="th"?"รายการโปรด":"Favorites"}</h3>
@@ -8625,23 +8625,23 @@ function App() {
                 </div>
               </div>
               {favoriteProducts.length === 0 ? (
-                <div style={{ background:"#F8F7F4", border:"1px solid #F0EEE8", borderRadius:12, padding:"18px", color:"#999", fontSize:13 }}>
+                <div style={{ background:isDark?"#2C2C2E":"#F8F7F4", border:`1px solid ${isDark?"#3A3A3A":"#F0EEE8"}`, borderRadius:12, padding:"18px", color:"#999", fontSize:13 }}>
                   {lang==="th"?"ยังไม่มีรายการโปรด กดหัวใจบนสินค้าเพื่อบันทึกไว้":"No favorites yet. Tap the heart on a product to save it."}
                 </div>
               ) : (
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:10 }}>
                   {favoriteProducts.map(({ brand, model, key }) => (
-                    <div key={key} style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"13px 14px" }}>
+                    <div key={key} style={{ background:isDark?"#2C2C2E":"#FAFAF8", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:12, padding:"13px 14px" }}>
                       <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
                         <BrandLogo logo={brand.logo} size={28} place="navFilter" />
                         <div style={{ minWidth:0, flex:1 }}>
-                          <div style={{ fontSize:13, fontWeight:900, color:"#1A1A1A" }}>{lang==="th"?brand.nameTh:brand.nameEn} {lang==="th"?model.nameTh:model.nameEn}</div>
+                          <div style={{ fontSize:13, fontWeight:900, color:isDark?"#fff":"#1A1A1A" }}>{lang==="th"?brand.nameTh:brand.nameEn} {lang==="th"?model.nameTh:model.nameEn}</div>
                           <div style={{ fontSize:12, color:"#777", marginTop:2 }}>{fmt(model.price)} · {model.stock} {t.inStock}</div>
                         </div>
                         <button type="button" className={`favorite-heart-btn is-favorite ${favoritePulseKey===productKey(brand.id, model.id)?"favorite-pump":""}`} onMouseDown={(e)=>{ e.preventDefault(); e.stopPropagation(); }} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleFavoriteProduct(brand, model); }} style={{ width:34, height:34, fontSize:28 }}>♥</button>
                       </div>
                       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-                        <button onClick={()=>openProductDetail(brand, model)} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:9, padding:"9px 11px", cursor:"pointer", fontSize:12, fontWeight:900, fontFamily:thF }}>
+                        <button onClick={()=>openProductDetail(brand, model)} style={{ background:isDark?"#2C2C2E":"#fff", border:`1px solid ${isDark?"#3A3A3A":"#E0DDD8"}`, color:isDark?"#fff":"#1A1A1A", borderRadius:9, padding:"9px 11px", cursor:"pointer", fontSize:12, fontWeight:900, fontFamily:thF }}>
                           {lang==="th"?"ดูสินค้า":"View"}
                         </button>
                         <button disabled={model.stock===0} onClick={()=>model.stock>0&&setOrderForm({ brand:lang==="th"?brand.nameTh:brand.nameEn, model:lang==="th"?model.nameTh:model.nameEn, brandId:brand.id, modelId:model.id, price:model.price })} style={{ background:model.stock===0?"#eee":"#1A1A1A", color:model.stock===0?"#aaa":"#fff", border:"none", borderRadius:9, padding:"9px 11px", cursor:model.stock===0?"not-allowed":"pointer", fontSize:12, fontWeight:900, fontFamily:thF }}>
@@ -8655,7 +8655,7 @@ function App() {
             </div>
 
             {/* Order history — show orders matching this customer's email/name */}
-            <div className="purchase-history-panel" style={{ background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"24px" }}>
+            <div className="purchase-history-panel" style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:16, border:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, padding:"24px" }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12, flexWrap:"wrap", marginBottom:18 }}>
                 <div>
                   <h3 style={{ margin:"0 0 5px", fontSize:18, fontWeight:900 }}>{t.auth.myOrders}</h3>
@@ -8697,21 +8697,21 @@ function App() {
                         </div>
                       ))}
                     </div>
-                    <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:10, marginBottom:6, background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:12 }}>
+                    <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:10, marginBottom:6, background:isDark?"#2C2C2E":"#FAFAF8", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:12, padding:12 }}>
                       <div>
                         <label style={{ display:"block", fontSize:11, color:isDark?"#A0A09A":"#666", fontWeight:700, marginBottom:5 }}>{lang==="th"?"ค้นหาออเดอร์":"Search orders"}</label>
-                        <input value={customerOrderSearch} onChange={e=>setCustomerOrderSearch(e.target.value)} placeholder={lang==="th"?"เลขออเดอร์ รุ่นรถ เบอร์โทร":"Order ID, model, phone"} style={{ width:"100%", boxSizing:"border-box", background:"#fff", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 12px", fontSize:14, color:"#1A1A1A", fontFamily:thF, outline:"none" }} />
+                        <input value={customerOrderSearch} onChange={e=>setCustomerOrderSearch(e.target.value)} placeholder={lang==="th"?"เลขออเดอร์ รุ่นรถ เบอร์โทร":"Order ID, model, phone"} style={{ width:"100%", boxSizing:"border-box", background:isDark?"#1C1C1E":"#fff", border:`1px solid ${isDark?"#3A3A3A":"#D6D1C8"}`, borderRadius:10, padding:"12px 12px", fontSize:14, color:isDark?"#fff":"#1A1A1A", fontFamily:thF, outline:"none" }} />
                       </div>
                       <div>
                         <label style={{ display:"block", fontSize:11, color:isDark?"#A0A09A":"#666", fontWeight:700, marginBottom:5 }}>{lang==="th"?"กรองสถานะ":"Filter status"}</label>
-                        <select value={customerOrderStatus} onChange={e=>setCustomerOrderStatus(e.target.value)} style={{ width:"100%", boxSizing:"border-box", background:"#fff", border:"1px solid #D6D1C8", borderRadius:10, padding:"12px 12px", fontSize:14, color:"#1A1A1A", fontFamily:thF, outline:"none", cursor:"pointer" }}>
+                        <select value={customerOrderStatus} onChange={e=>setCustomerOrderStatus(e.target.value)} style={{ width:"100%", boxSizing:"border-box", background:isDark?"#1C1C1E":"#fff", border:`1px solid ${isDark?"#3A3A3A":"#D6D1C8"}`, borderRadius:10, padding:"12px 12px", fontSize:14, color:isDark?"#fff":"#1A1A1A", fontFamily:thF, outline:"none", cursor:"pointer" }}>
                           <option value="all">{lang==="th"?"ทุกสถานะ":"All status"}</option>
                           {Object.keys(ORDER_STATUS).map(s=><option key={s} value={s}>{t.admin.statusLabels[s]}</option>)}
                         </select>
                       </div>
                     </div>
                     {filteredMyOrders.length === 0 && (
-                      <div style={{ textAlign:"center", padding:"26px 16px", color:"#999", background:"#F8F7F4", borderRadius:10, border:"1px solid #F0EEE8", fontSize:13 }}>
+                      <div style={{ textAlign:"center", padding:"26px 16px", color:"#999", background:isDark?"#2C2C2E":"#F8F7F4", borderRadius:10, border:`1px solid ${isDark?"#3A3A3A":"#F0EEE8"}`, fontSize:13 }}>
                         {lang==="th"?"ไม่พบออเดอร์ที่ตรงกับการค้นหา":"No orders match your search"}
                       </div>
                     )}
@@ -8723,14 +8723,14 @@ function App() {
                       const orderQty = Number(o.quantity) || 1;
                       const paymentText = t.admin.paymentLabels[o.paymentStatus || "waiting_review"];
                       return (
-                        <div className="customer-order-card" key={o.id} style={{ background:"#F8F7F4", borderRadius:14, padding:"16px", border:"1px solid #F0EEE8", boxShadow:"0 10px 28px rgba(26,26,26,.04)" }}>
+                        <div className="customer-order-card" key={o.id} style={{ background:isDark?"#2C2C2E":"#F8F7F4", borderRadius:14, padding:"16px", border:`1px solid ${isDark?"#3A3A3A":"#F0EEE8"}`, boxShadow:"0 10px 28px rgba(26,26,26,.04)" }}>
                           <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:14, flexWrap:"wrap", marginBottom:10 }}>
                             <div style={{ minWidth:0, flex:"1 1 250px" }}>
                               <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", marginBottom:5 }}>
-                                <span style={{ fontFamily:"monospace", fontSize:12, fontWeight:900, color:"#555", background:"#fff", border:"1px solid #ECECEC", borderRadius:20, padding:"3px 9px" }}>{o.id}</span>
+                                <span style={{ fontFamily:"monospace", fontSize:12, fontWeight:900, color:isDark?"#bbb":"#555", background:isDark?"#1C1C1E":"#fff", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:20, padding:"3px 9px" }}>{o.id}</span>
                                 <span style={{ fontSize:11, color:"#999", fontWeight:800 }}>{o.date}</span>
                               </div>
-                              <div style={{ fontWeight:900, fontSize:16, color:"#1A1A1A", lineHeight:1.35 }}>{o.brand} {o.model}{orderQty>1?` x${orderQty}`:""}</div>
+                              <div style={{ fontWeight:900, fontSize:16, color:isDark?"#fff":"#1A1A1A", lineHeight:1.35 }}>{o.brand} {o.model}{orderQty>1?` x${orderQty}`:""}</div>
                               <div style={{ fontSize:12, color:"#777", marginTop:4 }}>{lang==="th"?"ปีรถ":"Car year"}: {o.year || "-"}</div>
                             </div>
                             <div style={{ textAlign:"right", flex:"0 0 auto" }}>
