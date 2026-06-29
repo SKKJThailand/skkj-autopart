@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
   <!-- Open Graph — controls how the link looks when shared on LINE, Facebook, Messenger -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SKKJ Autopart — แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ" />
@@ -47,6 +48,7 @@
   <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
   <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
   <style>
     html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
     #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
@@ -1799,6 +1801,76 @@ function BasketCheckout({ basket, shipping, lang, t, onConfirm, onClose, custome
   );
 }
 
+// ─── GALLERY EDITOR MODAL ───────────────────────────────────────────────────
+function GalleryEditor({ index, src, lang, onSave, onCancel }) {
+  const imgRef = React.useRef(null);
+  const cropperRef = React.useRef(null);
+  const scaleRef = React.useRef({ x: 1, y: 1 });
+  const [brightness, setBrightness] = React.useState(100);
+  const [contrast, setContrast] = React.useState(100);
+  const thF = "'Kanit','Noto Sans Thai',sans-serif";
+
+  React.useEffect(() => {
+    if (!imgRef.current) return;
+    const c = new Cropper(imgRef.current, { viewMode: 1, autoCropArea: 0.95, responsive: true });
+    cropperRef.current = c;
+    return () => { c.destroy(); cropperRef.current = null; };
+  }, [src]);
+
+  const rotate = deg => cropperRef.current && cropperRef.current.rotate(deg);
+  const flipH = () => { if (!cropperRef.current) return; scaleRef.current.x *= -1; cropperRef.current.scaleX(scaleRef.current.x); };
+  const flipV = () => { if (!cropperRef.current) return; scaleRef.current.y *= -1; cropperRef.current.scaleY(scaleRef.current.y); };
+  const resetAll = () => { if (!cropperRef.current) return; cropperRef.current.reset(); scaleRef.current = { x:1, y:1 }; setBrightness(100); setContrast(100); };
+
+  const handleSave = () => {
+    if (!cropperRef.current) return;
+    const canvas = cropperRef.current.getCroppedCanvas({ maxWidth: 1920, maxHeight: 1440 });
+    const out = document.createElement('canvas');
+    out.width = canvas.width; out.height = canvas.height;
+    const ctx = out.getContext('2d');
+    ctx.filter = 'brightness(' + brightness + '%) contrast(' + contrast + '%)';
+    ctx.drawImage(canvas, 0, 0);
+    onSave(index, out.toDataURL('image/jpeg', 0.88));
+  };
+
+  const btnS = { background:"#2C2C2E", color:"#fff", border:"none", borderRadius:8, padding:"8px 14px", cursor:"pointer", fontSize:13, fontFamily:thF, fontWeight:700 };
+
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.9)", zIndex:9999, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:12, boxSizing:"border-box" }}>
+      <div style={{ width:"100%", maxWidth:820, background:"#1A1A1A", borderRadius:16, overflow:"hidden", display:"flex", flexDirection:"column", maxHeight:"96vh" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", borderBottom:"1px solid #333", flexShrink:0 }}>
+          <span style={{ color:"#fff", fontWeight:800, fontSize:15, fontFamily:thF }}>{lang==="th"?"แก้ไขภาพ":"Edit Photo"} #{index+1}</span>
+          <button onClick={onCancel} style={{ background:"none", border:"none", color:"#aaa", fontSize:26, cursor:"pointer", lineHeight:1 }}>×</button>
+        </div>
+        <div style={{ background:"#111", flexGrow:1, minHeight:0, overflow:"hidden", position:"relative" }}>
+          <img ref={imgRef} src={src} style={{ display:"block", maxWidth:"100%" }} />
+        </div>
+        <div style={{ padding:"14px 18px", display:"flex", flexDirection:"column", gap:10, flexShrink:0 }}>
+          <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+            <button onClick={()=>rotate(-90)} style={btnS}>↺ {lang==="th"?"หมุนซ้าย":"Rotate L"}</button>
+            <button onClick={()=>rotate(90)} style={btnS}>↻ {lang==="th"?"หมุนขวา":"Rotate R"}</button>
+            <button onClick={flipH} style={btnS}>⇄ Flip H</button>
+            <button onClick={flipV} style={btnS}>⇅ Flip V</button>
+            <button onClick={resetAll} style={{ ...btnS, background:"#444" }}>{lang==="th"?"รีเซ็ต":"Reset"}</button>
+          </div>
+          <div>
+            <div style={{ color:"#bbb", fontSize:12, marginBottom:4 }}>{lang==="th"?"ความสว่าง":"Brightness"} {brightness}%</div>
+            <input type="range" min={50} max={200} value={brightness} onChange={e=>setBrightness(Number(e.target.value))} style={{ width:"100%", accentColor:"#9A0018" }} />
+          </div>
+          <div>
+            <div style={{ color:"#bbb", fontSize:12, marginBottom:4 }}>{lang==="th"?"ความเปรียบต่าง":"Contrast"} {contrast}%</div>
+            <input type="range" min={50} max={200} value={contrast} onChange={e=>setContrast(Number(e.target.value))} style={{ width:"100%", accentColor:"#9A0018" }} />
+          </div>
+          <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
+            <button onClick={onCancel} style={{ background:"#333", color:"#fff", border:"none", borderRadius:8, padding:"10px 22px", cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ยกเลิก":"Cancel"}</button>
+            <button onClick={handleSave} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:8, padding:"10px 26px", fontWeight:800, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"บันทึก":"Save"}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── ACCOUNTS PANEL (owner only) ─────────────────────────────────────────────
 function AccountsPanel({ currentUser, lang, onLog, isDark }) {
   const [profiles, setProfiles] = useState([]);
@@ -3222,6 +3294,7 @@ function App() {
   const [activityLog, setActivityLog]     = useState([]);
   const [isDark, setIsDark] = useState(() => { try { return localStorage.getItem("skkj_v2_dark") === "1"; } catch(e) { return false; } });
   const [factorySlide, setFactorySlide] = useState(0);
+  const [galleryEdit, setGalleryEdit] = useState(null);
   const [showTutorial, setShowTutorial] = useState(() => { try { return localStorage.getItem("skkj_tutorial_skip_v2") !== "1"; } catch(e) { return true; } });
   const [tutorialStep, setTutorialStep] = useState(0);
   const [tutorialDontShow, setTutorialDontShow] = useState(false);
@@ -9599,10 +9672,25 @@ function App() {
                 {/* ── GALLERY TAB ── */}
                 {adminTab==="gallery" && (
                   <div style={{ padding:"8px 0" }}>
+                    {galleryEdit && (
+                      <GalleryEditor
+                        index={galleryEdit.index}
+                        src={galleryEdit.src}
+                        lang={lang}
+                        onSave={(i, dataUrl) => {
+                          try { localStorage.setItem("skkj_gallery_"+i, dataUrl); } catch(err) {}
+                          setGalleryEdit(null);
+                          setFactorySlide(i);
+                          alert(lang==="th"?"บันทึกแล้ว!":"Saved!");
+                        }}
+                        onCancel={() => setGalleryEdit(null)}
+                      />
+                    )}
                     <h3 style={{ margin:"0 0 6px", fontSize:17, fontWeight:800, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"ภาพโรงงาน":"Factory Photos"}</h3>
-                    <p style={{ margin:"0 0 20px", fontSize:13, color:"#888" }}>{lang==="th"?"กดแก้ไขที่ภาพเพื่อเปลี่ยนรูป":"Click Edit on any photo to replace it. Changes save instantly."}</p>
+                    <p style={{ margin:"0 0 20px", fontSize:13, color:"#888" }}>{lang==="th"?"กดแก้ไขที่ภาพเพื่อครอบตัด ปรับแสง หรือหมุน":"Click Edit to crop, adjust, or rotate a photo."}</p>
                     {(()=>{
                       const factoryImgs = ["IMG_9025.jpg","IMG_9026.jpg","IMG_9027.jpg","IMG_9028.jpg","IMG_9029.jpg","IMG_9030.jpg","IMG_9031.jpg","IMG_9115.jpg"];
+                      const thF2 = "'Kanit','Noto Sans Thai',sans-serif";
                       return (
                         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
                           {factoryImgs.map((fname, i) => {
@@ -9611,21 +9699,15 @@ function App() {
                             return (
                               <div key={i} style={{ position:"relative", borderRadius:12, overflow:"hidden", background:isDark?"#2C2C2E":"#F0EEE8" }}>
                                 <img src={src} alt={"Photo "+(i+1)} style={{ width:"100%", aspectRatio:"4/3", objectFit:"cover", display:"block" }} />
-                                <div style={{ position:"absolute", top:8, right:8 }}>
-                                  <label style={{ background:"rgba(0,0,0,.65)", color:"#fff", borderRadius:8, padding:"5px 12px", fontSize:12, fontWeight:700, cursor:"pointer", backdropFilter:"blur(4px)" }}>
-                                    {lang==="th"?"แก้ไข":"Edit"}
-                                    <input type="file" accept="image/*" style={{ display:"none" }} onChange={e => {
-                                      const file = e.target.files[0];
-                                      if (!file) return;
-                                      const reader = new FileReader();
-                                      reader.onload = ev => {
-                                        try { localStorage.setItem("skkj_gallery_"+i, ev.target.result); } catch(err) {}
-                                        setFactorySlide(i);
-                                        alert((lang==="th"?"บันทึกแล้ว! รีเฟรชหน้าเว็บเพื่อดูผลลัพธ์":"Saved! Refresh the page to see the change."));
-                                      };
-                                      reader.readAsDataURL(file);
-                                    }} />
-                                  </label>
+                                <div style={{ position:"absolute", top:8, right:8, display:"flex", flexDirection:"column", gap:5 }}>
+                                  <button onClick={()=>setGalleryEdit({index:i,src})} style={{ background:"rgba(0,0,0,.7)", color:"#fff", borderRadius:8, padding:"5px 12px", fontSize:12, fontWeight:700, cursor:"pointer", border:"none", backdropFilter:"blur(4px)", fontFamily:thF2 }}>
+                                    ✏️ {lang==="th"?"แก้ไข":"Edit"}
+                                  </button>
+                                  {stored && (
+                                    <button onClick={()=>{ try{localStorage.removeItem("skkj_gallery_"+i);}catch(e){} alert(lang==="th"?"รีเซ็ตเป็นภาพเดิมแล้ว — กดรีเฟรช":"Reset to original — refresh page."); }} style={{ background:"rgba(80,0,0,.8)", color:"#fff", borderRadius:8, padding:"5px 10px", fontSize:11, fontWeight:700, cursor:"pointer", border:"none", backdropFilter:"blur(4px)", fontFamily:thF2 }}>
+                                      {lang==="th"?"รีเซ็ต":"Reset"}
+                                    </button>
+                                  )}
                                 </div>
                                 <div style={{ position:"absolute", bottom:0, left:0, right:0, background:"rgba(0,0,0,.45)", color:"#fff", fontSize:11, fontWeight:600, padding:"4px 10px" }}>
                                   #{i+1} · {fname}
@@ -9637,7 +9719,7 @@ function App() {
                       );
                     })()}
                     <div style={{ marginTop:16, background:isDark?"#2C2C2E":"#FFF8E7", borderRadius:10, padding:"12px 16px", fontSize:12, color:isDark?"#aaa":"#666", border:`1px solid ${isDark?"#3A3A3A":"#F0D080"}` }}>
-                      {lang==="th"?"หมายเหตุ: การเปลี่ยนภาพจะบันทึกในเบราว์เซอร์นี้เท่านั้น หากต้องการให้ลูกค้าเห็น ให้อัปโหลดไฟล์ภาพไปที่ assets/ บน GitHub ด้วย":"Note: Changes are saved in this browser only. To show customers the new photo, also upload the image file to assets/ on GitHub."}
+                      {lang==="th"?"หมายเหตุ: การแก้ไขภาพจะบันทึกในเบราว์เซอร์นี้เท่านั้น หากต้องการให้ลูกค้าเห็น ให้อัปโหลดไฟล์ภาพไปที่ assets/ บน GitHub ด้วย":"Note: Edits save in this browser only. For customers to see changes, also upload the image to assets/ on GitHub."}
                     </div>
                   </div>
                 )}
