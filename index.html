@@ -481,7 +481,7 @@ const T = {
       newOrder:"+ New Order", logout:"Logout",
       stats:["Total Revenue","Total Orders","Delivered","Active"],
       statsSub:["excl. cancelled","all time","completed","pending/processing"],
-      tabs:[["orders","Orders"],["inventory","Inventory"],["customers","Customers"],["revenue","Revenue"],["activity","Activity"]],
+      tabs:[["orders","Orders"],["inventory","Inventory"],["customers","Customers"],["revenue","Revenue"],["activity","Activity"],["gallery","Gallery"]],
       tableHeaders:["Order ID","Customer","Brand / Model","Year","Price","Status","Date","Actions"],
       edit:"Edit", save:"Save", editTitle:"Edit Order",
       revenueTitle:"Revenue by Brand", orderWord:"order", ordersWord:"orders",
@@ -637,7 +637,7 @@ const T = {
       newOrder:"+ สั่งซื้อใหม่", logout:"ออกจากระบบ",
       stats:["รายได้ทั้งหมด","คำสั่งซื้อทั้งหมด","จัดส่งแล้ว","กำลังดำเนินการ"],
       statsSub:["ไม่รวมที่ยกเลิก","ตลอดเวลา","เสร็จสิ้น","รอ / กำลังดำเนินการ"],
-      tabs:[["orders","คำสั่งซื้อ"],["inventory","สินค้าคงคลัง"],["customers","ลูกค้า"],["revenue","รายได้"],["activity","บันทึกกิจกรรม"]],
+      tabs:[["orders","คำสั่งซื้อ"],["inventory","สินค้าคงคลัง"],["customers","ลูกค้า"],["revenue","รายได้"],["activity","บันทึกกิจกรรม"],["gallery","แกลเลอรี่"]],
       tableHeaders:["รหัสออเดอร์","ลูกค้า","ยี่ห้อ / รุ่น","ปี","ราคา","สถานะ","วันที่","จัดการ"],
       edit:"แก้ไข", save:"บันทึก", editTitle:"แก้ไขออเดอร์",
       revenueTitle:"รายได้ตามยี่ห้อรถ", orderWord:"ออเดอร์", ordersWord:"ออเดอร์",
@@ -3221,6 +3221,7 @@ function App() {
   const [incomeLayout, setIncomeLayout]   = useState("1");
   const [activityLog, setActivityLog]     = useState([]);
   const [isDark, setIsDark] = useState(() => { try { return localStorage.getItem("skkj_v2_dark") === "1"; } catch(e) { return false; } });
+  const [factorySlide, setFactorySlide] = useState(0);
   const [showTutorial, setShowTutorial] = useState(() => { try { return localStorage.getItem("skkj_tutorial_skip_v2") !== "1"; } catch(e) { return true; } });
   const [tutorialStep, setTutorialStep] = useState(0);
   const [tutorialDontShow, setTutorialDontShow] = useState(false);
@@ -6852,7 +6853,7 @@ function App() {
             ))}
             {/* ── LOGIN / USER BUTTON ── */}
             {currentCustomer ? (
-              <button className="mobile-login-btn customer-profile" onClick={()=>setPage("profile")} style={{ background:"#F0EEE8", border:"1px solid #E0DDD8", borderRadius:20, padding:"6px 14px", cursor:"pointer", display:"flex", alignItems:"center", gap:6, fontSize:13, fontWeight:600, color:"#1A1A1A", fontFamily:thF }}>
+              <button className="mobile-login-btn customer-profile" onClick={()=>setPage("profile")} style={{ background:isDark?"#2C2C2E":"#F0EEE8", border:`1px solid ${isDark?"#3A3A3A":"#E0DDD8"}`, borderRadius:20, padding:"6px 14px", cursor:"pointer", display:"flex", alignItems:"center", gap:6, fontSize:13, fontWeight:600, color:isDark?"#fff":"#1A1A1A", fontFamily:thF }}>
                 <span style={{ width:22, height:22, background:"#1A1A1A", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, color:"#fff", fontWeight:700 }}>{currentCustomer.name.charAt(0).toUpperCase()}</span>
                 <span style={{ maxWidth:80, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{currentCustomer.name.split(" ")[0]}</span>
               </button>
@@ -7789,23 +7790,45 @@ function App() {
               </div>
 
               {/* ══ FACTORY PHOTO GALLERY ══ */}
-              <div style={{ marginTop:40 }}>
-                <h2 style={{ fontFamily:"'Kanit',sans-serif", fontSize:20, fontWeight:800, letterSpacing:"-0.3px", margin:"0 0 14px", color:isDark?"#F5F5F5":"#1A1A1A" }}>
-                  {lang==="th"?"ภาพจากโรงงาน":"Factory Photos"}
-                </h2>
-                {/* Big photo */}
-                <div style={{ borderRadius:14, overflow:"hidden", marginBottom:6, height:220, background:isDark?"#2C2C2E":"#E8E6E0", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <span style={{ fontSize:44, opacity:.2 }}>📷</span>
-                </div>
-                {/* 3 small photos */}
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:6 }}>
-                  {[0,1,2].map(i=>(
-                    <div key={i} style={{ borderRadius:10, height:110, background:isDark?"#242424":"#D5D2CB", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <span style={{ fontSize:22, opacity:.2 }}>📷</span>
+              {(()=>{
+                const factoryImgs = ["IMG_9025.jpg","IMG_9026.jpg","IMG_9027.jpg","IMG_9028.jpg","IMG_9029.jpg","IMG_9030.jpg","IMG_9031.jpg","IMG_9115.jpg"];
+                return (
+                <div style={{ marginTop:40 }}>
+                  <h2 style={{ fontFamily:"'Kanit',sans-serif", fontSize:20, fontWeight:800, letterSpacing:"-0.3px", margin:"0 0 14px", color:isDark?"#F5F5F5":"#1A1A1A" }}>
+                    {lang==="th"?"ภาพจากโรงงาน":"Factory Photos"}
+                  </h2>
+                  {/* Main big image */}
+                  <div style={{ position:"relative", borderRadius:14, overflow:"hidden", marginBottom:8, background:"#111" }}>
+                    <img
+                      src={(()=>{ try { return localStorage.getItem("skkj_gallery_"+factorySlide) || ("assets/"+factoryImgs[factorySlide]); } catch(e){ return "assets/"+factoryImgs[factorySlide]; } })()}
+                      alt={"Factory photo " + (factorySlide+1)}
+                      style={{ width:"100%", aspectRatio:"4/3", maxHeight:420, objectFit:"cover", display:"block" }}
+                    />
+                    {/* Prev / Next arrows */}
+                    <button onClick={()=>setFactorySlide(s=>(s-1+factoryImgs.length)%factoryImgs.length)}
+                      style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", background:"rgba(0,0,0,.45)", color:"#fff", border:"none", borderRadius:"50%", width:36, height:36, fontSize:18, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", lineHeight:1 }}>‹</button>
+                    <button onClick={()=>setFactorySlide(s=>(s+1)%factoryImgs.length)}
+                      style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", background:"rgba(0,0,0,.45)", color:"#fff", border:"none", borderRadius:"50%", width:36, height:36, fontSize:18, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", lineHeight:1 }}>›</button>
+                    {/* Dot counter */}
+                    <div style={{ position:"absolute", bottom:10, left:0, right:0, display:"flex", justifyContent:"center", gap:5 }}>
+                      {factoryImgs.map((_,i)=>(
+                        <button key={i} onClick={()=>setFactorySlide(i)}
+                          style={{ width:i===factorySlide?18:7, height:7, borderRadius:4, background:i===factorySlide?"#fff":"rgba(255,255,255,.45)", border:"none", cursor:"pointer", padding:0, transition:"width .2s" }} />
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  {/* Thumbnail strip */}
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:6 }}>
+                    {factoryImgs.map((img,i)=>(
+                      <div key={i} onClick={()=>setFactorySlide(i)}
+                        style={{ borderRadius:8, overflow:"hidden", height:72, cursor:"pointer", border:i===factorySlide?`2px solid #9A0018`:`2px solid transparent`, boxSizing:"border-box" }}>
+                        <img src={(()=>{ try { return localStorage.getItem("skkj_gallery_"+i) || ("assets/"+img); } catch(e){ return "assets/"+img; } })()} alt={"thumb "+(i+1)} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+                );
+              })()}
 
               {/* ══ LINE PRE-SALE STRIP ══ */}
               <div style={{ marginTop:40, background:"#06C755", borderRadius:16, padding:"22px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, flexWrap:"wrap" }}>
@@ -9572,6 +9595,52 @@ function App() {
                     </div>
                   </div>
                 )}
+
+                {/* ── GALLERY TAB ── */}
+                {adminTab==="gallery" && (
+                  <div style={{ padding:"8px 0" }}>
+                    <h3 style={{ margin:"0 0 6px", fontSize:17, fontWeight:800, color:isDark?"#F5F5F5":"#1A1A1A" }}>{lang==="th"?"ภาพโรงงาน":"Factory Photos"}</h3>
+                    <p style={{ margin:"0 0 20px", fontSize:13, color:"#888" }}>{lang==="th"?"กดแก้ไขที่ภาพเพื่อเปลี่ยนรูป":"Click Edit on any photo to replace it. Changes save instantly."}</p>
+                    {(()=>{
+                      const factoryImgs = ["IMG_9025.jpg","IMG_9026.jpg","IMG_9027.jpg","IMG_9028.jpg","IMG_9029.jpg","IMG_9030.jpg","IMG_9031.jpg","IMG_9115.jpg"];
+                      return (
+                        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
+                          {factoryImgs.map((fname, i) => {
+                            const stored = (() => { try { return localStorage.getItem("skkj_gallery_"+i); } catch(e) { return null; } })();
+                            const src = stored || ("assets/" + fname);
+                            return (
+                              <div key={i} style={{ position:"relative", borderRadius:12, overflow:"hidden", background:isDark?"#2C2C2E":"#F0EEE8" }}>
+                                <img src={src} alt={"Photo "+(i+1)} style={{ width:"100%", aspectRatio:"4/3", objectFit:"cover", display:"block" }} />
+                                <div style={{ position:"absolute", top:8, right:8 }}>
+                                  <label style={{ background:"rgba(0,0,0,.65)", color:"#fff", borderRadius:8, padding:"5px 12px", fontSize:12, fontWeight:700, cursor:"pointer", backdropFilter:"blur(4px)" }}>
+                                    {lang==="th"?"แก้ไข":"Edit"}
+                                    <input type="file" accept="image/*" style={{ display:"none" }} onChange={e => {
+                                      const file = e.target.files[0];
+                                      if (!file) return;
+                                      const reader = new FileReader();
+                                      reader.onload = ev => {
+                                        try { localStorage.setItem("skkj_gallery_"+i, ev.target.result); } catch(err) {}
+                                        setFactorySlide(i);
+                                        alert((lang==="th"?"บันทึกแล้ว! รีเฟรชหน้าเว็บเพื่อดูผลลัพธ์":"Saved! Refresh the page to see the change."));
+                                      };
+                                      reader.readAsDataURL(file);
+                                    }} />
+                                  </label>
+                                </div>
+                                <div style={{ position:"absolute", bottom:0, left:0, right:0, background:"rgba(0,0,0,.45)", color:"#fff", fontSize:11, fontWeight:600, padding:"4px 10px" }}>
+                                  #{i+1} · {fname}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                    <div style={{ marginTop:16, background:isDark?"#2C2C2E":"#FFF8E7", borderRadius:10, padding:"12px 16px", fontSize:12, color:isDark?"#aaa":"#666", border:`1px solid ${isDark?"#3A3A3A":"#F0D080"}` }}>
+                      {lang==="th"?"หมายเหตุ: การเปลี่ยนภาพจะบันทึกในเบราว์เซอร์นี้เท่านั้น หากต้องการให้ลูกค้าเห็น ให้อัปโหลดไฟล์ภาพไปที่ assets/ บน GitHub ด้วย":"Note: Changes are saved in this browser only. To show customers the new photo, also upload the image file to assets/ on GitHub."}
+                    </div>
+                  </div>
+                )}
                 {/* ── ACCOUNTS TAB — owner only ── */}
                 {adminTab==="accounts" && currentUser?.role==="owner" && (
                   <AccountsPanel
@@ -9586,7 +9655,7 @@ function App() {
         )}
 
         {/* ══ 404 ══ */}
-        {!["home","catalog","policy","contact","about","admin","product"].includes(page)&&(
+        {!["home","catalog","policy","contact","about","admin","product","profile"].includes(page)&&(
           <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"calc(100vh - 260px)", padding:"60px 20px", textAlign:"center" }}>
             <div style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(80px,18vw,140px)", fontWeight:900, lineHeight:1, color:isDark?"#F5F5F5":"#1A1A1A", letterSpacing:"-4px", marginBottom:4, userSelect:"none" }}>404</div>
             <div style={{ width:48, height:4, background:"#9A0018", borderRadius:2, margin:"0 0 20px" }} />
