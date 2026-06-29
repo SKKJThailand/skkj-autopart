@@ -1,0 +1,43 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Babel
+        run: npm install @babel/core @babel/preset-react
+
+      - name: Create dist folder
+        run: mkdir -p dist
+
+      - name: Compile JSX
+        run: node build.js
+
+      - name: Copy assets and other files
+        run: |
+          cp -r assets dist/ 2>/dev/null || true
+          cp sitemap.xml dist/ 2>/dev/null || true
+          cp robots.txt dist/ 2>/dev/null || true
+          cp README.md dist/ 2>/dev/null || true
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
