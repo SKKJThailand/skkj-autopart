@@ -6420,8 +6420,8 @@ function App() {
         .skkj-v2[data-dark="1"] h1,.skkj-v2[data-dark="1"] h2,.skkj-v2[data-dark="1"] h3,.skkj-v2[data-dark="1"] h4,.skkj-v2[data-dark="1"] h5,.skkj-v2[data-dark="1"] h6{color:#fff!important}
         .skkj-v2[data-dark="1"] p,.skkj-v2[data-dark="1"] span,.skkj-v2[data-dark="1"] label,.skkj-v2[data-dark="1"] li{color:#ccc!important}
         .skkj-v2[data-dark="1"] div{color:#fff!important}
-        .skkj-v2[data-dark="1"] .v2-product-card{background:#111!important;border-color:#1E1E1E!important;box-shadow:none!important}
-        .skkj-v2[data-dark="1"] .v2-product-card:hover{border-color:#333!important;box-shadow:0 8px 24px rgba(0,0,0,.6)!important}
+        .skkj-v2[data-dark="1"] .v2-product-card{background:none!important;border:none!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .v2-product-card:hover{border:none!important;box-shadow:none!important}
         .skkj-v2[data-dark="1"] .product-photo-box{background:linear-gradient(135deg,#0A0A0A,#111)!important;border-bottom-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] input,.skkj-v2[data-dark="1"] select,.skkj-v2[data-dark="1"] textarea{background:#111!important;border-color:#2A2A2A!important;color:#fff!important}
         .skkj-v2[data-dark="1"] input::placeholder,.skkj-v2[data-dark="1"] textarea::placeholder{color:#555!important}
@@ -6448,6 +6448,7 @@ function App() {
         .skkj-v2[data-dark="1"] .v2-hero-visual .product-photo-box{background:#0D0D0D!important}
         .skkj-v2[data-dark="1"] .hero-product-info{background:#111!important;border-top-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .v2-product-card span{background:#1E1E1E!important;color:#aaa!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .v2-buy-button span{background:transparent!important;color:#fff!important;border:none!important}
         .skkj-v2[data-dark="1"] [title="เปรียบเทียบ"],.skkj-v2[data-dark="1"] [title="Compare"]{background:#1A1A1A!important;border-color:#2A2A2A!important;color:#888!important}
         .skkj-v2[data-dark="1"] .slide-arrow{background:rgba(20,20,20,0.92)!important;color:#fff!important;border-color:#2A2A2A!important}
         .skkj-v2[data-dark="1"] button[title="ดูรูปใหญ่"],.skkj-v2[data-dark="1"] button[title="View larger"]{background:rgba(20,20,20,0.92)!important;border-color:#2A2A2A!important;color:#aaa!important}
@@ -6549,6 +6550,7 @@ function App() {
         .v2-product-details{background:#fff!important}
         .v2-product-price{color:var(--skkj-red)!important;font-family:Arial,sans-serif!important;letter-spacing:-.04em!important}
         .v2-buy-button{background:#111!important;color:#fff!important;border:none!important;border-radius:6px!important;box-shadow:0 12px 30px rgba(17,17,17,.18)}
+        .skkj-v2[data-dark="1"] .v2-buy-button{background:#9A0018!important;color:#fff!important;box-shadow:0 8px 24px rgba(154,0,24,.35)!important}
         .v2-ask-button{background:#fff!important;color:#111!important;border:1px solid var(--skkj-line)!important;border-radius:6px!important}
         .v2-red-button{background:var(--skkj-red)!important;color:#fff!important;border-color:var(--skkj-red)!important;animation:v2SoftPulse 2.8s ease-in-out infinite}
         .skkj-v2 .admin-dashboard-card{border-radius:22px!important;border:1px solid var(--skkj-line)!important;box-shadow:0 24px 65px rgba(17,17,17,.09)!important}
@@ -8064,7 +8066,7 @@ function App() {
                     const isFav = isFavoriteProduct(brand.id, model.id);
                     const favKey = productKey(brand.id, model.id);
                     return (
-                      <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:"#fff", border:"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 2px 8px rgba(0,0,0,0.06)", position:"relative", opacity:model.stock===0?0.5:1, display:"flex", flexDirection:"column" }}>
+                      <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:isDark?"transparent":"#fff", border:isDark?"none":"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 2px 8px rgba(0,0,0,0.06)", position:"relative", opacity:model.stock===0?0.5:1, display:"flex", flexDirection:"column" }}>
                         <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} onMagnify={setLightboxImage} onOpenDetail={()=>openProductDetail(brand, model)} />
                         <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"12px 14px", minWidth:44, minHeight:44, boxSizing:"border-box", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
                           <span style={{ fontSize:13 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
@@ -8141,7 +8143,7 @@ function App() {
                               <RestockAlertButton brandId={brand.id} modelId={model.id} lang={lang} isDark={isDark} thF={thF} />
                             </div>
                           ) : (
-                            <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:"#1A1A1A", color:"#fff", border:"none", borderRadius:6, padding:"12px", cursor:"pointer", fontFamily:thF, display:"flex", flexDirection:"column", alignItems:"center", gap:2 }}>
+                            <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:isDark?"#F5F5F5":"#1A1A1A", color:isDark?"#1A1A1A":"#fff", border:"none", borderRadius:6, padding:"12px", cursor:"pointer", fontFamily:thF, display:"flex", flexDirection:"column", alignItems:"center", gap:2 }}>
                               <span style={{ fontSize:13, fontWeight:800 }}>{t.orderNow}</span>
                               <span style={{ fontSize:10, fontWeight:500, opacity:0.60 }}>{lang==="th"?"ซื้อทันที ไม่ผ่านตะกร้า":"Quick buy — skips cart"}</span>
                             </button>
@@ -8218,7 +8220,7 @@ function App() {
               <span className="crumb-sep">›</span>
               <span className="crumb-current">{lang==="th"?detailModel.nameTh:detailModel.nameEn}</span>
             </nav>
-            <button onClick={()=>setPage("catalog")} style={{ background:"#fff", border:"1px solid #E0DDD8", color:"#1A1A1A", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, marginBottom:18 }}>
+            <button onClick={()=>setPage("catalog")} style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #3A3A3A":"1px solid #E0DDD8", color:isDark?"#F5F5F5":"#1A1A1A", borderRadius:12, padding:"10px 14px", cursor:"pointer", fontSize:13, fontWeight:800, fontFamily:thF, marginBottom:18, marginTop:10 }}>
               ‹ {lang==="th"?"กลับไปสินค้า":"Back to products"}
             </button>
             <div className="v2-product-shell" style={{ background:"#fff", border:"1px solid #E8E1D2", borderRadius:16, overflow:"hidden", display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:0, boxShadow:"0 18px 50px rgba(26,26,26,0.08)" }}>
