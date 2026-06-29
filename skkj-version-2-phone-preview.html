@@ -8561,14 +8561,14 @@ function App() {
                       <div key={k}><label style={{ fontSize:12, color:"#888", display:"block", marginBottom:6 }}>{t.contact[k]}</label>
                         <input required={k!=="email"} placeholder={t.contact[ph]} style={iSLight} /></div>
                     ))}
-                    <div style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:12 }}>
-                      <label style={{ fontSize:12, color:"#555", display:"block", marginBottom:8, fontWeight:800 }}>{lang==="th"?"เลือกรถ/สินค้า (ไม่ต้องพิมพ์)":"Choose car/product (no typing)"}</label>
+                    <div style={{ background:isDark?"#2C2C2E":"#FAFAF8", border:`1px solid ${isDark?"#3A3A3A":"#ECECEC"}`, borderRadius:12, padding:12 }}>
+                      <label style={{ fontSize:12, color:isDark?"#CCC":"#555", display:"block", marginBottom:8, fontWeight:800 }}>{lang==="th"?"เลือกรถ/สินค้า (ไม่ต้องพิมพ์)":"Choose car/product (no typing)"}</label>
                       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:10 }}>
-                        <select value={contactBrandId} onChange={e=>{ setContactBrandId(e.target.value); setContactModelId(""); }} style={{ ...iSLight, background:"#fff", cursor:"pointer" }}>
+                        <select value={contactBrandId} onChange={e=>{ setContactBrandId(e.target.value); setContactModelId(""); }} style={{ ...iSLight, background:isDark?"#3A3A3C":"#fff", color:isDark?"#F0EFE8":"#1A1A1A", border:`1px solid ${isDark?"#4A4A4C":"#D6D1C8"}`, cursor:"pointer" }}>
                           <option value="">{lang==="th"?"เลือกยี่ห้อรถ":"Choose brand"}</option>
                           {brands.map(b=><option key={b.id} value={b.id}>{lang==="th"?b.nameTh:b.nameEn}</option>)}
                         </select>
-                        <select value={contactModelId} disabled={!contactBrandId} onChange={e=>{ setContactModelId(e.target.value); applyContactProduct(contactBrandId, e.target.value); }} style={{ ...iSLight, background:contactBrandId?"#fff":"#F0EEE8", cursor:contactBrandId?"pointer":"not-allowed" }}>
+                        <select value={contactModelId} disabled={!contactBrandId} onChange={e=>{ setContactModelId(e.target.value); applyContactProduct(contactBrandId, e.target.value); }} style={{ ...iSLight, background:isDark?(contactBrandId?"#3A3A3C":"#2C2C2E"):(contactBrandId?"#fff":"#F0EEE8"), color:isDark?"#F0EFE8":"#1A1A1A", border:`1px solid ${isDark?"#4A4A4C":"#D6D1C8"}`, cursor:contactBrandId?"pointer":"not-allowed" }}>
                           <option value="">{lang==="th"?"เลือกรุ่นสินค้า":"Choose model"}</option>
                           {contactModels.map(m=><option key={m.id} value={m.id}>{lang==="th"?m.nameTh:m.nameEn}{m.years?` (${m.years})`:""}</option>)}
                         </select>
