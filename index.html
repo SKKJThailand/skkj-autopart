@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- skkj v2 | fixed 2026-06-30 -->
 <html lang="th">
 <head>
   <meta charset="utf-8" />
@@ -10421,9 +10422,7 @@ function App() {
           </div>
         </div>
       </div>
-    ) : null}
-    {/* QuickFind backdrop */}
-    {quickFindOpen && <div onClick={()=>{ setQuickFindOpen(false); setQuickFindBrand(null); }} style={{ position:"fixed", inset:0, zIndex:9997, background:"rgba(0,0,0,0.4)" }} />}
+    )}
     </>
   );
 }
@@ -10432,6 +10431,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 setTimeout(function(){
   var el = document.getElementById('loading');
   if(el){ el.classList.add('fade-out'); setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 450); }
+
 }, 800);
   </script>
 </body>
