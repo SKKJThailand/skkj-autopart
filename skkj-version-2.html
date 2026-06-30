@@ -51,11 +51,45 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
   <style>
     html, body, #root { min-height: 100%; margin: 0; background:#FAFAF8; }
-    #loading { font-family: Arial, sans-serif; padding: 28px; color: #333; }
+    #loading {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0a0a0a;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      transition: opacity 0.4s ease;
+    }
+    #loading.fade-out { opacity: 0; pointer-events: none; }
+    #loading-brand {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      animation: skkj-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes skkj-pop {
+      from { opacity: 0; transform: scale(0.85) translateY(16px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    #loading-skkj {
+      font-size: 80px; font-weight: 800; color: #fff; letter-spacing: 8px; line-height: 1;
+    }
+    #loading-bar-track {
+      margin-top: 32px; width: 180px; height: 3px; background: #1e1e1e; border-radius: 2px; overflow: hidden;
+    }
+    #loading-bar-fill {
+      height: 100%; width: 0%; background: #9B0000; border-radius: 2px;
+      animation: skkj-bar 1.2s ease-out 0.3s forwards;
+    }
+    @keyframes skkj-bar {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
   </style>
 </head>
 <body>
-  <div id="root"><div id="loading">Opening SKKJ website preview...</div></div>
+  <div id="root"><div id="loading">
+    <div id="loading-brand">
+      <div id="loading-skkj">SKKJ</div>
+    </div>
+    <div id="loading-bar-track"><div id="loading-bar-fill"></div></div>
+  </div></div>
   <script type="text/babel" data-presets="react">
 const { useState, useRef, useCallback, useEffect } = React;// ─── FULL PRODUCT LIST ────────────────────────────────────────────────────────
 const INIT_BRANDS = [
@@ -9941,9 +9975,11 @@ function App() {
         return (
           <div style={{ position:"fixed", inset:0, zIndex:99999, background:"rgba(0,0,0,0.78)", display:"flex", alignItems:"center", justifyContent:"center", padding:16, fontFamily:thF }}>
             <div style={{ background:cardBg, borderRadius:20, maxWidth:390, width:"100%", padding:"22px 18px 18px", position:"relative", boxShadow:"0 20px 60px rgba(0,0,0,0.55)" }}>
-              <button onClick={closeTutorial} style={{ position:"absolute", top:12, right:12, background:isDark?"#2C2C2E":"#F0EEE8", border:"none", borderRadius:8, width:28, height:28, fontSize:16, cursor:"pointer", color:isDark?"#aaa":"#555", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700 }}>×</button>
-              <div style={{ display:"flex", gap:5, marginBottom:14 }}>
-                {steps.map((_,i) => <div key={i} style={{ height:4, flex:1, borderRadius:4, background:i<=tutorialStep?"#9A0018":isDark?"#3A3A3A":"#E0DEDA" }} />)}
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:14 }}>
+                <div style={{ display:"flex", gap:5, flex:1 }}>
+                  {steps.map((_,i) => <div key={i} style={{ height:4, flex:1, borderRadius:4, background:i<=tutorialStep?"#9A0018":isDark?"#3A3A3A":"#E0DEDA" }} />)}
+                </div>
+                <button onClick={closeTutorial} style={{ flexShrink:0, background:isDark?"#2C2C2E":"#F0EEE8", border:"none", borderRadius:8, width:28, height:28, fontSize:16, cursor:"pointer", color:isDark?"#aaa":"#555", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700 }}>×</button>
               </div>
               {stepPreviews[tutorialStep]}
               <h3 style={{ margin:"0 0 5px", fontSize:17, fontWeight:900, textAlign:"center", color:textMain }}>{lang==="th" ? step.title : step.titleEn}</h3>
@@ -10316,6 +10352,10 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+setTimeout(function(){
+  var el = document.getElementById('loading');
+  if(el){ el.classList.add('fade-out'); setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 450); }
+}, 800);
   </script>
 </body>
 </html>
