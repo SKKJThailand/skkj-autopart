@@ -10417,5 +10417,10 @@ setTimeout(function(){
   if(el){ el.classList.add('fade-out'); setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 450); }
 }, 800);
   </script>
+<script>
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/skkj-autopart/sw.js');
+  }
+</script>
 </body>
 </html>
