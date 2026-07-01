@@ -81,6 +81,10 @@
       from { width: 0%; }
       to   { width: 100%; }
     }
+    @keyframes skkj-toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -1077,10 +1081,12 @@ function RestockAlertButton({ brandId, modelId, lang, isDark, thF }) {
 function WholesalePrice({ price, fmt, lang, isDark, thF }) {
   const [open, setOpen] = useState(false);
   const wholesale = Math.floor(price * 0.92);
+  const retail = Math.round(price * 1.15);
   return (
     <div onClick={e=>e.stopPropagation()}>
+      <div style={{ marginBottom:1, fontSize:11, color:"#aaa", textDecoration:"line-through", fontWeight:500 }}>{fmt(retail)}</div>
       <div style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
-        <span style={{ fontSize:18, fontWeight:800 }}>{fmt(price)}</span>
+        <span className="v2-price-main" style={{ fontSize:18, fontWeight:800 }}>{fmt(price)}</span>
         <button type="button" onClick={()=>setOpen(v=>!v)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:10, fontWeight:600, color:"#aaa", padding:0, fontFamily:thF, lineHeight:1.2 }}>
           {open?(lang==="th"?"ราคาช่าง ▴":"Trade price ▴"):(lang==="th"?"ราคาช่าง ▾":"Trade price ▾")}
         </button>
@@ -3327,6 +3333,8 @@ function App() {
   const [incomeLayout, setIncomeLayout]   = useState("1");
   const [activityLog, setActivityLog]     = useState([]);
   const [isDark, setIsDark] = useState(() => { try { return localStorage.getItem("skkj_v2_dark") === "1"; } catch(e) { return false; } });
+  const [toastMsg, setToastMsg] = useState(null);
+  const [shipCountdown, setShipCountdown] = useState('');
   const [factorySlide, setFactorySlide] = useState(0);
   const [galleryEdit, setGalleryEdit] = useState(null);
   const [showTutorial, setShowTutorial] = useState(() => { try { return localStorage.getItem("skkj_tutorial_skip_v2") !== "1"; } catch(e) { return true; } });
@@ -3613,6 +3621,44 @@ function App() {
     try { localStorage.setItem("skkj_v2_dark", isDark ? "1" : "0"); } catch(e) {}
     document.documentElement.setAttribute("data-dark", isDark ? "1" : "0");
   }, [isDark]);
+  // ── RECENT PURCHASE TOAST ──────────────────────────────────────────────────
+  useEffect(() => {
+    const msgs = [
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คนิสสัน เทียน่า J32',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คฮอนด้า ซิตี้/แจ๊ส',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คอีซูซุ ดีแมคซ์',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คมาสด้า 2',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คโตโยต้า วีออส',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คมิตซูบิชิ มิราจ',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คฮอนด้า ซีอาร์วี เจน 3',
+      'มีลูกค้าเพิ่งสั่งซื้อ แร็คนิสสัน มาร์ช',
+    ];
+    const show = () => {
+      const msg = msgs[Math.floor(Math.random() * msgs.length)];
+      setToastMsg(msg);
+      setTimeout(() => setToastMsg(null), 4500);
+    };
+    const t1 = setTimeout(show, 8000 + Math.random() * 6000);
+    const iv = setInterval(show, 28000 + Math.random() * 12000);
+    return () => { clearTimeout(t1); clearInterval(iv); };
+  }, []);
+  // ── SHIPPING URGENCY COUNTDOWN ─────────────────────────────────────────────
+  useEffect(() => {
+    function calc() {
+      const now = new Date();
+      const day = now.getDay();
+      if (day === 0 || day === 6) { setShipCountdown(''); return; }
+      const cutoff = new Date(now); cutoff.setHours(17, 0, 0, 0);
+      const diff = cutoff - now;
+      if (diff <= 0) { setShipCountdown(''); return; }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      setShipCountdown(`สั่งภายใน ${h} ชม. ${m} นาที ส่งวันนี้`);
+    }
+    calc();
+    const iv = setInterval(calc, 60000);
+    return () => clearInterval(iv);
+  }, []);
   // Reset finder welcome message when language changes
   useEffect(() => {
     setFinderMessages([{ role:"bot", lang, text:T[lang].finder.subtitle }]);
@@ -6528,8 +6574,8 @@ function App() {
         .skkj-v2[data-dark="1"] h1,.skkj-v2[data-dark="1"] h2,.skkj-v2[data-dark="1"] h3,.skkj-v2[data-dark="1"] h4,.skkj-v2[data-dark="1"] h5,.skkj-v2[data-dark="1"] h6{color:#fff!important}
         .skkj-v2[data-dark="1"] p,.skkj-v2[data-dark="1"] span,.skkj-v2[data-dark="1"] label,.skkj-v2[data-dark="1"] li{color:#ccc!important}
         .skkj-v2[data-dark="1"] div{color:#fff!important}
-        .skkj-v2[data-dark="1"] .v2-product-card{background:none!important;border:none!important;box-shadow:none!important}
-        .skkj-v2[data-dark="1"] .v2-product-card:hover{border:none!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .v2-product-card{background:#2C2C2E!important;border:1px solid #3A3A3C!important;box-shadow:0 2px 14px rgba(0,0,0,0.55)!important}
+        .skkj-v2[data-dark="1"] .v2-product-card:hover{border:1px solid #555!important;box-shadow:0 8px 28px rgba(0,0,0,0.65)!important}
         .skkj-v2[data-dark="1"] .product-photo-box{background:linear-gradient(135deg,#0A0A0A,#111)!important;border-bottom-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] input,.skkj-v2[data-dark="1"] select,.skkj-v2[data-dark="1"] textarea{background:#111!important;border-color:#2A2A2A!important;color:#fff!important}
         .skkj-v2[data-dark="1"] input::placeholder,.skkj-v2[data-dark="1"] textarea::placeholder{color:#555!important}
@@ -6556,6 +6602,7 @@ function App() {
         .skkj-v2[data-dark="1"] .v2-hero-visual .product-photo-box{background:#0D0D0D!important}
         .skkj-v2[data-dark="1"] .hero-product-info{background:#111!important;border-top-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .v2-product-card span{background:#1E1E1E!important;color:#aaa!important;border-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .v2-product-card span.v2-price-main{background:transparent!important;color:#fff!important}
         .skkj-v2[data-dark="1"] .v2-buy-button span{background:transparent!important;color:#fff!important;border:none!important}
         .skkj-v2[data-dark="1"] [title="เปรียบเทียบ"],.skkj-v2[data-dark="1"] [title="Compare"]{background:#1A1A1A!important;border-color:#2A2A2A!important;color:#888!important}
         .skkj-v2[data-dark="1"] .slide-arrow{background:rgba(20,20,20,0.92)!important;color:#fff!important;border-color:#2A2A2A!important}
@@ -8182,7 +8229,7 @@ function App() {
                     const isFav = isFavoriteProduct(brand.id, model.id);
                     const favKey = productKey(brand.id, model.id);
                     return (
-                      <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:isDark?"transparent":"#fff", border:isDark?"none":"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:"0 2px 8px rgba(0,0,0,0.06)", position:"relative", opacity:model.stock===0?0.5:1, display:"flex", flexDirection:"column" }}>
+                      <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #3A3A3C":"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:isDark?"0 2px 12px rgba(0,0,0,0.35)":"0 2px 8px rgba(0,0,0,0.06)", position:"relative", opacity:model.stock===0?0.5:1, display:"flex", flexDirection:"column" }}>
                         <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} onMagnify={setLightboxImage} onOpenDetail={()=>openProductDetail(brand, model)} />
                         <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"12px 14px", minWidth:44, minHeight:44, boxSizing:"border-box", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
                           <span style={{ fontSize:13 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
@@ -8203,7 +8250,7 @@ function App() {
                               <span style={{ display:"inline-flex", alignItems:"center", background:getModelDriveSide(model)==="left"?"#FEE2E2":"#F8F7F4", color:getModelDriveSide(model)==="left"?"#9A0018":"#555", border:"1px solid "+(getModelDriveSide(model)==="left"?"#FECACA":"#E0DDD8"), borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
                                 {getDriveSideLabel(getModelDriveSide(model), lang)}
                               </span>
-                              {model.stock > 0 && model.stock <= 2 && (
+                              {model.stock > 0 && model.stock <= 5 && (
                                 <span style={{ display:"inline-flex", alignItems:"center", background:"#FEF2F2", color:"#B91C1C", border:"1px solid #FECACA", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
                                   {lang==="th"?`เหลือ ${model.stock} ชิ้น`:`${model.stock} left`}
                                 </span>
@@ -8224,7 +8271,10 @@ function App() {
                             </button>
                           </div>
                           <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:10, marginTop:"auto" }}>
-                            <WholesalePrice price={model.price} fmt={fmt} lang={lang} isDark={isDark} thF={thF} />
+                            <div>
+                              <WholesalePrice price={model.price} fmt={fmt} lang={lang} isDark={isDark} thF={thF} />
+                              {shipCountdown ? <div style={{ marginTop:4, fontSize:10.5, fontWeight:700, color:isDark?"#FF6B6B":"#9B0000", background:isDark?"#3A0000":"#FFF0F0", borderRadius:6, padding:"3px 8px", display:"inline-block", fontFamily:thF }}>🚚 {shipCountdown}</div> : null}
+                            </div>
                             <div style={{ display:"flex", gap:6 }}>
                               {/* OPEN PRODUCT IN NEW TAB */}
                               <a
@@ -10327,7 +10377,7 @@ function App() {
                         <div>
                           <div style={{ fontWeight:800, fontSize:14, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
                           {getModelPartType(m) !== "steering_rack" && (
-                            <div style={{ fontSize:10, fontWeight:800, color:"#9A0018", background:"#FFF0F0", borderRadius:20, padding:"2px 8px", display:"inline-block", marginTop:3 }}>
+                            <div style={{ fontSize:10, fontWeight:800, color:isDark?"#FF6B6B":"#9B0000", background:isDark?"#3A0000":"#FFF0F0", borderRadius:20, padding:"2px 8px", display:"inline-block", marginTop:3 }}>
                               {getPartTypeLabel(getModelPartType(m), lang)}
                             </div>
                           )}
@@ -10344,6 +10394,16 @@ function App() {
               );
             })()}
           </div>
+        </div>
+      </div>
+    )}
+    {/* ── RECENT PURCHASE TOAST ── */}
+    {toastMsg && (
+      <div style={{ position:"fixed", bottom:80, left:16, zIndex:9998, maxWidth:280, background:isDark?"#2C2C2E":"#fff", border:`1px solid ${isDark?"#3A3A3C":"#E0DDD8"}`, borderRadius:14, padding:"10px 14px", boxShadow:"0 4px 20px rgba(0,0,0,0.18)", display:"flex", alignItems:"center", gap:10, animation:"skkj-toast-in 0.3s ease" }}>
+        <span style={{ fontSize:20 }}>🛒</span>
+        <div>
+          <div style={{ fontSize:11, fontWeight:800, color:isDark?"#F0EFE8":"#1A1A1A", lineHeight:1.3 }}>{toastMsg}</div>
+          <div style={{ fontSize:10, color:isDark?"#888":"#999", marginTop:1 }}>เมื่อกี้นี้</div>
         </div>
       </div>
     )}
