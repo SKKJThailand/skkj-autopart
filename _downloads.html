@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SKKJ Downloads</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#F8F7F4;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:#fff;border:1px solid #E8E6E0;border-radius:20px;padding:28px;width:100%;max-width:480px;box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+  h1{font-size:18px;font-weight:700;color:#1A1A1A;margin-bottom:4px}
+  .sub{font-size:13px;color:#888;margin-bottom:8px}
+  .legend{display:flex;gap:14px;margin-bottom:20px;font-size:11px;font-weight:600}
+  .legend span{display:flex;align-items:center;gap:5px}
+  .legend .dot{width:10px;height:10px;border-radius:50%}
+  .dot-red{background:#DC2626}
+  .dot-black{background:#1A1A1A}
+  .row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #F0EEE8}
+  .row:last-child{border-bottom:none}
+  .info .name{font-size:13px;font-weight:600;color:#1A1A1A}
+  .info .desc{font-size:11px;color:#999;margin-top:2px}
+  button{border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .15s;white-space:nowrap}
+  button:hover{opacity:.8}
+  button.need{background:#DC2626;color:#fff}
+  button.old{background:#E8E6E0;color:#888}
+  button.done{background:#16A34A;color:#fff}
+  button.err{background:#DC2626;color:#fff}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>SKKJ Autopart — Downloads</h1>
+  <div class="sub">Click a button to download the file</div>
+  <div class="legend">
+    <span><span class="dot dot-red"></span> Download now</span>
+    <span><span class="dot dot-black"></span> Already done</span>
+  </div>
+
+  <!-- ── THIS SESSION — download these ── -->
+  <div class="row">
+    <div class="info">
+      <div class="name">skkj-version-2.html</div>
+      <div class="desc">Product page: 3 clean buttons (Order Now, Add to Basket, Ask shop), Save this car is now a small link, product descriptions on every model, clearer "Fits these cars" heading, no tag emoji on discount. All previous features included.</div>
+    </div>
+    <button class="need" onclick="dl(this,'skkj-version-2.html')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">index.html</div>
+      <div class="desc">Upload to GitHub — live site copy (same as above)</div>
+    </div>
+    <button class="need" onclick="dl(this,'index.html')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">009_fix_anon_rls_policies.sql</div>
+      <div class="desc">Run in Supabase SQL Editor — tightens open RLS policies on reviews, income records, admin logs, and product-images bucket</div>
+    </div>
+    <button class="need" onclick="dl(this,'supabase/migrations/009_fix_anon_rls_policies.sql','009_fix_anon_rls_policies.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">moderate-review/index.ts</div>
+      <div class="desc">Deploy as new Supabase Edge Function "moderate-review" — then set SKKJ_REVIEW_TOKEN secret in Supabase dashboard</div>
+    </div>
+    <button class="need" onclick="dl(this,'supabase/functions/moderate-review/index.ts','moderate-review-index.ts')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">skkj-version-2-phone-preview.html</div>
+      <div class="desc">Upload to GitHub — phone preview (same product page changes)</div>
+    </div>
+    <button class="need" onclick="dl(this,'skkj-version-2-phone-preview.html')">&#8595; Download</button>
+  </div>
+
+  <!-- ── ALREADY DONE ── -->
+  <div class="row">
+    <div class="info">
+      <div class="name">skkj-slip-sync.js</div>
+      <div class="desc">Already downloaded — bilingual order.txt</div>
+    </div>
+    <button class="old" onclick="dl(this,'skkj-slip-sync.js','skkj-slip-sync.js')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">skkj-slip-sync.bat</div>
+      <div class="desc">Already done</div>
+    </div>
+    <button class="old" onclick="dl(this,'skkj-slip-sync.bat','skkj-slip-sync.bat')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">007_skkj_review_moderation.sql</div>
+      <div class="desc">Already ran in Supabase</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/migrations/007_skkj_review_moderation.sql','007_skkj_review_moderation.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">order-alert/index.ts</div>
+      <div class="desc">Already deployed as Edge Function</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/functions/order-alert/index.ts','order-alert-index.ts')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">008_skkj_slips.sql</div>
+      <div class="desc">Already ran in Supabase</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/migrations/008_skkj_slips.sql','008_skkj_slips.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">004_skkj_simple_tables.sql</div>
+      <div class="desc">Already ran in Supabase</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/migrations/004_skkj_simple_tables.sql','004_skkj_simple_tables.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">005_weekly_report_schedule.sql</div>
+      <div class="desc">Already ran in Supabase</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/migrations/005_weekly_report_schedule.sql','005_weekly_report_schedule.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">006_skkj_reviews.sql</div>
+      <div class="desc">Already ran in Supabase</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/migrations/006_skkj_reviews.sql','006_skkj_reviews.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">weekly-report/index.ts</div>
+      <div class="desc">Already deployed as Edge Function</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/functions/weekly-report/index.ts','weekly-report-index.ts')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">low-stock-alert/index.ts</div>
+      <div class="desc">Already deployed as Edge Function</div>
+    </div>
+    <button class="old" onclick="dl(this,'supabase/functions/low-stock-alert/index.ts','low-stock-alert-index.ts')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">sitemap.xml</div>
+      <div class="desc">Already uploaded to GitHub</div>
+    </div>
+    <button class="old" onclick="dl(this,'sitemap.xml','sitemap.xml')">&#8595; Download</button>
+  </div>
+</div>
+
+<script>
+async function dl(btn, path, filename) {
+  const name = filename || path;
+  const origText = btn.textContent;
+  const origClass = btn.className;
+  btn.textContent = '...';
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; a.click();
+    URL.revokeObjectURL(url);
+    btn.textContent = '✓ Done';
+    btn.className = 'done';
+    setTimeout(() => { btn.textContent = origText; btn.className = origClass; }, 3000);
+  } catch(e) {
+    btn.textContent = '✗ Error';
+    btn.className = 'err';
+    setTimeout(() => { btn.textContent = origText; btn.className = origClass; }, 3000);
+  }
+}
+</script>
+</body>
+</html>
