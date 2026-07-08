@@ -8207,14 +8207,19 @@ function App() {
                   : `Showing ${(catalogPage-1)*ITEMS_PER_PAGE+1}–${Math.min(catalogPage*ITEMS_PER_PAGE,catalogTotalItems)} of ${catalogTotalItems} items`}
               </div>
             )}
+            {catalogTotalItems>0 && shipCountdown && (
+              <div style={{ marginBottom:18, fontSize:13, fontWeight:600, color:isDark?"#CFCFC8":"#555", display:"inline-flex", alignItems:"center", gap:7, background:isDark?"#242426":"#F7F4ED", border:isDark?"1px solid #333":"1px solid #E8E1D2", borderRadius:10, padding:"8px 14px", fontFamily:thF }}>
+                🚚 {shipCountdown}
+              </div>
+            )}
             {pagedBrands.map(brand=>(
-              <div key={brand.id} style={{ marginBottom:48 }}>
-                <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:16 }}>
+              <div key={brand.id} style={{ marginBottom:56 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:18 }}>
                   <BrandLogo logo={brand.logo} size={24} place="navFilter" />
                   <h3 style={{ margin:0, fontSize:20, fontWeight:800 }}>{lang==="th"?brand.nameTh:brand.nameEn}</h3>
                   <div style={{ height:1, flex:1, background:"#E8E6E0", marginLeft:6 }} />
                 </div>
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(240px,100%),1fr))", gap:16 }}>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(240px,100%),1fr))", gap:20 }}>
                   {brand.models.length===0 ? (
                     <div style={{ gridColumn:"1/-1", background:"#fff", border:"2px dashed #E8E6E0", borderRadius:16, padding:"48px 24px", textAlign:"center", color:"#BBB" }}>
                       <div style={{ display:"flex", justifyContent:"center", marginBottom:12 }}><BrandLogo logo={brand.logo} size={40} place="productPhoto" /></div>
@@ -8231,89 +8236,40 @@ function App() {
                     return (
                       <div className="v2-product-card" key={model.id} onClick={()=>openProductDetail(brand, model)} role="button" tabIndex={0} onKeyDown={e=>{ if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openProductDetail(brand, model); } }} style={{ background:isDark?"#2C2C2E":"#fff", border:isDark?"1px solid #3A3A3C":"1px solid #ECECEC", borderRadius:14, overflow:"hidden", boxShadow:isDark?"0 2px 12px rgba(0,0,0,0.35)":"0 2px 8px rgba(0,0,0,0.06)", position:"relative", opacity:model.stock===0?0.5:1, display:"flex", flexDirection:"column" }}>
                         <ProductPhotoBox brand={brand} model={model} lang={lang} t={t} onMagnify={setLightboxImage} onOpenDetail={()=>openProductDetail(brand, model)} />
-                        <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":"rgba(255,255,255,0.92)", color:isComparing(brand.id, model.id)?"#fff":"#555", border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":"#E0DDD8"), borderRadius:8, padding:"12px 14px", minWidth:44, minHeight:44, boxSizing:"border-box", fontSize:13, fontWeight:800, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
-                          <span style={{ fontSize:13 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
+                        <button type="button" onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleCompare(brand, model); }} title={lang==="th"?"เปรียบเทียบ":"Compare"} style={{ position:"absolute", top:10, left:10, zIndex:4, display:"flex", alignItems:"center", gap:5, background:isComparing(brand.id, model.id)?"#1A1A1A":(isDark?"rgba(28,28,30,0.72)":"rgba(255,255,255,0.82)"), color:isComparing(brand.id, model.id)?"#fff":(isDark?"#bbb":"#777"), border:"1px solid "+(isComparing(brand.id, model.id)?"#1A1A1A":(isDark?"rgba(255,255,255,0.14)":"rgba(0,0,0,0.09)")), borderRadius:8, padding:"6px 9px", fontSize:11, fontWeight:600, cursor:"pointer", fontFamily:thF, backdropFilter:"blur(4px)" }}>
+                          <span style={{ fontSize:12 }}>{isComparing(brand.id, model.id)?"☑":"☐"}</span>
                           {lang==="th"?"เทียบ":"Compare"}
                         </button>
-                        <div style={{ padding:"14px 16px 16px", display:"flex", flexDirection:"column", flex:1 }}>
-                          <div style={{ cursor:"pointer", borderRadius:10, padding:"2px 0 6px" }}>
-                            <h4 style={{ margin:"0 0 2px", fontSize:15, fontWeight:800, color:"#111" }}>{brandName} {modelName}</h4>
-                            {model.years && <p style={{ margin:"0 0 2px", color:"#8B7A5B", fontSize:12, fontWeight:700 }}>{model.years}</p>}
-                            <p style={{ margin:"0 0 6px", color:"#999", fontSize:11, fontFamily:"'Courier New', monospace" }}>{model.sku}</p>
-                          </div>
-                          <CompatibleCars items={model.compatible} lang={lang} thF={thF} isDark={isDark} />
-                          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, marginBottom:8 }}>
-                            <div style={{ display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
-                              <span style={{ display:"inline-flex", alignItems:"center", background:"#FFF7ED", color:"#9A0018", border:"1px solid #F3D7B5", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
-                                {getPartTypeLabel(getModelPartType(model), lang)}
-                              </span>
-                              <span style={{ display:"inline-flex", alignItems:"center", background:getModelDriveSide(model)==="left"?"#FEE2E2":"#F8F7F4", color:getModelDriveSide(model)==="left"?"#9A0018":"#555", border:"1px solid "+(getModelDriveSide(model)==="left"?"#FECACA":"#E0DDD8"), borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
-                                {getDriveSideLabel(getModelDriveSide(model), lang)}
-                              </span>
-                              {model.stock > 0 && model.stock <= 5 && (
-                                <span style={{ display:"inline-flex", alignItems:"center", background:"#FEF2F2", color:"#B91C1C", border:"1px solid #FECACA", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
-                                  {lang==="th"?`เหลือ ${model.stock} ชิ้น`:`${model.stock} left`}
-                                </span>
-                              )}
-                              {model.stock >= 10 && (
-                                <span style={{ display:"inline-flex", alignItems:"center", background:"#F0FDF4", color:"#15803D", border:"1px solid #BBF7D0", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
-                                  {lang==="th"?"พร้อมขาย":"Ready"}
-                                </span>
-                              )}
-                              {(()=>{ const r=avgRating(brand.id,model.id); return r ? (
-                                <span style={{ display:"inline-flex", alignItems:"center", gap:2, background:"#FFFBEB", color:"#92400E", border:"1px solid #FDE68A", borderRadius:999, padding:"3px 9px", fontSize:10, fontWeight:900 }}>
-                                  {"★".repeat(Math.round(r.avg))}{"☆".repeat(5-Math.round(r.avg))} {r.avg.toFixed(1)} ({r.count})
-                                </span>
-                              ) : null; })()}
+                        <div style={{ padding:"18px 18px 20px", display:"flex", flexDirection:"column", flex:1 }}>
+                          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:10 }}>
+                            <div style={{ minWidth:0 }}>
+                              <h4 style={{ margin:"0 0 3px", fontSize:15, fontWeight:700, color:isDark?"#F0EFE8":"#1A1A1A", lineHeight:1.3 }}>{brandName} {modelName}</h4>
+                              {model.years && <p style={{ margin:0, color:isDark?"#8E8E88":"#8A8A82", fontSize:12, fontWeight:400 }}>{model.years}</p>}
                             </div>
-                            <button type="button" className={`favorite-heart-btn ${isFav?"is-favorite":""} ${favoritePulseKey===favKey?"favorite-pump":""}`} onMouseDown={(e)=>{ e.preventDefault(); e.stopPropagation(); }} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleFavoriteProduct(brand, model); }} title={lang==="th"?"บันทึกเป็นรายการโปรด":"Save as favorite"}>
+                            <button type="button" className={`favorite-heart-btn ${isFav?"is-favorite":""} ${favoritePulseKey===favKey?"favorite-pump":""}`} onMouseDown={(e)=>{ e.preventDefault(); e.stopPropagation(); }} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); toggleFavoriteProduct(brand, model); }} title={lang==="th"?"บันทึกเป็นรายการโปรด":"Save as favorite"} style={{ flexShrink:0, fontSize:20, width:32, height:32 }}>
                               {isFav ? "♥" : "♡"}
                             </button>
                           </div>
-                          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:10, marginTop:"auto" }}>
-                            <div>
+                          <div style={{ marginTop:"auto", paddingTop:14 }}>
+                            <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", gap:10 }}>
                               <WholesalePrice price={model.price} fmt={fmt} lang={lang} isDark={isDark} thF={thF} />
-                              {shipCountdown ? <div style={{ marginTop:4, fontSize:10.5, fontWeight:700, color:isDark?"#FF6B6B":"#9B0000", background:isDark?"#3A0000":"#FFF0F0", borderRadius:6, padding:"3px 8px", display:"inline-block", fontFamily:thF }}>🚚 {shipCountdown}</div> : null}
+                              {model.stock > 0 && model.stock <= 3 && (
+                                <span style={{ display:"inline-flex", alignItems:"center", background:isDark?"#3A0A0A":"#FEF2F2", color:isDark?"#FF8A8A":"#B91C1C", border:isDark?"1px solid #5A1A1A":"1px solid #FECACA", borderRadius:999, padding:"3px 9px", fontSize:11, fontWeight:700, whiteSpace:"nowrap" }}>
+                                  {lang==="th"?`เหลือ ${model.stock} ชิ้น`:`${model.stock} left`}
+                                </span>
+                              )}
                             </div>
-                            <div style={{ display:"flex", gap:6 }}>
-                              {/* OPEN PRODUCT IN NEW TAB */}
-                              <a
-                                href={productNewTabUrl(brand.id, model.id)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onMouseDown={(e)=>{ e.stopPropagation(); }}
-                                onClick={(e)=>{ e.stopPropagation(); }}
-                                title={lang==="th"?"เปิดสินค้าในแท็บใหม่":"Open product in new tab"}
-                                style={{ background:isDark?"#2C2C2E":"#fff", color:isDark?"#eee":"#1A1A1A", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, width:34, minWidth:34, height:32, display:"inline-flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:15, fontWeight:900, fontFamily:thF, textDecoration:"none", whiteSpace:"nowrap" }}>
-                                ↗
-                              </a>
-                              {/* ADD TO BASKET */}
-                              <button
-                                disabled={model.stock===0}
-                                title={model.stock===0?"":(lang==="th"?"เพิ่มลงตะกร้า — ซื้อหลายรายการพร้อมกัน":"Add to cart — checkout multiple items together")}
-                                onClick={(e)=>{ e.stopPropagation(); model.stock>0&&addToBasket(brand,model); }}
-                                style={{ background:model.stock===0?(isDark?"#2C2C2E":"#eee"):inBasket?(isDark?"#312e81":"#f0f0ff"):(isDark?"#2C2C2E":"#F0EEE8"), color:model.stock===0?(isDark?"#666":"#aaa"):inBasket?(isDark?"#a5b4fc":"#4f46e5"):(isDark?"#eee":"#444"), border:`1px solid ${model.stock===0?(isDark?"#2C2C2E":"#eee"):inBasket?"#6366f1":(isDark?"#2A2A2A":"#E0DDD8")}`, borderRadius:10, padding:"7px 10px", cursor:model.stock===0?"not-allowed":"pointer", fontSize:11, fontWeight:600, fontFamily:thF, whiteSpace:"nowrap" }}>
-                                {model.stock===0?"–":"🛒"}
+                            {model.stock===0 ? (
+                              <div style={{ marginTop:12 }}>
+                                <div style={{ background:isDark?"#2C2C2E":"#F4F2EE", color:isDark?"#999":"#888", borderRadius:8, padding:"11px", fontSize:13, fontWeight:600, fontFamily:thF, textAlign:"center" }}>{t.outOfStock}</div>
+                                <RestockAlertButton brandId={brand.id} modelId={model.id} lang={lang} isDark={isDark} thF={thF} />
+                              </div>
+                            ) : (
+                              <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:12, background:isDark?"#F5F5F5":"#1A1A1A", color:isDark?"#1A1A1A":"#fff", border:"none", borderRadius:8, padding:"12px", cursor:"pointer", fontFamily:thF, fontSize:13, fontWeight:800 }}>
+                                {t.orderNow}
                               </button>
-                              {/* ORDER NOW */}
-                              <button
-                                onClick={(e)=>{ e.stopPropagation(); askAboutProduct(brand, model); }}
-                                style={{ background:isDark?"#2C2C2E":"#fff", color:isDark?"#eee":"#1A1A1A", border:isDark?"1px solid #2A2A2A":"1px solid #E0DDD8", borderRadius:10, padding:"7px 12px", cursor:"pointer", fontSize:11, fontWeight:700, fontFamily:thF, whiteSpace:"nowrap" }}>
-                                {lang==="th"?"ถามรุ่นนี้":"Ask"}
-                              </button>
-                            </div>
+                            )}
                           </div>
-                          {model.stock===0 ? (
-                            <div style={{ marginTop:10 }}>
-                              <div style={{ background:isDark?"#2C2C2E":"#eee", color:"#aaa", borderRadius:6, padding:"12px", fontSize:13, fontWeight:800, fontFamily:thF, textAlign:"center" }}>{t.outOfStock}</div>
-                              <RestockAlertButton brandId={brand.id} modelId={model.id} lang={lang} isDark={isDark} thF={thF} />
-                            </div>
-                          ) : (
-                            <button className="v2-buy-button" onClick={(e)=>{ e.stopPropagation(); setOrderForm({ brand:brandName, model:modelName, brandId:brand.id, modelId:model.id, price:model.price }); }} style={{ width:"100%", marginTop:10, background:isDark?"#F5F5F5":"#1A1A1A", color:isDark?"#1A1A1A":"#fff", border:"none", borderRadius:6, padding:"12px", cursor:"pointer", fontFamily:thF, display:"flex", flexDirection:"column", alignItems:"center", gap:2 }}>
-                              <span style={{ fontSize:13, fontWeight:800 }}>{t.orderNow}</span>
-                              <span style={{ fontSize:10, fontWeight:500, opacity:0.60 }}>{lang==="th"?"ซื้อทันที ไม่ผ่านตะกร้า":"Quick buy — skips cart"}</span>
-                            </button>
-                          )}
                         </div>
                       </div>
                     );
@@ -8400,7 +8356,7 @@ function App() {
                 <div>
                   <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
                     <BrandLogo logo={detailBrand.logo} size={24} place="navFilter" />
-                    <span style={{ color:"#8B7A5B", fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:1 }}>{lang==="th"?detailBrand.nameTh:detailBrand.nameEn}</span>
+                    <span style={{ color:isDark?"#9A9A92":"#8A8A82", fontSize:12, fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>{lang==="th"?detailBrand.nameTh:detailBrand.nameEn}</span>
                   </div>
                   <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:12 }}>
                     <h2 style={{ margin:"0 0 8px", fontSize:"clamp(24px,3vw,34px)", lineHeight:1.15, fontWeight:900, color:"#111", flex:1 }}>
@@ -8438,10 +8394,11 @@ function App() {
                     [lang==="th"?"รับประกัน":"Warranty", lang==="th"?"6 เดือน / 20,000 กม.":"6 months / 20,000 km"],
                     [lang==="th"?"จัดส่ง":"Shipping", lang==="th"?"ฟรี · 2–5 วัน":"Free · 2–5 days"],
                     [lang==="th"?"ประเภท":"Type", getPartTypeLabel(getModelPartType(detailModel), lang)],
+                    [lang==="th"?"พวงมาลัย":"Steering", getDriveSideLabel(getModelDriveSide(detailModel), lang)],
                   ].map(([label,value])=>(
                     <div key={label} className="detail-info-cell" style={{ background:"#FAFAF8", border:"1px solid #ECECEC", borderRadius:12, padding:"12px 13px" }}>
-                      <div style={{ color:"#999", fontSize:11, fontWeight:800, marginBottom:4 }}>{label}</div>
-                      <div style={{ color:"#1A1A1A", fontSize:13, fontWeight:800 }}>{value}</div>
+                      <div style={{ color:isDark?"#8E8E88":"#999", fontSize:11, fontWeight:700, marginBottom:4 }}>{label}</div>
+                      <div style={{ color:isDark?"#E8E6E0":"#1A1A1A", fontSize:13, fontWeight:600 }}>{value}</div>
                     </div>
                   ))}
                 </div>
