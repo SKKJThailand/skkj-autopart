@@ -1316,30 +1316,28 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
   const imageTransform = `translate(${fit.x || 0}px, ${fit.y || 0}px) rotate(${fit.rotate || 0}deg)`;
 
   return (
-    <div className="product-photo-box" onClick={()=>onOpenDetail?.()} style={{ height, background:showImage?"linear-gradient(135deg,#F8F6EF 0%,#FFFFFF 48%,#F2EFE8 100%)":"#1a1a1a", borderBottom:"1px solid #E8E6E0", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", cursor:onOpenDetail?"pointer":"default" }}>
-      <div className="product-photo-bg" style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 50% 35%,rgba(255,255,255,0.78),rgba(232,230,224,0.18) 58%,rgba(240,238,232,0.42))" }} />
-      <div className="product-photo-shape" style={{ position:"absolute", inset:"0 auto auto 0", width:"46%", height:"42%", background:"#9B0018", clipPath:"polygon(0 0,100% 0,0 100%)", opacity:0.92 }} />
-      <div className="product-photo-shape" style={{ position:"absolute", inset:"auto 0 0 auto", width:"48%", height:"38%", background:"#B8942D", clipPath:"polygon(100% 0,100% 100%,0 100%)", opacity:0.92 }} />
+    <div className="product-photo-box" onClick={()=>onOpenDetail?.()} style={{ height, background:"radial-gradient(circle at 50% 42%,#FFFFFF 0%,#F8F6F0 55%,#EDEAE0 100%)", borderBottom:"1px solid #E8E6E0", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", cursor:onOpenDetail?"pointer":"default" }}>
+      <div className="product-photo-bg" style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 50% 38%,rgba(255,255,255,0.9) 0%,rgba(248,246,240,0) 62%)" }} />
       <div style={{ position:"absolute", top:10, right:10, background:ss.bg, color:ss.color, borderRadius:20, padding:"4px 10px", fontSize:10, fontWeight:800, border:`1px solid ${ss.color}30`, zIndex:2 }}>
         {model.stock} {t.inStock}
       </div>
       {showImage ? (
-        <img className="product-main-image" src={slide.src} alt={slide.title} loading="lazy" onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"none", transform:imageTransform }} />
+        <img className="product-main-image" src={slide.src} alt={slide.title} loading="lazy" onError={()=>setFailedImages(prev=>({ ...prev, [slide.src]:true }))} style={{ width:fit.width || "92%", height:fit.height || "86%", objectFit:"contain", objectPosition:fit.objectPosition || "center center", position:"relative", zIndex:1, filter:"drop-shadow(0 12px 16px rgba(0,0,0,0.14))", transform:imageTransform }} />
       ) : slides.some(s => s.type === "image") ? (
         /* Photo exists but failed to load — show brand logo fallback */
         <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:8 }}>
-          <div style={{ fontSize:36, fontWeight:900, color:"rgba(255,255,255,0.20)", fontFamily:"'Kanit', sans-serif", letterSpacing:4 }}>SKKJ</div>
+          <div className="pp-fb-brand" style={{ fontSize:36, fontWeight:900, color:"rgba(0,0,0,0.13)", fontFamily:"'Kanit', sans-serif", letterSpacing:4 }}>SKKJ</div>
           <BrandLogo logo={brand.logo} size={36} place="productPhoto" />
         </div>
       ) : (
         /* No photo uploaded yet — clear "coming soon" state */
-        <div style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:8 }}>
+        <div className="pp-fb-icon" style={{ position:"relative", zIndex:1, textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", gap:8, color:"#9C968B" }}>
           <svg width="58" height="32" viewBox="0 0 58 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="2" y="13" width="54" height="7" rx="3.5" fill="rgba(255,255,255,0.22)" />
-            <circle cx="10" cy="16.5" r="6" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" />
-            <circle cx="48" cy="16.5" r="6" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" />
+            <rect x="2" y="13" width="54" height="7" rx="3.5" fill="currentColor" fillOpacity="0.5" />
+            <circle cx="10" cy="16.5" r="6" fill="currentColor" fillOpacity="0.28" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.5" />
+            <circle cx="48" cy="16.5" r="6" fill="currentColor" fillOpacity="0.28" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.5" />
           </svg>
-          <div style={{ fontSize:10, color:"rgba(255,255,255,0.50)", fontFamily:"'Kanit', sans-serif", letterSpacing:0.3 }}>
+          <div style={{ fontSize:10, color:"currentColor", fontFamily:"'Kanit', sans-serif", letterSpacing:0.3 }}>
             {lang==="th" ? "กำลังเพิ่มรูปภาพ" : "Photo coming soon"}
           </div>
         </div>
@@ -1350,6 +1348,7 @@ function ProductPhotoBox({ brand, model, lang, t, height=178, onMagnify, onOpenD
       <div style={{ position:"absolute", right:12, bottom:12, display:"flex", gap:4, zIndex:3 }}>
         {slides.map((s,i)=><span key={`${s.type}-${i}`} style={{ width:i===idx?14:5, height:5, borderRadius:20, background:i===idx?"#1A1A1A":"#CFC7B8", transition:"all 0.2s" }} />)}
       </div>
+      {height > 100 && <div style={{ position:"absolute", left:0, right:0, bottom:0, height:height>=300?3:2, background:"#9B0018", zIndex:2 }} />}
     </div>
   );
 }
@@ -6572,7 +6571,10 @@ function App() {
         .skkj-v2[data-dark="1"] div{color:#fff!important}
         .skkj-v2[data-dark="1"] .v2-product-card{background:#2C2C2E!important;border:1px solid #3A3A3C!important;box-shadow:0 2px 14px rgba(0,0,0,0.55)!important}
         .skkj-v2[data-dark="1"] .v2-product-card:hover{border:1px solid #555!important;box-shadow:0 8px 28px rgba(0,0,0,0.65)!important}
-        .skkj-v2[data-dark="1"] .product-photo-box{background:linear-gradient(135deg,#0A0A0A,#111)!important;border-bottom-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .product-photo-box{background:radial-gradient(circle at 50% 42%,#2E2E30 0%,#242426 55%,#1B1B1D 100%)!important;border-bottom-color:#1E1E1E!important}
+        .skkj-v2[data-dark="1"] .product-main-image{filter:drop-shadow(0 14px 22px rgba(0,0,0,0.55))!important}
+        .skkj-v2[data-dark="1"] .pp-fb-brand{color:rgba(255,255,255,0.20)!important}
+        .skkj-v2[data-dark="1"] .pp-fb-icon{color:rgba(255,255,255,0.44)!important}
         .skkj-v2[data-dark="1"] input,.skkj-v2[data-dark="1"] select,.skkj-v2[data-dark="1"] textarea{background:#111!important;border-color:#2A2A2A!important;color:#fff!important}
         .skkj-v2[data-dark="1"] input::placeholder,.skkj-v2[data-dark="1"] textarea::placeholder{color:#555!important}
         .skkj-v2[data-dark="1"] .lang-switch{background:#111!important;border-color:#2A2A2A!important}
@@ -6586,16 +6588,16 @@ function App() {
         .skkj-v2[data-dark="1"] .skkj-modal-card{background:#111!important;border-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .checkout-step{background:#111!important;border-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .checkout-step span{background:#1E1E1E!important;color:#999!important}
-        .skkj-v2[data-dark="1"] .v2-home-hero{background:#0D0D0D!important;border-color:#1E1E1E!important;box-shadow:none!important}
-        .skkj-v2[data-dark="1"] .v2-home-hero:before{opacity:0!important}
-        .skkj-v2[data-dark="1"] .v2-home-hero:after{opacity:0!important}
+        .skkj-v2[data-dark="1"] .v2-home-hero{background:linear-gradient(180deg,#201F21 0%,#181819 100%)!important;border-color:#1E1E1E!important;box-shadow:none!important}
+        .skkj-v2[data-dark="1"] .v2-home-hero:before{display:none!important}
+        .skkj-v2[data-dark="1"] .v2-home-hero:after{opacity:1!important;background:#9B0018!important}
         .skkj-v2[data-dark="1"] .v2-hero-visual{background:#0D0D0D!important;border-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .fitment-control{background:#111!important;border-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .part-type-picker{background:#111!important;border-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .fitment-divider{background:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .drive-side-picker button{background:#111!important;border-color:#1E1E1E!important;color:#888!important}
         .skkj-v2[data-dark="1"] .drive-side-picker button[style*="rgb(26"]{background:#D00020!important;border-color:#D00020!important;color:#fff!important}
-        .skkj-v2[data-dark="1"] .v2-hero-visual .product-photo-box{background:#0D0D0D!important}
+        .skkj-v2[data-dark="1"] .v2-hero-visual .product-photo-box{background:radial-gradient(circle at 50% 42%,#2A2A2C 0%,#202022 55%,#171718 100%)!important}
         .skkj-v2[data-dark="1"] .hero-product-info{background:#111!important;border-top-color:#1E1E1E!important}
         .skkj-v2[data-dark="1"] .v2-product-card span{background:#1E1E1E!important;color:#aaa!important;border-color:#2A2A2A!important}
         .skkj-v2[data-dark="1"] .v2-product-card span.v2-price-main{background:transparent!important;color:#fff!important}
@@ -6604,7 +6606,8 @@ function App() {
         .skkj-v2[data-dark="1"] .slide-arrow{background:rgba(20,20,20,0.92)!important;color:#fff!important;border-color:#2A2A2A!important}
         .skkj-v2[data-dark="1"] button[title="ดูรูปใหญ่"],.skkj-v2[data-dark="1"] button[title="View larger"]{background:rgba(20,20,20,0.92)!important;border-color:#2A2A2A!important;color:#aaa!important}
         .skkj-v2[data-dark="1"] .v2-product-shell{background:#2C2C2E!important;border-color:#1E1E1E!important}
-        .skkj-v2[data-dark="1"] .v2-product-gallery{background:#1A1A1A!important;border-right-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .v2-product-gallery{background:radial-gradient(circle at 50% 40%,#242426 0%,#1E1E20 60%,#181819 100%)!important;border-right-color:#2A2A2A!important}
+        .skkj-v2[data-dark="1"] .v2-product-gallery .product-photo-box{border-color:#2A2A2A!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)!important}
         .skkj-v2[data-dark="1"] .v2-product-details{background:#2C2C2E!important}
         .skkj-v2[data-dark="1"] .v2-catalog-tools{background:#1A1A1A!important;border-color:#1E1E1E!important;box-shadow:none!important}
         .skkj-v2[data-dark="1"] .faq-item{background:#1A1A1A!important;border-color:#1E1E1E!important}
@@ -6621,8 +6624,8 @@ function App() {
         .skkj-v2[data-dark="1"] .terms-chk-label{background:#2C2C2E!important;border-color:#1E1E1E!important;color:#ddd!important}
         .skkj-v2[data-dark="1"] .terms-item{background:#1E1E1E!important;border-color:#2A2A2A!important;color:#ccc!important}
         .skkj-v2{position:relative;isolation:isolate;overflow:hidden;background:#FAFAF8!important}
-        .skkj-v2:before{content:"";position:fixed;inset:60px 0 0;z-index:0;pointer-events:none;background:linear-gradient(118deg,rgba(255,255,255,.86) 0 20%,rgba(246,243,236,.72) 20% 39%,transparent 39% 63%,rgba(200,168,62,.08) 63% 63.7%,transparent 63.7% 100%),repeating-linear-gradient(90deg,rgba(17,17,17,.018) 0 1px,transparent 1px 76px),repeating-linear-gradient(0deg,rgba(17,17,17,.012) 0 1px,transparent 1px 76px);opacity:.95}
-        .skkj-v2:after{content:"";position:fixed;left:-12%;top:470px;width:124%;height:420px;z-index:0;pointer-events:none;background:linear-gradient(153deg,transparent 0 45%,rgba(200,168,62,.10) 45% 51%,transparent 51% 71%,rgba(154,0,24,.045) 71% 76%,transparent 76% 100%);opacity:.9}
+        .skkj-v2:before{content:"";position:fixed;inset:60px 0 0;z-index:0;pointer-events:none;background:repeating-linear-gradient(90deg,rgba(17,17,17,.018) 0 1px,transparent 1px 76px),repeating-linear-gradient(0deg,rgba(17,17,17,.012) 0 1px,transparent 1px 76px),radial-gradient(120% 90% at 50% 0%,#FDFCF9 0%,#F7F4ED 55%,#F4F1EA 100%);opacity:.95}
+        .skkj-v2:after{display:none!important}
         .skkj-v2 .site-nav,.skkj-v2 .app-main,.skkj-v2 footer{position:relative;z-index:1}
         .site-nav{box-shadow:0 16px 42px rgba(26,26,26,.08);backdrop-filter:blur(18px)}
         .skkj-v2 .site-nav{background:rgba(250,250,248,.92)!important;border-bottom:1px solid var(--skkj-line)!important}
@@ -6644,15 +6647,15 @@ function App() {
         .v2-result-pill{display:inline-flex;align-items:center;gap:6px;background:#F7F1DD;border:1px solid #E7D79E;color:#6E5616;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:900;white-space:nowrap}
         .product-photo-bg,.product-photo-shape,.product-main-image{transition:filter .45s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.22,1,.36,1), opacity .45s cubic-bezier(.22,1,.36,1)}
         .product-photo-box:hover .product-photo-bg,.product-photo-box:hover .product-photo-shape{filter:blur(6px);opacity:.62;transform:scale(1.055)}
-        .product-photo-box:hover .product-main-image{transform:scale(1.045);filter:contrast(1.05) saturate(1.05)}
+        .product-photo-box:hover .product-main-image{transform:scale(1.045);filter:contrast(1.05) saturate(1.05) drop-shadow(0 14px 20px rgba(0,0,0,0.16))}
         .skkj-v2 .feature-card,.skkj-v2 .v2-product-card,.skkj-v2 .admin-dashboard-card,.skkj-v2 .customer-order-card{transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease}
-        .skkj-v2 .feature-card:hover,.skkj-v2 .v2-product-card:hover,.skkj-v2 .customer-order-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.10)!important;border-color:#D8C88E!important}
+        .skkj-v2 .feature-card:hover,.skkj-v2 .v2-product-card:hover,.skkj-v2 .customer-order-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.10)!important;border-color:#D8D3C8!important}
         .v2-concept-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--skkj-line);border-radius:999px;padding:8px 13px;font-size:12px;font-weight:900;color:#555;box-shadow:0 10px 26px rgba(17,17,17,.06)}
         .v2-concept-badge strong{color:var(--skkj-red)}
-        .v2-catalog-tools{background:linear-gradient(135deg,#fff 0%,#fff 64%,rgba(200,168,62,.13) 64%,rgba(154,0,24,.08) 100%)!important;border:1px solid var(--skkj-line)!important;border-radius:18px!important;box-shadow:0 14px 36px rgba(17,17,17,.05)!important}
-        .v2-home-hero{position:relative;overflow:hidden;border:1px solid var(--skkj-line);border-radius:28px;margin:34px 0 34px;padding:56px 58px;background:linear-gradient(135deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.98) 58%,rgba(200,168,62,.16) 58%,rgba(154,0,24,.09) 100%);box-shadow:0 24px 80px rgba(17,17,17,.08)}
-        .v2-home-hero:before{content:"";position:absolute;right:-90px;top:-120px;width:330px;height:330px;border-radius:50%;background:rgba(200,168,62,.18);filter:blur(4px)}
-        .v2-home-hero:after{content:"";position:absolute;right:-90px;bottom:-96px;width:390px;height:150px;background:var(--skkj-red);transform:rotate(-13deg);opacity:.96}
+        .v2-catalog-tools{background:linear-gradient(180deg,#FFFFFF 0%,#FAF8F2 100%)!important;border:1px solid var(--skkj-line)!important;border-radius:18px!important;box-shadow:0 14px 36px rgba(17,17,17,.05)!important}
+        .v2-home-hero{position:relative;overflow:hidden;border:1px solid var(--skkj-line);border-radius:28px;margin:34px 0 34px;padding:56px 58px;background:linear-gradient(180deg,#FFFFFF 0%,#FAF8F2 100%);box-shadow:0 24px 80px rgba(17,17,17,.08)}
+        .v2-home-hero:before{display:none}
+        .v2-home-hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#9B0018;opacity:1}
         .v2-home-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,430px);gap:64px;align-items:center}
         .v2-home-copy{text-align:left;max-width:610px}
         .v2-home-badge{display:inline-flex!important;align-items:center;gap:8px;background:#111!important;color:#fff!important;box-shadow:0 12px 26px rgba(17,17,17,.14)}
@@ -6685,19 +6688,19 @@ function App() {
         .fitment-divider{width:1px;align-self:stretch;background:#EEE9DF;margin:2px 2px}
         .v2-feature-grid{max-width:none!important;margin:0 0 32px!important}
         .v2-feature-card{position:relative;overflow:hidden;border-radius:20px!important}
-        .v2-feature-card:after{content:"";position:absolute;right:-32px;bottom:-42px;width:120px;height:90px;background:rgba(200,168,62,.15);transform:rotate(-18deg)}
+        .v2-feature-card:after{display:none}
         .v2-brand-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
         .v2-brand-heading h2{margin:0!important}
         .v2-brand-note{color:#777;font-size:12px;font-weight:800}
         .v2-brand-grid button{border-radius:18px!important;transition:transform .38s cubic-bezier(.22,1,.36,1),box-shadow .38s cubic-bezier(.22,1,.36,1),border-color .38s cubic-bezier(.22,1,.36,1)!important}
-        .v2-brand-grid button:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(17,17,17,.10);border-color:#D8C88E!important}
+        .v2-brand-grid button:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(17,17,17,.10);border-color:#D8D3C8!important}
         .v2-product-card{border-radius:18px!important;box-shadow:0 2px 8px rgba(0,0,0,0.06)!important;overflow:hidden!important;cursor:pointer!important}
-        .v2-product-card:focus-within{outline:2px solid rgba(200,168,62,.55);outline-offset:3px}
-        .v2-product-card .product-photo-box{background:linear-gradient(135deg,#fff 0%,#fff 52%,rgba(200,168,62,.34) 52%,rgba(200,168,62,.34) 67%,rgba(154,0,24,.88) 67%,rgba(154,0,24,.88) 80%,#171717 80%)!important}
+        .v2-product-card:focus-within{outline:2px solid rgba(155,0,24,.45);outline-offset:3px}
+        .v2-product-card .product-photo-box{background:radial-gradient(circle at 50% 42%,#FFFFFF 0%,#F8F6F0 55%,#EDEAE0 100%)!important}
         .v2-product-page{animation:v2FloatIn .55s cubic-bezier(.22,1,.36,1)}
         .v2-product-shell{border-radius:22px!important;border:1px solid var(--skkj-line)!important;box-shadow:0 24px 70px rgba(17,17,17,.11)!important;overflow:hidden!important;background:#fff!important}
-        .v2-product-gallery{background:linear-gradient(135deg,#fff 0%,#fff 56%,rgba(200,168,62,.35) 56%,rgba(200,168,62,.35) 70%,var(--skkj-red) 70%,var(--skkj-red) 82%,#171717 82%)!important}
-        .v2-product-gallery .product-photo-box{border-radius:18px!important;background:rgba(255,255,255,.92)!important;border:1px solid rgba(255,255,255,.84)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+        .v2-product-gallery{background:radial-gradient(circle at 50% 40%,#FFFFFF 0%,#F6F3EC 60%,#EDEAE0 100%)!important}
+        .v2-product-gallery .product-photo-box{border-radius:18px!important;background:radial-gradient(circle at 50% 42%,#FFFFFF 0%,#F8F6F0 55%,#EDEAE0 100%)!important;border:1px solid rgba(232,225,210,.9)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
         .v2-product-details{background:#fff!important}
         .v2-product-price{color:var(--skkj-red)!important;font-family:Arial,sans-serif!important;letter-spacing:-.04em!important}
         .v2-buy-button{background:#111!important;color:#fff!important;border:none!important;border-radius:6px!important;box-shadow:0 12px 30px rgba(17,17,17,.18)}
@@ -6845,7 +6848,7 @@ function App() {
           table { font-size: 12px !important; }
           section { padding-top: 38px !important; padding-bottom: 38px !important; }
 
-          .skkj-v2:before { opacity: .45 !important; background: linear-gradient(140deg, rgba(255,255,255,.95) 0 38%, rgba(246,243,236,.78) 38% 64%, rgba(200,168,62,.08) 64% 100%) !important; }
+          .skkj-v2:before { opacity: .6 !important; background: radial-gradient(120% 80% at 50% 0%, #FDFCF9 0%, #F5F2EB 100%) !important; }
           .skkj-v2:after { display: none !important; }
           .site-nav { box-shadow: 0 10px 26px rgba(17,17,17,.07) !important; }
           .mobile-page-tabs { flex-wrap: nowrap !important; overflow-x: auto !important; overflow-y: hidden !important; padding: 2px 0 1px !important; scrollbar-width: none !important; }
@@ -6856,10 +6859,10 @@ function App() {
             margin: 14px 0 18px !important;
             padding: 18px 14px 16px !important;
             border-radius: 18px !important;
-            background: linear-gradient(150deg,#fff 0 62%,rgba(200,168,62,.12) 62% 78%,rgba(154,0,24,.09) 78% 100%) !important;
+            background: linear-gradient(180deg,#FFFFFF 0%,#FAF8F2 100%) !important;
             box-shadow: 0 14px 36px rgba(17,17,17,.07) !important;
           }
-          .v2-home-hero:before { width: 180px !important; height: 180px !important; right: -80px !important; top: -80px !important; opacity: .7 !important; }
+          .v2-home-hero:before { display: none !important; }
           .v2-home-hero:after { height: 92px !important; width: 240px !important; right: -95px !important; bottom: -66px !important; opacity: .9 !important; }
           .v2-home-grid { gap: 14px !important; }
           .v2-home-copy { text-align: left !important; }
