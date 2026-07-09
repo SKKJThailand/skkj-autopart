@@ -3228,6 +3228,62 @@ async function skkjSupabaseTableRequest(config, tableName, options = {}) {
   return data;
 }
 
+// ─── PRODUCTS FROM SUPABASE (with built-in fallback) ─────────────────────────
+// Builds the in-memory brands/models structure from skkj_products rows.
+function buildBrandsFromProductRows(rows) {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const byBrand = new Map();
+  rows.forEach(r => {
+    if (!r || !r.brand_id || !r.id) return;
+    if (!byBrand.has(r.brand_id)) {
+      byBrand.set(r.brand_id, {
+        id: r.brand_id,
+        nameTh: r.brand_name_th || r.brand_id,
+        nameEn: r.brand_name_en || r.brand_id,
+        logo: r.brand_logo || "",
+        _sort: Number(r.brand_sort) || 0,
+        models: [],
+      });
+    }
+    const b = byBrand.get(r.brand_id);
+    const model = {
+      id: r.id,
+      nameTh: r.name_th || "",
+      nameEn: r.name_en || "",
+      sku: r.sku || "",
+      years: r.years || "",
+      price: Number(r.price) || 0,
+      stock: Number(r.stock) || 0,
+      compatible: Array.isArray(r.compatible) ? r.compatible : [],
+      descTh: r.desc_th || "",
+      descEn: r.desc_en || "",
+    };
+    if (r.product_image) model.productImage = r.product_image;
+    if (Array.isArray(r.product_images) && r.product_images.length) model.productImages = r.product_images;
+    if (r.part_type) model.partType = r.part_type;
+    if (r.drive_side) model.driveSide = r.drive_side;
+    b.models.push(model);
+  });
+  const brands = Array.from(byBrand.values()).sort((a, b) => (a._sort || 0) - (b._sort || 0));
+  brands.forEach(b => { delete b._sort; });
+  return brands.length ? brands : null;
+}
+
+// Returns a brands array from the skkj_products table, or null on ANY problem
+// (unreachable, not set up, empty). Null means "keep the built-in fallback".
+async function skkjLoadProductsTable(config) {
+  try {
+    if (!config || !config.supabaseUrl || !config.supabaseKey) return null;
+    const rows = await skkjSupabaseTableRequest(config, "skkj_products", {
+      method: "GET",
+      query: "?select=*&active=eq.true&order=brand_sort.asc,sort_order.asc",
+    });
+    return buildBrandsFromProductRows(rows);
+  } catch (error) {
+    return null;
+  }
+}
+
 const cleanText = (value, max = 500) => String(value || "").replace(/[<>]/g, "").trim().slice(0, max);
 const cleanNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
 const stableTextId = (prefix, value) => `${prefix}_${String(value || "unknown").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 80) || "unknown"}`;
@@ -3458,6 +3514,12 @@ function App() {
   const [reviewFormSubmitting, setReviewFormSubmitting] = useState(false);
   const [reviewFormDone, setReviewFormDone] = useState(false);
   const [reviewToken, setReviewToken] = useState("");
+  const [productToken, setProductToken] = useState("");
+  const [productDrafts, setProductDrafts] = useState({});
+  const [productMsg, setProductMsg] = useState("");
+  const [productBusyId, setProductBusyId] = useState("");
+  const [productSearch, setProductSearch] = useState("");
+  const [productAdd, setProductAdd] = useState(null);
   const [promoDiscount, setPromoDiscount] = useState(() => {
     try {
       const p = new URLSearchParams(window.location.search);
@@ -3475,6 +3537,8 @@ function App() {
   const [qrError, setQrError]             = useState("");
   const [printMenuOpen, setPrintMenuOpen] = useState(null);
   const dbLoadedRef                       = useRef(false);
+  const revealObserverRef                 = useRef(null);
+  const productsFromDbRef                  = useRef(false);
   const dbSaveTimerRef                    = useRef(null);
   const dbFailCountRef                    = useRef(0);
   const dbCircuitUntilRef                 = useRef(0);
@@ -3616,6 +3680,23 @@ function App() {
     try { localStorage.setItem("skkj_v2_dark", isDark ? "1" : "0"); } catch(e) {}
     document.documentElement.setAttribute("data-dark", isDark ? "1" : "0");
   }, [isDark]);
+
+  // Gentle scroll-reveal: JS-gated (content visible without JS), respects reduced motion.
+  useEffect(() => {
+    document.documentElement.classList.add("skkj-js");
+    if (typeof IntersectionObserver === "undefined") return;
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const id = window.requestAnimationFrame(() => {
+      const els = Array.from(document.querySelectorAll(".skkj-reveal:not(.skkj-reveal-in)"));
+      if (reduce) { els.forEach(el => el.classList.add("skkj-reveal-in")); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("skkj-reveal-in"); io.unobserve(e.target); } });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
+      els.forEach(el => io.observe(el));
+      revealObserverRef.current = io;
+    });
+    return () => { window.cancelAnimationFrame(id); if (revealObserverRef.current) revealObserverRef.current.disconnect(); };
+  }, [page, lang, catalogPage]);
   // ── RECENT PURCHASE TOAST ──────────────────────────────────────────────────
   useEffect(() => {
     const msgs = [
@@ -4144,12 +4225,23 @@ function App() {
       return;
     }
     let cancelled = false;
+    let productsOk = false;
     setDbStatus(prev => ({ ...prev, loading:true, mode:"connecting", error:"" }));
-    skkjDatabaseRequest(config, "/api/state")
+    // 1) Products come from the skkj_products table when available. If the table
+    //    is unreachable / not set up / empty, skkjLoadProductsTable returns null
+    //    and we keep whatever brands are already loaded (the built-in fallback).
+    skkjLoadProductsTable(config)
+      .then(productBrands => {
+        if (cancelled) return;
+        if (productBrands) { productsOk = true; setBrands(productBrands); productsFromDbRef.current = true; }
+      })
+      // 2) The legacy site-state blob still supplies orders/hiddenPartTypes/syncEvents,
+      //    and supplies brands ONLY as a fallback when the products table wasn't used.
+      .then(() => skkjDatabaseRequest(config, "/api/state"))
       .then(data => {
         if (cancelled) return;
         const next = normalizeDatabaseState(data.state || data);
-        if (next.brands) setBrands(next.brands);
+        if (next.brands && !productsOk) setBrands(next.brands);
         if (next.orders) setOrders(next.orders);
         if (next.hiddenPartTypes) setHiddenPartTypes(next.hiddenPartTypes);
         if (next.syncEvents) setSyncEvents(next.syncEvents);
@@ -4166,12 +4258,13 @@ function App() {
       })
       .catch(error => {
         if (cancelled) return;
+        // If the products table already loaded, the shop is fine even if the blob failed.
         setDbStatus(prev => ({
           ...prev,
           loading:false,
           saving:false,
-          mode:"offline",
-          error:error.message || "Database connection failed",
+          mode: productsOk ? "connected" : "offline",
+          error: productsOk ? "" : (error.message || "Database connection failed"),
         }));
       })
       .finally(() => {
@@ -4332,6 +4425,34 @@ function App() {
     if (businessSyncErrorsRef.current.has(key)) return;
     businessSyncErrorsRef.current.add(key);
     console.warn("SKKJ business table sync skipped:", scope, error);
+  }
+
+  // Secure admin product writes — goes through the admin-products Edge Function.
+  // The service_role key stays on the server; the browser only sends the shared
+  // admin token. Returns true on success.
+  async function callAdminProducts(action, payload) {
+    const cfg = dbConfigRef.current;
+    if (!cfg.supabaseUrl || !cfg.supabaseKey) { setProductMsg(lang==="th"?"ยังไม่ได้ตั้งค่า Supabase":"Supabase not configured"); return false; }
+    if (!productToken) { setProductMsg(lang==="th"?"กรุณาใส่ Admin Token ก่อน":"Enter the Admin Token first"); return false; }
+    try {
+      const res = await fetch(`${cfg.supabaseUrl}/functions/v1/admin-products`, {
+        method:"POST",
+        headers:{ Authorization:`Bearer ${cfg.supabaseKey}`, "Content-Type":"application/json", "x-skkj-token":productToken },
+        body:JSON.stringify({ action, ...payload }),
+      });
+      const data = await res.json().catch(()=>null);
+      if (!res.ok || (data && data.error)) { setProductMsg((data && data.error) || (lang==="th"?"บันทึกไม่สำเร็จ":"Save failed")); return false; }
+      setProductMsg(lang==="th"?"บันทึกแล้ว ✓":"Saved ✓");
+      return true;
+    } catch (e) {
+      setProductMsg(lang==="th"?"เชื่อมต่อไม่ได้":"Could not reach the server");
+      return false;
+    }
+  }
+
+  // Update one model in local brands state so the admin UI reflects edits at once.
+  function patchLocalModel(brandId, modelId, patch) {
+    setBrands(prev => prev.map(b => b.id!==brandId ? b : { ...b, models: b.models.map(m => m.id!==modelId ? m : { ...m, ...patch }) }));
   }
 
   async function upsertBusinessRows(tableName, rows, scope) {
@@ -6564,8 +6685,7 @@ function App() {
         .skkj-v2[data-dark="1"]:before,.skkj-v2[data-dark="1"]:after{opacity:0!important}
         .skkj-v2[data-dark="1"] .site-nav{background:#0A0A0A!important;border-bottom:1px solid #1E1E1E!important;box-shadow:none!important}
         .skkj-v2[data-dark="1"] .app-main{background:#1C1C1E!important}
-        .skkj-v2[data-dark="1"] footer{background:#000!important;border-top:1px solid #1E1E1E!important}
-        .skkj-v2[data-dark="1"] footer div,.skkj-v2[data-dark="1"] footer p,.skkj-v2[data-dark="1"] footer span,.skkj-v2[data-dark="1"] footer a{color:#777!important}
+        .skkj-v2[data-dark="1"] footer{background:#141414!important;border-top:3px solid #9B0018!important}
         .skkj-v2[data-dark="1"] h1,.skkj-v2[data-dark="1"] h2,.skkj-v2[data-dark="1"] h3,.skkj-v2[data-dark="1"] h4,.skkj-v2[data-dark="1"] h5,.skkj-v2[data-dark="1"] h6{color:#fff!important}
         .skkj-v2[data-dark="1"] p,.skkj-v2[data-dark="1"] span,.skkj-v2[data-dark="1"] label,.skkj-v2[data-dark="1"] li{color:#ccc!important}
         .skkj-v2[data-dark="1"] div{color:#fff!important}
@@ -6649,7 +6769,23 @@ function App() {
         .product-photo-box:hover .product-photo-bg,.product-photo-box:hover .product-photo-shape{filter:blur(6px);opacity:.62;transform:scale(1.055)}
         .product-photo-box:hover .product-main-image{transform:scale(1.045);filter:contrast(1.05) saturate(1.05) drop-shadow(0 14px 20px rgba(0,0,0,0.16))}
         .skkj-v2 .feature-card,.skkj-v2 .v2-product-card,.skkj-v2 .admin-dashboard-card,.skkj-v2 .customer-order-card{transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease}
-        .skkj-v2 .feature-card:hover,.skkj-v2 .v2-product-card:hover,.skkj-v2 .customer-order-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.10)!important;border-color:#D8D3C8!important}
+        .skkj-v2 .feature-card:hover,.skkj-v2 .v2-product-card:hover,.skkj-v2 .customer-order-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,0.13)!important;border-color:#D8D3C8!important}
+        /* ── Task 7: brand character ── */
+        @media (hover:hover){
+          .skkj-v2 .v2-product-card:hover .product-main-image{transform:scale(1.03)}
+          .v2-buy-button,.v2-ask-button{transition:transform .16s ease, box-shadow .16s ease, background .16s ease, filter .16s ease}
+          .v2-buy-button:hover{transform:translateY(-1px);filter:brightness(.92);box-shadow:0 14px 30px rgba(17,17,17,.22)}
+          .v2-buy-button:active{transform:scale(.98)}
+          .v2-ask-button:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(17,17,17,.10)}
+          .v2-ask-button:active{transform:scale(.98)}
+        }
+        .skkj-js .skkj-reveal{opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+        .skkj-js .skkj-reveal.skkj-reveal-in{opacity:1;transform:none}
+        @media (prefers-reduced-motion:reduce){.skkj-js .skkj-reveal{opacity:1!important;transform:none!important;transition:none!important}}
+        .skkj-kicker{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+        .skkj-kicker .kline{width:28px;height:3px;background:#9B0018;border-radius:2px;flex-shrink:0}
+        .skkj-kicker .ktext{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#9A948A;font-family:'Sarabun','Helvetica Neue',Arial,sans-serif}
+        .skkj-v2[data-dark="1"] .skkj-kicker .ktext{color:#8E8E88}
         .v2-concept-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--skkj-line);border-radius:999px;padding:8px 13px;font-size:12px;font-weight:900;color:#555;box-shadow:0 10px 26px rgba(17,17,17,.06)}
         .v2-concept-badge strong{color:var(--skkj-red)}
         .v2-catalog-tools{background:linear-gradient(180deg,#FFFFFF 0%,#FAF8F2 100%)!important;border:1px solid var(--skkj-line)!important;border-radius:18px!important;box-shadow:0 14px 36px rgba(17,17,17,.05)!important}
@@ -7912,8 +8048,22 @@ function App() {
               </div>
             </div>
 
+            <section className="skkj-reveal" style={{ maxWidth:960, margin:"40px auto 0", padding:"0 4px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16, background:isDark?"#242426":"#fff", border:isDark?"1px solid #333":"1px solid #ECE8DE", borderRadius:16, padding:"26px 18px", boxShadow:isDark?"none":"0 10px 30px rgba(17,17,17,.05)" }}>
+                {(lang==="th"
+                  ? [{num:"70+",label:"รุ่นที่ครอบคลุม"},{num:"6 เดือน",label:"รับประกัน 20,000 กม."},{num:"ทั่วประเทศ",label:"จัดส่งถึงบ้าน"}]
+                  : [{num:"70+",label:"Models covered"},{num:"6 months",label:"Warranty / 20,000 km"},{num:"Nationwide",label:"Home delivery"}]
+                ).map((s,i)=>(
+                  <div key={s.label} style={{ textAlign:"center", borderLeft:i>0?(isDark?"1px solid #333":"1px solid #EDE9DF"):"none" }}>
+                    <div style={{ fontFamily:"'Kanit',sans-serif", fontSize:"clamp(22px,4.2vw,36px)", fontWeight:800, color:isDark?"#F5F1E8":"#1A1A1A", lineHeight:1.1, marginBottom:6 }}>{s.num}</div>
+                    <div style={{ fontSize:12, color:isDark?"#9A948A":"#8A857B", fontWeight:600, letterSpacing:0.2, lineHeight:1.4 }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             <section style={{ paddingBottom:80, paddingTop:48 }}>
-              <div className="feature-grid v2-feature-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))", gap:18, maxWidth:960, margin:"0 auto 70px" }}>
+              <div className="feature-grid v2-feature-grid skkj-reveal" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))", gap:18, maxWidth:960, margin:"0 auto 70px" }}>
                 {t.features.map((f,fi)=>(
                   <div className="feature-card v2-feature-card" key={f.title} style={{ background:"#fff", borderRadius:18, padding:"42px 28px 26px", border:"1px solid #ECECEC", minHeight:156, height:"100%" }}>
                     <div className="feature-card-icon" style={{ fontSize:30, marginBottom:14, lineHeight:1 }}>{f.icon}</div>
@@ -7922,6 +8072,7 @@ function App() {
                   </div>
                 ))}
               </div>
+              <div className="skkj-kicker"><span className="kline" /><span className="ktext">SKKJ Autopart</span></div>
               <div className="v2-brand-heading">
                 <h2 className="v2-overline" style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", marginBottom:18 }}>{t.shopByBrand}</h2>
                 <div className="v2-brand-note">{lang==="th"?`กำลังดู: ${activePartTypeLabel} · ${getDriveSideLabel(selectedDriveSide, lang)}`:`Showing: ${activePartTypeLabel} · ${getDriveSideLabel(selectedDriveSide, lang)}`}</div>
@@ -8068,10 +8219,11 @@ function App() {
                 <span className="crumb-current">{lang==="th"?"สินค้าทั้งหมด":"All products"}</span>
               )}
             </nav>
+            <div className="skkj-kicker"><span className="kline" /><span className="ktext">SKKJ Autopart</span></div>
             <div style={{ marginBottom:26, display:"flex", alignItems:"flex-start", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
               <h2 className="v2-overline" style={{ fontSize:24, fontWeight:800, letterSpacing:"-0.5px", margin:0 }}>
                 {selectedBrand ? (lang==="th"?brands.find(b=>b.id===selectedBrand)?.nameTh:brands.find(b=>b.id===selectedBrand)?.nameEn) : t.allBrands}
-                <span style={{ display:"block", fontSize:12, fontWeight:800, color:"#9A0018", marginTop:4 }}>{activePartTypeLabel} · {getDriveSideLabel(selectedDriveSide, lang)}</span>
+                <span style={{ display:"block", fontSize:12, fontWeight:700, color:isDark?"#9A948A":"#8A857B", marginTop:4 }}>{activePartTypeLabel} · {getDriveSideLabel(selectedDriveSide, lang)}</span>
               </h2>
               <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
                 <button onClick={()=>setSelectedBrand(null)} style={{ background:!selectedBrand?"#1A1A1A":"#fff", color:!selectedBrand?"#fff":"#555", border:"1px solid "+(!selectedBrand?"#1A1A1A":"#ddd"), borderRadius:20, padding:"6px 14px", cursor:"pointer", fontSize:13, fontFamily:thF }}>{t.all}</button>
@@ -8429,6 +8581,7 @@ function App() {
 
             {/* ══ REVIEWS ══ */}
             <div className="review-box" style={{ marginTop:18, background:"#fff", borderRadius:16, border:"1px solid #ECECEC", padding:"22px 24px" }}>
+              <div className="skkj-kicker"><span className="kline" /><span className="ktext">SKKJ Autopart</span></div>
               <div style={{ fontSize:16, fontWeight:800, color:"#1A1A1A", marginBottom:14 }}>{lang==="th"?"รีวิวจากผู้ซื้อ":"Customer Reviews"}</div>
               {(()=>{
                 const rList = allReviews[`${detailBrand.id}__${detailModel.id}`];
@@ -9170,7 +9323,7 @@ function App() {
                 </div>
 
                 <div className="admin-tabs" style={{ display:"flex", gap:2, background:isDark?"#1C1C1E":"#F0EEE8", borderRadius:11, padding:4, marginBottom:20, width:"fit-content", border:`1px solid ${isDark?"#2A2A2A":"#E0DDD8"}`, flexWrap:"wrap" }}>
-                  {[...ta.tabs, ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["reviews", lang==="th"?"รีวิว":"Reviews"], ["qr", lang==="th"?"ลิงก์ส่วนลด":"Discount Links"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
+                  {[...ta.tabs, ["products", lang==="th"?"จัดการสินค้า":"Products"], ["analytics", lang==="th"?"วิเคราะห์":"Analytics"], ["reviews", lang==="th"?"รีวิว":"Reviews"], ["qr", lang==="th"?"ลิงก์ส่วนลด":"Discount Links"], ...(currentUser?.role==="owner" ? [["accounts", lang==="th"?"จัดการบัญชี":"Accounts"]] : [])].map(([tv,tl])=>(
                     <button key={tv} onClick={()=>setAdminTab(tv)} style={{ background:adminTab===tv?"#1A1A1A":"transparent", border:"none", borderRadius:8, padding:"8px 16px", cursor:"pointer", fontSize:13, fontWeight:adminTab===tv?700:400, color:adminTab===tv?"#fff":(isDark?"#C0C0B8":"#555"), fontFamily:thF, boxShadow:"none", display:"flex", alignItems:"center", gap:7 }}>
                       <span>{tl}</span>
                       {tv==="orders" && newOrderCount > 0 && <span style={{ background:"#ef4444", color:"#fff", borderRadius:20, padding:"1px 7px", fontSize:10, fontWeight:800 }}>{newOrderCount}</span>}
@@ -9566,6 +9719,84 @@ function App() {
                   </div>
                 )}
 
+                {adminTab==="products"&&(()=>{
+                  const inS = { fontFamily:thF, fontSize:12, padding:"7px 9px", border:`1px solid ${isDark?"#3A3A3C":"#E0DDD8"}`, borderRadius:8, outline:"none", background:isDark?"#2C2C2E":"#fff", color:isDark?"#F0EFE8":"#1A1A1A" };
+                  const q = productSearch.trim().toLowerCase();
+                  return (
+                  <div style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:13, border:isDark?"1px solid #2A2A2A":"1px solid #ECECEC", overflow:"hidden" }}>
+                    <div style={{ padding:"14px 16px", borderBottom:isDark?"1px solid #2A2A2A":"1px solid #ECECEC", background:isDark?"#242426":"#FAFAF8" }}>
+                      <div style={{ fontSize:14, fontWeight:800, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?"จัดการสินค้า":"Manage products"}</div>
+                      <div style={{ fontSize:12, color:isDark?"#9A948A":"#888", marginTop:2 }}>{lang==="th"?"แก้ราคาและสต็อกได้ทันที บันทึกไป Supabase ผ่านช่องทางปลอดภัย":"Edit price/stock inline; saved to Supabase through the secure Edge Function"}</div>
+                      <div style={{ display:"flex", gap:10, alignItems:"center", marginTop:10, flexWrap:"wrap" }}>
+                        <span style={{ fontSize:12, color:isDark?"#AAA":"#666", whiteSpace:"nowrap", fontFamily:thF }}>Admin Token</span>
+                        <input type="password" value={productToken} onChange={e=>setProductToken(e.target.value)} placeholder={lang==="th"?"ใส่ token เพื่อบันทึก...":"Enter token to save..."} style={{ ...inS, flex:1, minWidth:150 }} />
+                        <input value={productSearch} onChange={e=>setProductSearch(e.target.value)} placeholder={lang==="th"?"ค้นหา...":"Search..."} style={{ ...inS, flex:1, minWidth:130 }} />
+                        <button onClick={()=>setProductAdd({ id:"", brand_id:brands[0]?.id||"", name_th:"", name_en:"", sku:"", years:"", price:0, stock:0, product_image:"", compatible:"" })} style={{ background:"#1A1A1A", color:"#fff", border:"none", borderRadius:8, padding:"8px 14px", fontSize:12, fontWeight:800, cursor:"pointer", fontFamily:thF, whiteSpace:"nowrap" }}>{lang==="th"?"+ เพิ่มสินค้า":"+ Add"}</button>
+                      </div>
+                      {productMsg && <div style={{ marginTop:8, fontSize:12, fontWeight:700, color:productMsg.includes("✓")?"#16a34a":"#dc2626" }}>{productMsg}</div>}
+                    </div>
+                    {productAdd && (
+                      <div style={{ padding:"14px 16px", borderBottom:isDark?"1px solid #2A2A2A":"1px solid #ECECEC", background:isDark?"#202022":"#FBFAF7", display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))", gap:8 }}>
+                        <input value={productAdd.id} onChange={e=>setProductAdd(p=>({...p,id:e.target.value}))} placeholder={lang==="th"?"รหัส (เช่น nsn-99)":"id (e.g. nsn-99)"} style={inS} />
+                        <select value={productAdd.brand_id} onChange={e=>setProductAdd(p=>({...p,brand_id:e.target.value}))} style={inS}>{brands.map(b=><option key={b.id} value={b.id}>{lang==="th"?b.nameTh:b.nameEn}</option>)}</select>
+                        <input value={productAdd.name_th} onChange={e=>setProductAdd(p=>({...p,name_th:e.target.value}))} placeholder={lang==="th"?"ชื่อ (ไทย)":"Name (Thai)"} style={inS} />
+                        <input value={productAdd.name_en} onChange={e=>setProductAdd(p=>({...p,name_en:e.target.value}))} placeholder="Name (English)" style={inS} />
+                        <input value={productAdd.sku} onChange={e=>setProductAdd(p=>({...p,sku:e.target.value}))} placeholder="SKU" style={inS} />
+                        <input value={productAdd.years} onChange={e=>setProductAdd(p=>({...p,years:e.target.value}))} placeholder={lang==="th"?"ปี (2015–2020)":"Years"} style={inS} />
+                        <input type="number" value={productAdd.price} onChange={e=>setProductAdd(p=>({...p,price:e.target.value}))} placeholder={lang==="th"?"ราคา":"Price"} style={inS} />
+                        <input type="number" value={productAdd.stock} onChange={e=>setProductAdd(p=>({...p,stock:e.target.value}))} placeholder={lang==="th"?"สต็อก":"Stock"} style={inS} />
+                        <input value={productAdd.product_image} onChange={e=>setProductAdd(p=>({...p,product_image:e.target.value}))} placeholder="assets/photo.png" style={{ ...inS, gridColumn:"1/-1" }} />
+                        <input value={productAdd.compatible} onChange={e=>setProductAdd(p=>({...p,compatible:e.target.value}))} placeholder={lang==="th"?"ใช้กับรถ (คั่นด้วย ,)":"Fits (comma-separated)"} style={{ ...inS, gridColumn:"1/-1" }} />
+                        <div style={{ gridColumn:"1/-1", display:"flex", gap:8 }}>
+                          <button onClick={async()=>{
+                            const b = brands.find(x=>x.id===productAdd.brand_id);
+                            if (!productAdd.id.trim()||!b) { setProductMsg(lang==="th"?"ต้องมีรหัสและยี่ห้อ":"id and brand required"); return; }
+                            const compat = productAdd.compatible.split(",").map(s=>s.trim()).filter(Boolean);
+                            const product = { id:productAdd.id.trim(), brand_id:b.id, brand_name_th:b.nameTh, brand_name_en:b.nameEn, brand_logo:b.logo, brand_sort:brands.indexOf(b), name_th:productAdd.name_th, name_en:productAdd.name_en, sku:productAdd.sku, years:productAdd.years, price:Number(productAdd.price)||0, stock:Math.floor(Number(productAdd.stock)||0), product_image:productAdd.product_image, product_images:[], part_type:"", drive_side:"", compatible:compat, desc_th:"", desc_en:"", active:true, sort_order:(b.models||[]).length };
+                            const ok = await callAdminProducts("save", { product });
+                            if (ok) {
+                              const newModel = { id:product.id, nameTh:product.name_th, nameEn:product.name_en, sku:product.sku, years:product.years, price:product.price, stock:product.stock, compatible:compat, descTh:"", descEn:"", productImage:product.product_image };
+                              setBrands(prev=>prev.map(bb=>bb.id!==b.id?bb:{...bb, models:[...bb.models, newModel]}));
+                              setProductAdd(null);
+                            }
+                          }} style={{ background:"#9A0018", color:"#fff", border:"none", borderRadius:8, padding:"8px 16px", fontSize:12, fontWeight:800, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"บันทึกสินค้าใหม่":"Save product"}</button>
+                          <button onClick={()=>{ setProductAdd(null); setProductMsg(""); }} style={{ background:"none", border:isDark?"1px solid #3A3A3C":"1px solid #E0DDD8", color:isDark?"#C0C0B8":"#555", borderRadius:8, padding:"8px 16px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ยกเลิก":"Cancel"}</button>
+                        </div>
+                      </div>
+                    )}
+                    <div style={{ maxHeight:520, overflowY:"auto" }}>
+                      {brands.map(b => {
+                        const models = (b.models||[]).filter(m => !q || (String(m.nameTh)+m.nameEn+m.sku+b.nameTh+b.nameEn).toLowerCase().includes(q));
+                        if (!models.length) return null;
+                        return (
+                          <div key={b.id}>
+                            <div style={{ padding:"8px 16px", background:isDark?"#242426":"#F4F2EE", fontSize:12, fontWeight:800, color:isDark?"#C0C0B8":"#555" }}>{lang==="th"?b.nameTh:b.nameEn} <span style={{ color:isDark?"#777":"#AAA", fontWeight:600 }}>· {models.length}</span></div>
+                            {models.map(m => {
+                              const draft = productDrafts[m.id] || {};
+                              const priceVal = draft.price!==undefined?draft.price:m.price;
+                              const stockVal = draft.stock!==undefined?draft.stock:m.stock;
+                              const dirty = draft.price!==undefined || draft.stock!==undefined;
+                              return (
+                                <div key={m.id} style={{ display:"flex", alignItems:"center", gap:9, padding:"10px 16px", borderBottom:isDark?"1px solid #242426":"1px solid #F0EEE8", flexWrap:"wrap" }}>
+                                  <div style={{ flex:1, minWidth:130 }}>
+                                    <div style={{ fontSize:13, fontWeight:700, color:isDark?"#F0EFE8":"#1A1A1A" }}>{lang==="th"?m.nameTh:m.nameEn}</div>
+                                    <div style={{ fontSize:11, color:isDark?"#8E8E88":"#999", fontFamily:"'Courier New',monospace" }}>{m.sku||m.id}</div>
+                                  </div>
+                                  <label style={{ fontSize:11, color:isDark?"#9A948A":"#888" }}>{lang==="th"?"ราคา":"฿"} <input type="number" value={priceVal} onChange={e=>setProductDrafts(p=>({...p,[m.id]:{...p[m.id],price:e.target.value}}))} style={{ ...inS, width:78 }} /></label>
+                                  <label style={{ fontSize:11, color:isDark?"#9A948A":"#888" }}>{lang==="th"?"สต็อก":"Qty"} <input type="number" value={stockVal} onChange={e=>setProductDrafts(p=>({...p,[m.id]:{...p[m.id],stock:e.target.value}}))} style={{ ...inS, width:62 }} /></label>
+                                  <button disabled={!dirty||productBusyId===m.id} onClick={async()=>{ setProductBusyId(m.id); const ok=await callAdminProducts("set",{id:m.id,price:Number(priceVal)||0,stock:Math.floor(Number(stockVal)||0)}); if(ok){ patchLocalModel(b.id,m.id,{price:Number(priceVal)||0,stock:Math.floor(Number(stockVal)||0)}); setProductDrafts(p=>{const n={...p};delete n[m.id];return n;}); } setProductBusyId(""); }} style={{ background:dirty?"#1A1A1A":(isDark?"#2C2C2E":"#eee"), color:dirty?"#fff":(isDark?"#666":"#aaa"), border:"none", borderRadius:8, padding:"7px 12px", fontSize:12, fontWeight:800, cursor:dirty?"pointer":"default", fontFamily:thF }}>{productBusyId===m.id?"...":(lang==="th"?"บันทึก":"Save")}</button>
+                                  <button onClick={async()=>{ if(!window.confirm(lang==="th"?"ซ่อนสินค้านี้จากหน้าร้าน?":"Hide this product from the shop?"))return; setProductBusyId(m.id); const ok=await callAdminProducts("deactivate",{id:m.id}); if(ok){ setBrands(prev=>prev.map(bb=>bb.id!==b.id?bb:{...bb,models:bb.models.filter(mm=>mm.id!==m.id)})); } setProductBusyId(""); }} style={{ background:isDark?"#2C2C2E":"#FBEAEA", color:"#9A0018", border:isDark?"1px solid #3A2A2A":"1px solid #F3C9C9", borderRadius:8, padding:"7px 11px", fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:thF }}>{lang==="th"?"ซ่อน":"Hide"}</button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  );
+                })()}
+
                 {adminTab==="reviews"&&(
                   <div style={{ background:isDark?"#1C1C1E":"#fff", borderRadius:13, border:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, overflow:"hidden" }}>
                     <div style={{ padding:"14px 16px", borderBottom:`1px solid ${isDark?"#2A2A2A":"#ECECEC"}`, background:isDark?"#2C2C2E":"#FAFAF8", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -9817,24 +10048,29 @@ function App() {
       </main>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background:"#1A1A1A", color:"#888", padding:"40px 1.5rem", marginTop:60 }}>
-        <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", justifyContent:"space-between", flexWrap:"wrap", gap:24 }}>
-          <div>
-            <div style={{ color:"#fff", fontWeight:700, fontSize:18, marginBottom:8 }}>SKKJ Autopart</div>
-            <div style={{ fontSize:13, lineHeight:1.7, whiteSpace:"pre-line" }}>{t.footer.tagline}</div>
+      <footer style={{ background:"#141414", color:"#B8B4AC", marginTop:72, borderTop:"3px solid #9B0018" }}>
+        <div style={{ maxWidth:1200, margin:"0 auto", padding:"48px 1.5rem 22px", display:"flex", justifyContent:"space-between", flexWrap:"wrap", gap:34 }}>
+          <div style={{ maxWidth:280 }}>
+            <div style={{ color:"#F5F1E8", fontWeight:800, fontSize:20, marginBottom:6, letterSpacing:0.3, fontFamily:"'Kanit',sans-serif" }}>SKKJ Autopart</div>
+            <div style={{ fontSize:13.5, lineHeight:1.7, color:"#9C978C" }}>{lang==="th"?"แร็คพวงมาลัยคุณภาพ ทุกยี่ห้อ":"Quality steering racks, every brand"}</div>
           </div>
           <div style={{ fontSize:13, lineHeight:2 }}>
-            <div style={{ color:"#fff", fontWeight:600, marginBottom:8 }}>{t.footer.quickLinks}</div>
-            {navPages.map(p=><div key={p} style={{ cursor:"pointer" }} onClick={()=>setPage(p)}>{t.nav[p]}</div>)}
+            <div style={{ color:"#F5F1E8", fontWeight:700, marginBottom:8, fontSize:12.5, textTransform:"uppercase", letterSpacing:0.8 }}>{t.footer.quickLinks}</div>
+            {navPages.map(p=><div key={p} style={{ cursor:"pointer", color:"#B8B4AC" }} onClick={()=>setPage(p)}>{t.nav[p]}</div>)}
           </div>
-          <div style={{ fontSize:13, lineHeight:2 }}>
-            <div style={{ color:"#fff", fontWeight:600, marginBottom:8 }}>{t.footer.contactTitle}</div>
-            <div>087-102-2666</div><div>skkjthailand@gmail.com</div><div>Bangkok, Thailand</div>
-            <div style={{ marginTop:10, color:"#fff", fontWeight:600 }}>LINE</div>
-            <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:86, height:86, objectFit:"cover", borderRadius:8, background:"#fff", padding:4, marginTop:4 }} />
+          <div style={{ fontSize:13, lineHeight:1.9, maxWidth:236 }}>
+            <div style={{ color:"#F5F1E8", fontWeight:700, marginBottom:8, fontSize:12.5, textTransform:"uppercase", letterSpacing:0.8 }}>{t.footer.contactTitle}</div>
+            <div>087-102-2666</div>
+            <div>skkjthailand@gmail.com</div>
+            <div style={{ marginTop:6, lineHeight:1.65 }}>{lang==="th"?"36/1 ซอยอนามัยงามเจริญ 33 แขวงท่าข้าม เขตบางขุนเทียน กรุงเทพฯ 10150":"36/1 Soi Anamai Ngam Charoen 33, Bang Khun Thian, Bangkok 10150"}</div>
+            <div style={{ marginTop:6 }}>{lang==="th"?"จ–ส 8:00–18:00 · อา 9:00–15:00":"Mon–Sat 8:00–18:00 · Sun 9:00–15:00"}</div>
+          </div>
+          <div style={{ textAlign:"center" }}>
+            <div style={{ color:"#F5F1E8", fontWeight:700, marginBottom:8, fontSize:12.5, textTransform:"uppercase", letterSpacing:0.8 }}>LINE</div>
+            <img src="assets/line-qr.jpg" alt="SKKJ LINE QR code" style={{ width:92, height:92, objectFit:"cover", borderRadius:10, background:"#fff", padding:4 }} />
           </div>
         </div>
-        <div style={{ maxWidth:1200, margin:"20px auto 0", borderTop:"1px solid #333", paddingTop:20, fontSize:12, textAlign:"center" }}>{t.footer.copyright}</div>
+        <div style={{ borderTop:"1px solid #262626", padding:"16px 1.5rem", fontSize:12, textAlign:"center", color:"#7A766E" }}>{t.footer.copyright}</div>
       </footer>
       {showTutorial && (() => {
         const cardBg   = isDark ? "#1C1C1E" : "#fff";

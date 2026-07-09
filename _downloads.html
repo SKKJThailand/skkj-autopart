@@ -39,9 +39,33 @@
   <div class="row">
     <div class="info">
       <div class="name">skkj-version-2.html</div>
-      <div class="desc">Declutter pass: product cards now show only photo, name+years, price, low-stock chip, one button, small heart, quiet compare. SKU/part-type/drive-side/ratings moved to detail page. Shipping countdown shown once per page. Lighter text weights, less red, more whitespace. Light + dark, mobile checked. All previous features included.</div>
+      <div class="desc">Products can now load from a Supabase table (skkj_products) with a full fallback to the built-in catalog — the shop is never empty. New admin "จัดการสินค้า/Products" tab edits price/stock/hide/add. Plus all earlier design work. Verified: compiles, fallback shows the full 66-item catalog.</div>
     </div>
     <button class="need" onclick="dl(this,'skkj-version-2.html')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">010_skkj_products.sql</div>
+      <div class="desc">Run FIRST in Supabase SQL Editor — creates the products table (read-only for anon)</div>
+    </div>
+    <button class="need" onclick="dl(this,'supabase/migrations/010_skkj_products.sql','010_skkj_products.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">011_skkj_products_seed.sql</div>
+      <div class="desc">Run SECOND — fills the table with today's 70 products (open in Notepad, paste into SQL Editor)</div>
+    </div>
+    <button class="need" onclick="dl(this,'supabase/migrations/011_skkj_products_seed.sql','011_skkj_products_seed.sql')">&#8595; Download</button>
+  </div>
+
+  <div class="row">
+    <div class="info">
+      <div class="name">admin-products/index.ts</div>
+      <div class="desc">Deploy as Edge Function "admin-products", then set the SKKJ_ADMIN_TOKEN secret</div>
+    </div>
+    <button class="need" onclick="dl(this,'supabase/functions/admin-products/index.ts','admin-products-index.ts')">&#8595; Download</button>
   </div>
 
   <div class="row">
