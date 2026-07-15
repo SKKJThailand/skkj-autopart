@@ -35,6 +35,17 @@ Thai is the main language. English is secondary.
 
 ## Design DNA (applies to every visual change)
 
+Control colors (locked - never change):
+1. Blood red #9B0018
+2. Charcoal black #161616
+3. Gold #C8A83E
+No session may change these values or substitute similar shades.
+New elements needing red, black, or gold use exactly these values.
+Dark-mode text variants are allowed (red ~#E24B5A, gold ~#D4AF4E)
+but fills stay locked. If a design idea requires changing a control
+color, stop and ask Craig. Cream shades, grays, and tints may be
+tuned within the DNA rules.
+
 Every page must match the SKKJ product picture design:
 cream card background, dark red frame, red STEERING RACK tag,
 black footer bar. Site translation of that picture:
